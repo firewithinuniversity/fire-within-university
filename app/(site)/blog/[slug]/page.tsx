@@ -1,0 +1,244 @@
+/**
+ * app/(site)/blog/[slug]/page.tsx — Single post page
+ *
+ * Renders a full sermon or article. The [slug] part of the URL is
+ * dynamic — Next.js passes the actual slug value as a param.
+ *
+ * PATTERN — generateStaticParams:
+ * This function tells Next.js to pre-render ALL post pages at build time.
+ * Without it, pages would be rendered on-demand at request time (slower).
+ * With it, every /blog/some-slug is a static HTML file on the CDN — fastest possible.
+ *
+ * PATTERN — generateMetadata:
+ * Async function that runs before the page renders to set SEO tags.
+ * Each post gets its own title, description, and Open Graph image.
+ *
+ * PATTERN — notFound():
+ * If getPostBySlug returns null (post doesn't exist or was deleted),
+ * we call notFound() which renders the 404 page.
+ */
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { getAllPostSlugs, getPostBySlug, getRelatedPosts } from "@/lib/sanity/queries";
+import { imageUrlFor } from "@/lib/sanity/image";
+import { readingTimeLabel } from "@/lib/readingTime";
+import PortableTextRenderer from "@/components/PortableTextRenderer";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
+import AuthorCard from "@/components/AuthorCard";
+import AffiliateCard from "@/components/AffiliateCard";
+import EmailSignup from "@/components/EmailSignup";
+import ShareButtons from "@/components/ShareButtons";
+import RelatedPosts from "@/components/RelatedPosts";
+
+// ── Static generation ─────────────────────────────────────────────────────────
+
+// Pre-render every post slug at build time
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs();
+  return slugs.map(({ slug }) => ({ slug }));
+}
+
+// ── SEO metadata per post ─────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  if (!post) return { title: "Post Not Found" };
+
+  const imageUrl = post.mainImage
+    ? imageUrlFor(post.mainImage).width(1200).height(630).fit("crop").url()
+    : undefined;
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.publishedAt,
+      authors: [post.author.name],
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
+    },
+  };
+}
+
+// ── Page component ────────────────────────────────────────────────────────────
+
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  // If no post found, render 404
+  if (!post) notFound();
+
+  const [relatedPosts] = await Promise.all([
+    getRelatedPosts(slug, post.category?._id),
+  ]);
+
+  const { title, publishedAt, author, category, series, mainImage, youtubeUrl, body, affiliateProducts } = post;
+  const readTime = body ? readingTimeLabel(body as unknown[]) : null;
+
+  const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const heroImageUrl = mainImage
+    ? imageUrlFor(mainImage).width(1200).height(500).fit("crop").auto("format").url()
+    : null;
+
+  const hasAffiliateProducts = affiliateProducts && affiliateProducts.length > 0;
+
+  return (
+    <article className="max-w-3xl mx-auto px-4 py-14">
+      {/* ── Breadcrumb ──────────────────────────────────────────────── */}
+      <nav className="text-sm text-brown/45 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+        <Link href="/blog" className="hover:text-orange transition-colors">
+          Sermons &amp; Articles
+        </Link>
+        <span aria-hidden="true" className="text-brown/25">/</span>
+        <span className="text-brown/65 truncate">{title}</span>
+      </nav>
+
+      {/* ── Post header ─────────────────────────────────────────────── */}
+      <header className="mb-8 space-y-4">
+        {/* Category tag */}
+        {category && (
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-orange">
+            {category.title}
+          </span>
+        )}
+
+        {/* Series badge */}
+        {series && (
+          <p className="text-xs text-brown/50">
+            Part of the{" "}
+            <span className="font-medium text-brown/70">{series.title}</span>{" "}
+            series
+          </p>
+        )}
+
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-brown leading-tight">
+          {title}
+        </h1>
+
+        {/* Author + date + reading time */}
+        <div className="flex items-center gap-3">
+          {author.photo && (
+            <Image
+              src={imageUrlFor(author.photo).width(48).height(48).fit("crop").auto("format").url()}
+              alt={author.name}
+              width={48}
+              height={48}
+              className="rounded-full w-10 h-10 object-cover"
+            />
+          )}
+          <div className="text-sm text-brown/60">
+            <span className="font-medium text-brown/80">{author.name}</span>
+            {author.role && (
+              <span className="text-brown/40"> · {author.role}</span>
+            )}
+            <br />
+            <time dateTime={publishedAt}>{formattedDate}</time>
+            {readTime && <span className="text-brown/40"> · {readTime}</span>}
+          </div>
+        </div>
+      </header>
+
+      {/* ── Hero image ──────────────────────────────────────────────── */}
+      {heroImageUrl && (
+        <div className="mb-8 rounded-xl overflow-hidden shadow-md">
+          <Image
+            src={heroImageUrl}
+            alt={mainImage?.alt ?? title}
+            width={1200}
+            height={500}
+            className="w-full h-auto"
+            priority // loads eagerly — above the fold
+          />
+        </div>
+      )}
+
+      {/* ── YouTube embed (before body, if URL present) ─────────────── */}
+      {youtubeUrl && (
+        <YouTubeEmbed url={youtubeUrl} title={`${title} — sermon video`} />
+      )}
+
+      {/* ── Post body ───────────────────────────────────────────────── */}
+      {body && body.length > 0 && (
+        <div className="mb-10">
+          <PortableTextRenderer value={body} />
+        </div>
+      )}
+
+      {/* ── Affiliate products ──────────────────────────────────────── */}
+      {hasAffiliateProducts && (
+        <section
+          className="border-t border-brown/10 pt-8 mb-10"
+          aria-label="Recommended resources"
+        >
+          {/* FTC disclosure — legally required */}
+          <p className="text-xs text-brown/40 italic mb-4">
+            This page contains affiliate links. We may earn a small commission
+            at no cost to you if you purchase through these links.
+          </p>
+          <h2 className="font-serif text-xl font-bold text-brown mb-4">
+            Resources We Recommend
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {affiliateProducts!.map((product) => (
+              <AffiliateCard key={product._id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Author bio ──────────────────────────────────────────────── */}
+      <div className="border-t border-brown/10 pt-8 mb-10">
+        <AuthorCard author={author} />
+      </div>
+
+      {/* ── Share buttons ─────────────────────────────────────────────── */}
+      <div className="border-t border-brown/10 pt-8 mb-8">
+        <ShareButtons title={title} />
+      </div>
+
+      {/* ── Email signup ─────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-brown/[0.04] to-gold/[0.06] rounded-2xl p-8 border border-gold/15 mb-8">
+        <h2 className="font-serif text-xl font-bold text-brown mb-1 text-center">
+          Hungry for More?
+        </h2>
+        <p className="text-brown/60 text-sm text-center mb-5">
+          Get new sermons and articles delivered to your inbox.
+        </p>
+        <EmailSignup variant="inline" />
+      </section>
+
+      {/* ── Related posts ─────────────────────────────────────────────── */}
+      <RelatedPosts posts={relatedPosts} />
+
+      {/* ── Back to blog ─────────────────────────────────────────────── */}
+      <div className="text-center mt-10">
+        <Link
+          href="/blog"
+          className="text-orange hover:text-orange-hover text-sm font-medium transition-colors"
+        >
+          ← Back to Sermons &amp; Articles
+        </Link>
+      </div>
+    </article>
+  );
+}

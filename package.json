@@ -4,21 +4,32 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm audit --audit-level=high && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.35"
+    "@portabletext/react": "6.0.3",
+    "@sanity/client": "7.20.0",
+    "@sanity/image-url": "2.1.1",
+    "@sanity/vision": "3.0.0",
+    "@stripe/stripe-js": "5.7.0",
+    "next": "16.2.2",
+    "next-sanity": "12.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "resend": "4.6.0",
+    "sanity": "5.19.0",
+    "stripe": "17.7.0",
+    "styled-components": "6.3.12",
+    "zod": "3.25.71"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "postcss": "8.5.8",
+    "tailwindcss": "3.4.19",
+    "typescript": "6.0.2"
   }
 }

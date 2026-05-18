@@ -3,25 +3,70 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-serif: "Lora", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --transition-base: 150ms ease;
+  --transition-medium: 250ms ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fdf6ec;
+  color: #3d1f0a;
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.015em;
+}
+
+/* Selection color — gold on brown */
+::selection {
+  background-color: rgba(232, 160, 32, 0.25);
+  color: #3d1f0a;
+}
+
+/* Entrance animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Portable Text article styles */
+.prose-ministry h2 {
+  @apply text-2xl font-serif font-bold text-brown mt-10 mb-4 leading-snug tracking-tight;
+}
+.prose-ministry h3 {
+  @apply text-xl font-serif font-semibold text-brown mt-8 mb-3 leading-snug;
+}
+.prose-ministry p {
+  @apply text-base leading-relaxed text-brown/85 mb-5;
+}
+.prose-ministry blockquote {
+  @apply border-l-4 border-gold pl-6 italic text-brown-light my-8 text-lg leading-relaxed bg-gold/5 rounded-r-xl py-4 pr-4;
+}
+.prose-ministry a {
+  @apply text-orange underline decoration-orange/40 underline-offset-2 hover:text-orange-hover hover:decoration-orange-hover transition-colors;
+}
+.prose-ministry ul {
+  @apply list-disc list-inside mb-4 space-y-1;
+}
+.prose-ministry ol {
+  @apply list-decimal list-inside mb-4 space-y-1;
+}
+
+:focus-visible {
+  outline: 2px solid #c45e1a;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
