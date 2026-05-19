@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AuthDropdown from "./AuthDropdown";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/blog", label: "Sermons & Articles" },
@@ -55,6 +56,9 @@ export default function Navbar() {
               Give
             </Link>
           </li>
+          <li>
+            <AuthDropdown />
+          </li>
         </ul>
 
         {/* Hamburger — 44px touch target */}
@@ -97,6 +101,9 @@ export default function Navbar() {
             >
               Give
             </Link>
+          </li>
+          <li className="pt-3 flex justify-center">
+            <AuthDropdown />
           </li>
         </ul>
       </div>

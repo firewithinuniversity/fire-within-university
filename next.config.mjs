@@ -7,9 +7,11 @@
 // with a cryptographic nonce for stronger XSS protection.
 
 const nextConfig = {
-  // React strict mode: renders components twice in development to surface side effects.
-  // This catches bugs where code assumes it only runs once (like bad useEffect usage).
   reactStrictMode: true,
+
+  turbopack: {
+    root: import.meta.dirname,
+  },
 
   // next/image configuration: allows images from Sanity's CDN
   images: {
@@ -17,6 +19,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
       },
     ],
   },
