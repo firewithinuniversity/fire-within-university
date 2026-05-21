@@ -20,7 +20,7 @@ export default function AuthorCard({ author }: Props) {
     : null;
 
   return (
-    <div className="flex gap-5 items-start p-6 bg-gradient-to-br from-brown/[0.04] to-gold/[0.08] rounded-2xl border border-brown/10 shadow-card">
+    <div className="flex gap-5 items-start p-6 bg-[#4A2A12]/60 rounded-2xl border border-white/[0.06]">
       {/* Author photo with gold accent ring */}
       {photoUrl ? (
         <Image
@@ -28,11 +28,11 @@ export default function AuthorCard({ author }: Props) {
           alt={author.name}
           width={80}
           height={80}
-          className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-cream"
+          className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]"
         />
       ) : (
         <div
-          className="rounded-full w-16 h-16 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-cream"
+          className="rounded-full w-16 h-16 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]"
           aria-hidden="true"
         >
           <span className="text-2xl font-serif font-bold">
@@ -43,14 +43,14 @@ export default function AuthorCard({ author }: Props) {
 
       {/* Author info */}
       <div className="space-y-1.5">
-        <p className="font-serif font-bold text-brown text-lg">{author.name}</p>
+        <p className="font-serif font-bold text-cream text-lg">{author.name}</p>
         {author.role && (
-          <p className="text-xs text-orange font-semibold uppercase tracking-widest">
+          <p className="text-xs text-gold font-semibold uppercase tracking-widest">
             {author.role}
           </p>
         )}
         {author.bio && (
-          <p className="text-sm text-brown/65 leading-relaxed">{author.bio}</p>
+          <p className="text-sm text-cream/55 leading-relaxed">{author.bio}</p>
         )}
       </div>
     </div>

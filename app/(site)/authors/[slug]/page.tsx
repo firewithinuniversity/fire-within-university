@@ -50,7 +50,7 @@ export default async function AuthorPage({
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
       {/* Author card */}
-      <div className="flex flex-col sm:flex-row gap-6 items-start mb-14 bg-white rounded-2xl p-8 shadow-card border border-brown/[0.07]">
+      <div className="flex flex-col sm:flex-row gap-6 items-start mb-14 bg-[#4A2A12]/70 rounded-2xl p-8 border border-white/[0.06]">
         {photoUrl ? (
           <Image
             src={photoUrl}
@@ -69,15 +69,15 @@ export default async function AuthorPage({
 
         <div className="flex-grow">
           {author.role && (
-            <p className="text-orange font-bold text-xs uppercase tracking-widest mb-1">
+            <p className="text-gold font-bold text-xs uppercase tracking-widest mb-1">
               {author.role}
             </p>
           )}
-          <h1 className="font-serif text-3xl font-bold text-brown mb-3">{author.name}</h1>
+          <h1 className="font-serif text-3xl font-bold text-cream mb-3">{author.name}</h1>
           {author.bio && (
-            <p className="text-brown/70 leading-relaxed max-w-2xl">{author.bio}</p>
+            <p className="text-cream/60 leading-relaxed max-w-2xl">{author.bio}</p>
           )}
-          <p className="text-xs text-brown/40 mt-3">
+          <p className="text-xs text-cream/30 mt-3">
             {posts.length} {posts.length === 1 ? "post" : "posts"} published
           </p>
         </div>
@@ -85,16 +85,16 @@ export default async function AuthorPage({
 
       {/* Posts by this author */}
       <div className="mb-8">
-        <p className="text-orange font-bold text-xs uppercase tracking-widest mb-1">
+        <p className="text-gold font-bold text-xs uppercase tracking-widest mb-1">
           Published Work
         </p>
-        <h2 className="font-serif text-2xl font-bold text-brown">
+        <h2 className="font-serif text-2xl font-bold text-cream">
           Posts by {author.name}
         </h2>
       </div>
 
       {posts.length === 0 ? (
-        <p className="text-brown/50 text-center py-16">No posts published yet.</p>
+        <p className="text-cream/40 text-center py-16">No posts published yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (

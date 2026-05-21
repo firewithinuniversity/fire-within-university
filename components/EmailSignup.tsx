@@ -41,8 +41,8 @@ export default function EmailSignup({ variant = "hero" }: Props) {
 
   if (status === "success") {
     return (
-      <div className="text-center py-4 px-6 bg-gold/15 rounded-2xl border border-gold/30" role="alert" aria-live="polite">
-        <p className="text-brown font-semibold">
+      <div className="text-center py-4 px-6 bg-gold/[0.1] rounded-2xl border border-gold/20" role="alert" aria-live="polite">
+        <p className="text-cream font-semibold">
           <span className="text-gold mr-2" aria-hidden="true">✦</span>
           {message}
         </p>
@@ -55,7 +55,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
   return (
     <form onSubmit={handleSubmit} className={isHero ? "max-w-md mx-auto" : "w-full"} aria-label="Newsletter signup" noValidate>
       {isHero && (
-        <p className={`text-sm mb-3 text-center ${isHero ? "text-cream/70" : "text-brown/60"}`}>
+        <p className={`text-sm mb-3 text-center ${isHero ? "text-cream/70" : "text-cream/50"}`}>
           Get new sermons and articles delivered to your inbox.
         </p>
       )}
@@ -73,7 +73,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
           className={`flex-grow px-4 py-3 rounded-full border-2 text-sm focus:outline-none focus:ring-0 disabled:opacity-60 transition-colors duration-150 ${
             isHero
               ? "border-[#D4B896]/40 bg-cream text-brown focus:border-orange placeholder:text-[#B07040]"
-              : "border-brown/20 bg-white text-brown focus:border-orange placeholder:text-brown/35"
+              : "border-cream/[0.1] bg-[#4A2A12]/60 text-cream focus:border-gold placeholder:text-cream/30"
           }`}
           aria-label="Email address"
         />
@@ -97,7 +97,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
       )}
 
       {/* Caption colour follows background: cream on dark hero, muted brown on light sections */}
-      <p className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/50" : "text-brown/45"}`}>
+      <p className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/50" : "text-cream/35"}`}>
         No spam, ever. Unsubscribe anytime.
       </p>
     </form>

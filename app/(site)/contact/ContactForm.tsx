@@ -88,13 +88,13 @@ export default function ContactForm() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <p className="font-serif text-xl font-bold text-brown mb-2">
+        <p className="font-serif text-xl font-bold text-cream mb-2">
           {form.subject === "prayer" ? "Praying for you." : "Message received!"}
         </p>
-        <p className="text-brown/70">{responseMessage}</p>
+        <p className="text-cream/60">{responseMessage}</p>
         <button
           onClick={() => setStatus("idle")}
-          className="mt-4 text-sm text-orange underline hover:text-orange-hover transition-colors"
+          className="mt-4 text-sm text-gold underline hover:text-gold transition-colors"
         >
           Send another message
         </button>
@@ -105,7 +105,7 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 bg-white rounded-2xl border border-brown/[0.08] shadow-card p-8"
+      className="space-y-5 bg-[#4A2A12]/70 rounded-2xl border border-white/[0.06] p-8"
       noValidate
     >
       {/* Honeypot — hidden from real users, should always be empty */}
@@ -130,7 +130,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="subject"
-          className="block text-sm font-medium text-brown mb-1.5"
+          className="block text-sm font-medium text-cream/60 mb-1.5"
         >
           What can we help with?
         </label>
@@ -140,7 +140,7 @@ export default function ContactForm() {
           value={form.subject}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-xl border-2 border-brown/20 bg-white text-brown text-sm focus:outline-none focus:border-orange focus:ring-0 transition-colors duration-150"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 transition-colors duration-150 placeholder:text-cream/25"
         >
           <option value="general">General question</option>
           <option value="prayer">Prayer request</option>
@@ -152,7 +152,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-brown mb-1.5"
+          className="block text-sm font-medium text-cream/60 mb-1.5"
         >
           Your name
         </label>
@@ -165,7 +165,7 @@ export default function ContactForm() {
           required
           maxLength={100}
           autoComplete="name"
-          className="w-full px-4 py-3 rounded-xl border-2 border-brown/20 bg-white text-brown text-sm focus:outline-none focus:border-orange focus:ring-0 transition-colors duration-150"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 transition-colors duration-150 placeholder:text-cream/25"
         />
       </div>
 
@@ -173,7 +173,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-brown mb-1.5"
+          className="block text-sm font-medium text-cream/60 mb-1.5"
         >
           Email address
         </label>
@@ -186,7 +186,7 @@ export default function ContactForm() {
           required
           maxLength={254}
           autoComplete="email"
-          className="w-full px-4 py-3 rounded-xl border-2 border-brown/20 bg-white text-brown text-sm focus:outline-none focus:border-orange focus:ring-0 transition-colors duration-150"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 transition-colors duration-150 placeholder:text-cream/25"
         />
       </div>
 
@@ -194,7 +194,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="message"
-          className="block text-sm font-medium text-brown mb-1.5"
+          className="block text-sm font-medium text-cream/60 mb-1.5"
         >
           {form.subject === "prayer" ? "Your prayer request" : "Your message"}
         </label>
@@ -207,21 +207,21 @@ export default function ContactForm() {
           minLength={10}
           maxLength={2000}
           rows={5}
-          className="w-full px-4 py-3 rounded-xl border-2 border-brown/20 bg-white text-brown text-sm focus:outline-none focus:border-orange focus:ring-0 resize-none transition-colors duration-150"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 resize-none transition-colors duration-150 placeholder:text-cream/25"
           placeholder={
             form.subject === "prayer"
               ? "Share your prayer request. We will pray for you personally."
               : "How can we help?"
           }
         />
-        <p className="text-xs text-brown/40 mt-1 text-right">
+        <p className="text-xs text-cream/30 mt-1 text-right">
           {form.message.length}/2000
         </p>
       </div>
 
       {/* Error message */}
       {status === "error" && (
-        <p className="text-red-600 text-sm text-center" role="alert">
+        <p className="text-red-400 text-sm text-center" role="alert">
           {responseMessage}
         </p>
       )}
@@ -239,7 +239,7 @@ export default function ContactForm() {
             ? "Submit Prayer Request"
             : "Send Message"}
         </button>
-        <p className="text-xs text-brown/40 sm:text-left">
+        <p className="text-xs text-cream/30 sm:text-left">
           We typically respond within 1-2 business days.
         </p>
       </div>

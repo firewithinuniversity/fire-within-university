@@ -25,14 +25,14 @@ export default function ContactPage() {
           </svg>
         </div>
 
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
           We&apos;re Here for You
         </h1>
-        <p className="text-brown/65 max-w-lg mx-auto leading-relaxed text-lg">
+        <p className="text-cream/55 max-w-lg mx-auto leading-relaxed text-lg">
           Whether it&apos;s a prayer request, a question about the faith, or just a
           word of encouragement — your message matters to us.
         </p>
-        <p className="text-brown/45 text-sm italic max-w-md mx-auto">
+        <p className="text-cream/35 text-sm italic max-w-md mx-auto">
           &ldquo;Carry each other&apos;s burdens, and in this way you will fulfill
           the law of Christ.&rdquo; — Galatians 6:2
         </p>

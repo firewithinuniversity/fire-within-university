@@ -80,10 +80,10 @@ export default function DonateForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl shadow-card border border-brown/[0.08] overflow-hidden"
+      className="bg-[#4A2A12]/70 rounded-2xl border border-white/[0.06] overflow-hidden"
     >
       {/* ── Frequency tabs ─────────────────────────────────────────── */}
-      <div className="flex border-b border-brown/10">
+      <div className="flex border-b border-cream/[0.06]">
         {(["once", "monthly"] as Frequency[]).map((freq) => (
           <button
             key={freq}
@@ -92,7 +92,7 @@ export default function DonateForm() {
             className={`flex-1 py-4 text-sm font-semibold transition-colors ${
               frequency === freq
                 ? "bg-orange text-cream"
-                : "bg-white text-brown/60 hover:bg-brown/5"
+                : "text-cream/50 hover:bg-cream/[0.05]"
             }`}
           >
             {freq === "once" ? "Give Once" : "Give Monthly"}
@@ -103,14 +103,14 @@ export default function DonateForm() {
       <div className="p-6 space-y-6">
         {/* Monthly encouragement text */}
         {frequency === "monthly" && (
-          <p className="text-sm text-orange/80 text-center bg-orange/5 rounded-lg py-2 px-3">
+          <p className="text-sm text-gold/80 text-center bg-gold/[0.06] rounded-lg py-2 px-3">
             Monthly giving provides sustainable support for the ministry.
           </p>
         )}
 
         {/* ── Preset amount buttons ──────────────────────────────── */}
         <div>
-          <p className="text-sm font-medium text-brown/60 mb-3">
+          <p className="text-sm font-medium text-cream/50 mb-3">
             Select an amount
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -126,7 +126,7 @@ export default function DonateForm() {
                 className={`py-3 rounded-xl text-sm font-semibold border-2 transition-all ${
                   !isCustom && selectedAmount === amount
                     ? "border-orange bg-orange text-cream"
-                    : "border-brown/20 text-brown hover:border-orange hover:text-orange"
+                    : "border-cream/[0.15] text-cream/70 hover:border-gold hover:text-gold"
                 }`}
                 aria-pressed={!isCustom && selectedAmount === amount}
               >
@@ -138,11 +138,11 @@ export default function DonateForm() {
 
         {/* ── Custom amount input ────────────────────────────────── */}
         <div>
-          <p className="text-sm font-medium text-brown/60 mb-2">
+          <p className="text-sm font-medium text-cream/50 mb-2">
             Or enter a custom amount
           </p>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brown/50 font-medium">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cream/40 font-medium">
               $
             </span>
             <input
@@ -157,32 +157,32 @@ export default function DonateForm() {
                 setIsCustom(true);
               }}
               onFocus={() => setIsCustom(true)}
-              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 text-brown text-sm focus:outline-none transition-colors ${
+              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-[#1a0f05] text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/25 ${
                 isCustom
-                  ? "border-orange"
-                  : "border-brown/20 focus:border-orange"
+                  ? "border-gold"
+                  : "border-cream/[0.1] focus:border-gold"
               }`}
               aria-label="Custom donation amount in dollars"
             />
           </div>
-          <p className="text-xs text-brown/40 mt-1">
+          <p className="text-xs text-cream/30 mt-1">
             Minimum ${MIN_CUSTOM_DOLLARS}
           </p>
         </div>
 
         {/* ── Summary ───────────────────────────────────────────── */}
-        <div className="bg-gradient-to-br from-cream to-gold/10 rounded-2xl p-5 text-center border border-gold/20">
-          <p className="text-sm text-brown/60">
+        <div className="bg-[#1a0f05]/60 rounded-2xl p-5 text-center border border-gold/[0.15]">
+          <p className="text-sm text-cream/50">
             {frequency === "once" ? "One-time gift of" : "Monthly gift of"}
           </p>
-          <p className="font-serif text-4xl font-bold text-brown mt-1">
+          <p className="font-serif text-4xl font-bold text-cream mt-1">
             ${finalAmountDollars > 0 ? finalAmountDollars.toFixed(0) : "—"}
           </p>
         </div>
 
         {/* Error message */}
         {error && (
-          <p className="text-red-600 text-sm text-center" role="alert">
+          <p className="text-red-400 text-sm text-center" role="alert">
             {error}
           </p>
         )}
@@ -198,7 +198,7 @@ export default function DonateForm() {
             : `Give $${finalAmountDollars > 0 ? finalAmountDollars.toFixed(0) : "—"} ${frequency === "monthly" ? "/ month" : ""}`}
         </button>
 
-        <p className="text-xs text-brown/40 text-center">
+        <p className="text-xs text-cream/30 text-center">
           🔒 Secure checkout powered by Stripe. We never store your card information.
         </p>
       </div>

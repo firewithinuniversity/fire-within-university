@@ -29,10 +29,10 @@ export default function EthosPage() {
     <article className="max-w-2xl mx-auto px-4 py-16 md:py-24">
       {/* ── Eyebrow & title ─────────────────────────────────────────── */}
       <header className="mb-16 text-center space-y-5">
-        <p className="text-orange font-bold text-xs uppercase tracking-[0.3em]">
+        <p className="text-gold font-bold text-xs uppercase tracking-[0.3em]">
           Our Ethos
         </p>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown leading-[1.15] tracking-tight">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream leading-[1.15] tracking-tight">
           Give Us Him
         </h1>
 
@@ -45,7 +45,7 @@ export default function EthosPage() {
       </header>
 
       {/* ── The testimony ───────────────────────────────────────────── */}
-      <div className="space-y-8 text-brown/85 font-serif text-[1.125rem] md:text-[1.2rem] leading-[1.85]">
+      <div className="space-y-8 text-cream/80 font-serif text-[1.125rem] md:text-[1.2rem] leading-[1.85]">
         <p>
           Several years ago something broke open in me. My heart grew hollow
           and restless, hungering for something I couldn&apos;t name but
@@ -57,7 +57,7 @@ export default function EthosPage() {
         <p>
           I couldn&apos;t stomach another polished message from another gifted
           voice. The insights felt thin. The anointing felt borrowed. All I
-          wanted was <em className="text-brown">Jesus</em> — not a version of
+          wanted was <em className="text-cream">Jesus</em> — not a version of
           him, not a teaching about him. The full weight of who he is. The
           kind of love that wrecks you and won&apos;t let you reassemble
           yourself the same way twice.
@@ -81,7 +81,7 @@ export default function EthosPage() {
         </p>
 
         {/* Pull quote — the pivot */}
-        <blockquote className="border-l-[3px] border-gold pl-7 py-2 my-14 italic text-brown/90 text-[1.18rem] md:text-[1.28rem] leading-relaxed">
+        <blockquote className="border-l-[3px] border-gold pl-7 py-2 my-14 italic text-cream/85 text-[1.18rem] md:text-[1.28rem] leading-relaxed">
           We have traded the burning mystery of who Jesus is for the
           comfortable usefulness of what Jesus does for us. We&apos;ve swapped
           the living creature&apos;s unrelenting gaze for the self-help wisdom
@@ -97,7 +97,7 @@ export default function EthosPage() {
       >
         {/* Soft gold glow backdrop */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-gold/[0.06] via-orange/[0.04] to-transparent rounded-3xl -mx-6 md:-mx-10"
+          className="absolute inset-0 bg-gradient-to-b from-gold/[0.08] via-[#4A2A12]/40 to-transparent rounded-3xl -mx-6 md:-mx-10"
           aria-hidden="true"
         />
 
@@ -106,7 +106,7 @@ export default function EthosPage() {
             A Prayer
           </p>
 
-          <div className="space-y-6 font-serif text-[1.15rem] md:text-[1.3rem] leading-[1.8] text-brown/90">
+          <div className="space-y-6 font-serif text-[1.15rem] md:text-[1.3rem] leading-[1.8] text-cream/85">
             <p>
               God, deliver us. Not from difficulty — from <em>smallness</em>.
               Give us back the Ancient One.
@@ -123,8 +123,8 @@ export default function EthosPage() {
 
           {/* The final line — set apart */}
           <div className="pt-8">
-            <p className="font-serif text-4xl md:text-5xl font-bold text-brown tracking-tight leading-tight">
-              Give us <span className="text-orange italic">him</span>.
+            <p className="font-serif text-4xl md:text-5xl font-bold text-cream tracking-tight leading-tight">
+              Give us <span className="text-gold italic">him</span>.
             </p>
           </div>
 
@@ -138,8 +138,8 @@ export default function EthosPage() {
       </section>
 
       {/* ── Call to action ──────────────────────────────────────────── */}
-      <div className="mt-20 pt-10 border-t border-brown/10 text-center space-y-6">
-        <p className="text-brown/65 italic max-w-md mx-auto">
+      <div className="mt-20 pt-10 border-t border-cream/[0.06] text-center space-y-6">
+        <p className="text-cream/55 italic max-w-md mx-auto">
           If this is the hunger in you too — walk with us.
         </p>
 
@@ -152,7 +152,7 @@ export default function EthosPage() {
           </Link>
           <Link
             href="/about"
-            className="border-2 border-brown/25 hover:border-orange text-brown hover:text-orange font-semibold px-8 py-3.5 rounded-full transition-all duration-200 text-sm"
+            className="border border-cream/30 hover:border-cream/60 text-cream font-semibold px-8 py-3.5 rounded-full transition-all duration-200 text-sm"
           >
             About the Ministry
           </Link>

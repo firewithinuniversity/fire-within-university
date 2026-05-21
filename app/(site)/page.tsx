@@ -79,8 +79,8 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05] via-transparent to-[#1a0f05]/40" />
         <div className="absolute inset-0 bg-[#1a0f05]/10" />
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full">
-          <div className="max-w-2xl space-y-8">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full flex items-center justify-center">
+          <div className="max-w-2xl space-y-8 text-center">
             <p className="inline-block text-gold/90 font-semibold text-[11px] uppercase tracking-[0.25em] border border-gold/30 rounded-full px-5 py-2 bg-gold/[0.06] backdrop-blur-sm">
               Ministry · Teaching · Discipleship
             </p>
@@ -88,10 +88,10 @@ export default async function HomePage() {
               Set Your Heart{" "}
               <span className="text-gold">On Fire</span>
             </h1>
-            <p className="text-cream/70 text-lg md:text-xl leading-[1.7] font-light max-w-lg">
+            <p className="text-cream/70 text-lg md:text-xl leading-[1.7] font-light max-w-lg mx-auto">
               Sermons, articles, and resources to deepen your faith and ignite your walk with Jesus.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
               <Link
                 href="/blog"
                 className="group bg-orange hover:bg-orange-hover text-cream font-semibold px-10 py-4 rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(196,94,26,0.35)] hover:shadow-[0_8px_32px_rgba(196,94,26,0.5)] hover:-translate-y-0.5 text-[15px] text-center"
@@ -119,7 +119,7 @@ export default async function HomePage() {
 
       {/* ── Scripture of the Day ──────────────────────────────────── */}
       <SectionReveal distance={32}>
-        <section className="max-w-3xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 mb-24">
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 mt-12 relative z-10 mb-24">
           <div className="bg-[#4A2A12]/80 backdrop-blur-sm border border-white/[0.08] rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
             <p className="text-gold/80 text-[10px] font-bold uppercase tracking-[0.3em] mb-6">Scripture of the Day</p>

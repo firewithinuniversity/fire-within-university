@@ -23,22 +23,22 @@ export default async function ResourcesPage() {
     <div className="max-w-6xl mx-auto px-4 py-14">
       {/* Header */}
       <div className="mb-10 space-y-3">
-        <p className="text-orange font-bold text-xs uppercase tracking-widest">
+        <p className="text-gold font-bold text-xs uppercase tracking-widest">
           Curated Tools
         </p>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown leading-tight">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream leading-tight">
           Recommended Resources
         </h1>
-        <p className="text-brown/65 text-lg max-w-xl">
+        <p className="text-cream/55 text-lg max-w-xl">
           Books, Bibles, and tools our team uses and trusts. Every resource is
           chosen to help you go deeper with God.
         </p>
       </div>
 
       {/* FTC Disclosure — legally required */}
-      <div className="bg-gold/10 border border-gold/25 rounded-xl px-5 py-4 mb-10">
-        <p className="text-xs text-brown/65 leading-relaxed">
-          <strong className="text-brown/80">Affiliate Disclosure:</strong>{" "}
+      <div className="bg-gold/[0.06] border border-gold/[0.15] rounded-xl px-5 py-4 mb-10">
+        <p className="text-xs text-cream/55 leading-relaxed">
+          <strong className="text-cream/70">Affiliate Disclosure:</strong>{" "}
           Some links on this page are affiliate links. If you purchase through them,
           we may earn a small commission at no extra cost to you. We only recommend
           resources we genuinely believe will benefit your faith journey.
@@ -47,8 +47,8 @@ export default async function ResourcesPage() {
 
       {products.length === 0 ? (
         <div className="text-center py-28 space-y-4">
-          <p className="font-serif text-2xl font-bold text-brown">Resources Coming Soon</p>
-          <p className="text-brown/55 max-w-md mx-auto">
+          <p className="font-serif text-2xl font-bold text-cream">Resources Coming Soon</p>
+          <p className="text-cream/45 max-w-md mx-auto">
             Our team is carefully selecting the best tools and books to recommend.
             Check back soon.
           </p>

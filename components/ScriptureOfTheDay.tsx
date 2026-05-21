@@ -22,7 +22,7 @@ export default function ScriptureOfTheDay() {
   return (
     <section
       aria-label="Scripture of the Day"
-      className="bg-gradient-to-r from-brown/[0.04] via-gold/[0.07] to-brown/[0.04] border-y border-gold/20 py-10 px-4"
+      className="bg-gradient-to-r from-[#4A2A12]/30 via-gold/[0.06] to-[#4A2A12]/30 border-y border-gold/[0.15] py-10 px-4"
     >
       <div className="max-w-3xl mx-auto">
         {/* Label */}
@@ -32,7 +32,7 @@ export default function ScriptureOfTheDay() {
 
         {/* Verse — gold left border, serif italic */}
         <blockquote className="relative pl-6 border-l-4 border-gold/60">
-          <p className="font-serif text-xl md:text-2xl italic text-brown/85 leading-relaxed">
+          <p className="font-serif text-xl md:text-2xl italic text-cream/80 leading-relaxed">
             &ldquo;{scripture.text}&rdquo;
           </p>
 
@@ -42,7 +42,7 @@ export default function ScriptureOfTheDay() {
               href={scripture.bibleGatewayUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-orange hover:text-orange-hover font-semibold text-sm transition-colors hover:underline underline-offset-2"
+              className="text-gold hover:text-gold font-semibold text-sm transition-colors hover:underline underline-offset-2"
               aria-label={`Read ${scripture.reference} on BibleGateway`}
             >
               — {scripture.reference}

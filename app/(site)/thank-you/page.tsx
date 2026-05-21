@@ -27,27 +27,27 @@ export default function ThankYouPage() {
         <span className="relative text-6xl">🔥</span>
       </div>
 
-      <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown tracking-tight">
+      <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream tracking-tight">
         Thank You!
       </h1>
 
-      <p className="text-brown/70 text-lg leading-relaxed max-w-md mx-auto">
+      <p className="text-cream/60 text-lg leading-relaxed max-w-md mx-auto">
         Your generous gift goes directly toward creating content that reaches
         people for Christ and builds up the body of believers.
       </p>
 
-      <p className="text-brown/55 leading-relaxed max-w-md mx-auto">
+      <p className="text-cream/45 leading-relaxed max-w-md mx-auto">
         We are praying for you and deeply grateful for your partnership in
         this ministry. Together, we&apos;re keeping the fire burning.
       </p>
 
       {/* Scripture */}
-      <div className="bg-gradient-to-br from-brown/[0.04] to-gold/[0.08] rounded-2xl p-7 my-6 border border-gold/20">
-        <p className="font-serif text-lg italic text-brown-light leading-relaxed">
+      <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl p-7 my-6">
+        <p className="font-serif text-lg italic text-cream/70 leading-relaxed">
           &ldquo;And do not forget to do good and to share with others, for with
           such sacrifices God is pleased.&rdquo;
         </p>
-        <p className="text-sm text-orange mt-2 font-medium">
+        <p className="text-sm text-gold mt-2 font-medium">
           <a
             href="https://www.biblegateway.com/passage/?search=Hebrews+13%3A16&version=NIV"
             target="_blank"
@@ -69,14 +69,14 @@ export default function ThankYouPage() {
         </Link>
         <Link
           href="/"
-          className="border-2 border-brown/30 hover:border-orange text-brown font-semibold px-8 py-3 rounded-full transition-colors"
+          className="border border-cream/30 hover:border-cream/60 text-cream font-semibold px-8 py-3 rounded-full transition-colors"
         >
           Return Home
         </Link>
       </div>
 
       {/* Donation disclaimer — reiterate after the transaction */}
-      <p className="text-xs text-brown/40 max-w-sm mx-auto mt-8">
+      <p className="text-xs text-cream/30 max-w-sm mx-auto mt-8">
         As a reminder, Fire Within University is not a 501(c)(3) nonprofit.
         Your donation is not tax-deductible. A receipt from Stripe has been
         sent to your email.

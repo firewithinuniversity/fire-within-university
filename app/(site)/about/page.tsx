@@ -32,30 +32,30 @@ export default async function AboutPage() {
           </svg>
         </div>
 
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
           About Fire Within University
         </h1>
-        <p className="text-brown/70 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
+        <p className="text-cream/60 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
           Fire Within University exists to equip believers with sound biblical
           teaching, practical discipleship resources, and a community that stirs
           one another toward love and good deeds.
         </p>
-        <p className="text-brown/55 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-cream/40 max-w-2xl mx-auto leading-relaxed">
           We believe the Word of God is living and active — capable of setting
           hearts on fire for Jesus. Our goal is simple: produce content that
           drives people into Scripture and deeper relationship with Christ.
         </p>
 
         {/* Foundation verse */}
-        <div className="bg-gradient-to-br from-brown/[0.03] to-gold/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto border border-gold/15">
-          <p className="text-brown/60 text-sm italic leading-relaxed">
+        <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto">
+          <p className="text-cream/60 text-sm italic leading-relaxed">
             &ldquo;For the word of God is alive and active. Sharper than any double-edged sword, it penetrates even to dividing soul and spirit.&rdquo;
           </p>
           <a
             href="https://www.biblegateway.com/passage/?search=Hebrews+4%3A12&version=NIV"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-orange hover:text-orange-hover text-xs font-semibold mt-2 inline-block transition-colors"
+            className="text-gold hover:text-gold text-xs font-semibold mt-2 inline-block transition-colors"
           >
             — Hebrews 4:12
           </a>
@@ -108,23 +108,23 @@ export default async function AboutPage() {
         ].map(({ icon, title, description }) => (
           <div
             key={title}
-            className="bg-white rounded-2xl p-7 border border-brown/[0.08] shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 text-center space-y-3"
+            className="bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl p-7 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1 transition-all duration-300 text-center space-y-3"
           >
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-orange/10 text-orange mx-auto">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold/[0.08] text-gold mx-auto">
               {icon}
             </div>
-            <h3 className="font-serif text-lg font-bold text-brown">{title}</h3>
-            <p className="text-sm text-brown/60 leading-relaxed">{description}</p>
+            <h3 className="font-serif text-lg font-bold text-cream">{title}</h3>
+            <p className="text-sm text-cream/60 leading-relaxed">{description}</p>
           </div>
         ))}
       </section>
 
       {/* Call to action — real email capture, not a link-away */}
-      <section className="mb-20 py-12 px-6 md:px-10 bg-gradient-to-br from-brown/[0.03] to-gold/[0.06] rounded-2xl border border-gold/15 text-center">
-        <h2 className="font-serif text-2xl md:text-3xl font-bold text-brown mb-3">
+      <section className="mb-20 py-12 px-6 md:px-10 bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl text-center">
+        <h2 className="font-serif text-2xl md:text-3xl font-bold text-cream mb-3">
           Join the Mission
         </h2>
-        <p className="text-brown/65 max-w-md mx-auto mb-6 leading-relaxed">
+        <p className="text-cream/60 max-w-md mx-auto mb-6 leading-relaxed">
           Drop your email below to get new sermons and articles delivered to your inbox.
         </p>
 
@@ -134,13 +134,13 @@ export default async function AboutPage() {
         </div>
 
         {/* Secondary path — supporting the ministry stays visible but no longer required */}
-        <div className="mt-8 pt-6 border-t border-brown/10 flex flex-col sm:flex-row gap-3 justify-center items-center">
-          <span className="text-xs text-brown/50 uppercase tracking-widest font-semibold">
+        <div className="mt-8 pt-6 border-t border-cream/[0.06] flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <span className="text-xs text-cream/40 uppercase tracking-widest font-semibold">
             Or
           </span>
           <Link
             href="/donate"
-            className="text-orange hover:text-orange-hover font-semibold text-sm transition-colors inline-flex items-center gap-1.5 hover:gap-2"
+            className="text-gold hover:text-gold font-semibold text-sm transition-colors inline-flex items-center gap-1.5 hover:gap-2"
           >
             Support the Ministry with a Gift <span aria-hidden="true">&rarr;</span>
           </Link>
@@ -150,7 +150,7 @@ export default async function AboutPage() {
       {/* Team / Authors */}
       {authors.length > 0 && (
         <section>
-          <h2 className="font-serif text-3xl font-bold text-brown text-center mb-8">
+          <h2 className="font-serif text-3xl font-bold text-cream text-center mb-8">
             Meet the Team
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -167,7 +167,7 @@ export default async function AboutPage() {
               return (
                 <div
                   key={author._id}
-                  className="flex gap-5 items-start p-6 bg-white rounded-2xl border border-brown/[0.08] shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+                  className="flex gap-5 items-start p-6 bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-0.5 transition-all duration-300"
                 >
                   {photoUrl ? (
                     <Image
@@ -175,26 +175,26 @@ export default async function AboutPage() {
                       alt={author.name}
                       width={80}
                       height={80}
-                      className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-white"
+                      className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]"
                     />
                   ) : (
-                    <div className="rounded-full w-20 h-20 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-white">
+                    <div className="rounded-full w-20 h-20 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]">
                       <span className="text-3xl font-serif font-bold">
                         {author.name[0]}
                       </span>
                     </div>
                   )}
                   <div className="space-y-1.5">
-                    <p className="font-serif font-bold text-brown text-lg">
+                    <p className="font-serif font-bold text-cream text-lg">
                       {author.name}
                     </p>
                     {author.role && (
-                      <p className="text-xs text-orange font-semibold uppercase tracking-widest">
+                      <p className="text-xs text-gold font-semibold uppercase tracking-widest">
                         {author.role}
                       </p>
                     )}
                     {author.bio && (
-                      <p className="text-sm text-brown/60 leading-relaxed">
+                      <p className="text-sm text-cream/60 leading-relaxed">
                         {author.bio}
                       </p>
                     )}

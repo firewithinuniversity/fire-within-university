@@ -105,33 +105,33 @@ export default async function PostPage({
   return (
     <article className="max-w-3xl mx-auto px-4 py-14">
       {/* ── Breadcrumb ──────────────────────────────────────────────── */}
-      <nav className="text-sm text-brown/45 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
-        <Link href="/blog" className="hover:text-orange transition-colors">
+      <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+        <Link href="/blog" className="hover:text-gold transition-colors">
           Sermons &amp; Articles
         </Link>
-        <span aria-hidden="true" className="text-brown/25">/</span>
-        <span className="text-brown/65 truncate">{title}</span>
+        <span aria-hidden="true" className="text-cream/20">/</span>
+        <span className="text-cream/55 truncate">{title}</span>
       </nav>
 
       {/* ── Post header ─────────────────────────────────────────────── */}
       <header className="mb-8 space-y-4">
         {/* Category tag */}
         {category && (
-          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-orange">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-gold">
             {category.title}
           </span>
         )}
 
         {/* Series badge */}
         {series && (
-          <p className="text-xs text-brown/50">
+          <p className="text-xs text-cream/40">
             Part of the{" "}
-            <span className="font-medium text-brown/70">{series.title}</span>{" "}
+            <span className="font-medium text-cream/60">{series.title}</span>{" "}
             series
           </p>
         )}
 
-        <h1 className="font-serif text-3xl md:text-4xl font-bold text-brown leading-tight">
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-cream leading-tight">
           {title}
         </h1>
 
@@ -146,14 +146,14 @@ export default async function PostPage({
               className="rounded-full w-10 h-10 object-cover"
             />
           )}
-          <div className="text-sm text-brown/60">
-            <span className="font-medium text-brown/80">{author.name}</span>
+          <div className="text-sm text-cream/50">
+            <span className="font-medium text-cream/80">{author.name}</span>
             {author.role && (
-              <span className="text-brown/40"> · {author.role}</span>
+              <span className="text-cream/30"> · {author.role}</span>
             )}
             <br />
             <time dateTime={publishedAt}>{formattedDate}</time>
-            {readTime && <span className="text-brown/40"> · {readTime}</span>}
+            {readTime && <span className="text-cream/30"> · {readTime}</span>}
           </div>
         </div>
       </header>
@@ -187,15 +187,15 @@ export default async function PostPage({
       {/* ── Affiliate products ──────────────────────────────────────── */}
       {hasAffiliateProducts && (
         <section
-          className="border-t border-brown/10 pt-8 mb-10"
+          className="border-t border-cream/[0.06] pt-8 mb-10"
           aria-label="Recommended resources"
         >
           {/* FTC disclosure — legally required */}
-          <p className="text-xs text-brown/40 italic mb-4">
+          <p className="text-xs text-cream/30 italic mb-4">
             This page contains affiliate links. We may earn a small commission
             at no cost to you if you purchase through these links.
           </p>
-          <h2 className="font-serif text-xl font-bold text-brown mb-4">
+          <h2 className="font-serif text-xl font-bold text-cream mb-4">
             Resources We Recommend
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -207,21 +207,21 @@ export default async function PostPage({
       )}
 
       {/* ── Author bio ──────────────────────────────────────────────── */}
-      <div className="border-t border-brown/10 pt-8 mb-10">
+      <div className="border-t border-cream/[0.06] pt-8 mb-10">
         <AuthorCard author={author} />
       </div>
 
       {/* ── Share buttons ─────────────────────────────────────────────── */}
-      <div className="border-t border-brown/10 pt-8 mb-8">
+      <div className="border-t border-cream/[0.06] pt-8 mb-8">
         <ShareButtons title={title} />
       </div>
 
       {/* ── Email signup ─────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-br from-brown/[0.04] to-gold/[0.06] rounded-2xl p-8 border border-gold/15 mb-8">
-        <h2 className="font-serif text-xl font-bold text-brown mb-1 text-center">
+      <section className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl p-8 mb-8">
+        <h2 className="font-serif text-xl font-bold text-cream mb-1 text-center">
           Hungry for More?
         </h2>
-        <p className="text-brown/60 text-sm text-center mb-5">
+        <p className="text-cream/50 text-sm text-center mb-5">
           Get new sermons and articles delivered to your inbox.
         </p>
         <EmailSignup variant="inline" />
@@ -234,7 +234,7 @@ export default async function PostPage({
       <div className="text-center mt-10">
         <Link
           href="/blog"
-          className="text-orange hover:text-orange-hover text-sm font-medium transition-colors"
+          className="text-gold hover:text-gold text-sm font-medium transition-colors"
         >
           ← Back to Sermons &amp; Articles
         </Link>

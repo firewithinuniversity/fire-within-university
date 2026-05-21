@@ -32,7 +32,7 @@ export default function SiteLayout({
           Skip to content
         </a>
         <Navbar />
-        <main id="main-content" className="flex-grow">{children}</main>
+        <main id="main-content" className="flex-grow bg-[#1a0f05]">{children}</main>
         <Footer />
       </div>
     </Providers>

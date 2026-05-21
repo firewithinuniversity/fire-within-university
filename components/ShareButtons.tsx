@@ -42,7 +42,7 @@ export default function ShareButtons({ title, url }: Props) {
 
   return (
     <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-xs font-semibold text-brown/50 uppercase tracking-widest">
+      <span className="text-xs font-semibold text-cream/40 uppercase tracking-widest">
         Share
       </span>
 
@@ -52,7 +52,7 @@ export default function ShareButtons({ title, url }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on X (Twitter)"
-        className="flex items-center gap-1.5 text-xs font-semibold text-brown/60 hover:text-brown bg-brown/[0.07] hover:bg-brown/[0.12] px-3 py-2 rounded-full transition-all duration-150"
+        className="flex items-center gap-1.5 text-xs font-semibold text-cream/50 hover:text-cream bg-cream/[0.07] hover:bg-cream/[0.12] px-3 py-2 rounded-full transition-all duration-150"
       >
         {/* X (Twitter) icon */}
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -67,7 +67,7 @@ export default function ShareButtons({ title, url }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on Facebook"
-        className="flex items-center gap-1.5 text-xs font-semibold text-brown/60 hover:text-brown bg-brown/[0.07] hover:bg-brown/[0.12] px-3 py-2 rounded-full transition-all duration-150"
+        className="flex items-center gap-1.5 text-xs font-semibold text-cream/50 hover:text-cream bg-cream/[0.07] hover:bg-cream/[0.12] px-3 py-2 rounded-full transition-all duration-150"
       >
         {/* Facebook icon */}
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -80,7 +80,7 @@ export default function ShareButtons({ title, url }: Props) {
       <button
         onClick={handleCopy}
         aria-label={copied ? "Link copied!" : "Copy link"}
-        className="flex items-center gap-1.5 text-xs font-semibold text-brown/60 hover:text-brown bg-brown/[0.07] hover:bg-brown/[0.12] px-3 py-2 rounded-full transition-all duration-150"
+        className="flex items-center gap-1.5 text-xs font-semibold text-cream/50 hover:text-cream bg-cream/[0.07] hover:bg-cream/[0.12] px-3 py-2 rounded-full transition-all duration-150"
       >
         {copied ? (
           <>

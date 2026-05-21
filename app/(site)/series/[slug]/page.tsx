@@ -59,12 +59,12 @@ export default async function SeriesDetailPage({
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
       {/* Breadcrumb */}
-      <nav className="text-sm text-brown/45 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
-        <Link href="/series" className="hover:text-orange transition-colors">
+      <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+        <Link href="/series" className="hover:text-gold transition-colors">
           Teaching Series
         </Link>
-        <span aria-hidden="true" className="text-brown/25">/</span>
-        <span className="text-brown/65 truncate">{series.title}</span>
+        <span aria-hidden="true" className="text-cream/20">/</span>
+        <span className="text-cream/55 truncate">{series.title}</span>
       </nav>
 
       {/* Series header */}
@@ -83,21 +83,21 @@ export default async function SeriesDetailPage({
         )}
 
         <div className="max-w-2xl">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-orange bg-orange/10 px-2.5 py-0.5 rounded-full mb-4">
+          <span className="inline-block text-xs font-bold uppercase tracking-widest text-gold bg-gold/[0.06] px-2.5 py-0.5 rounded-full mb-4">
             {series.postCount} {series.postCount === 1 ? "part" : "parts"}
           </span>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown leading-tight mb-4">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream leading-tight mb-4">
             {series.title}
           </h1>
           {series.description && (
-            <p className="text-brown/70 text-lg leading-relaxed">{series.description}</p>
+            <p className="text-cream/60 text-lg leading-relaxed">{series.description}</p>
           )}
         </div>
       </header>
 
       {/* Posts in this series */}
       {posts.length === 0 ? (
-        <p className="text-brown/50 text-center py-16">
+        <p className="text-cream/40 text-center py-16">
           No posts published in this series yet. Check back soon.
         </p>
       ) : (

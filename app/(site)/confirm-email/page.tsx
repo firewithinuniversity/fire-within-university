@@ -32,15 +32,15 @@ export default function ConfirmEmailPage() {
         </div>
       </div>
 
-      <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown mb-4 leading-tight">
+      <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream mb-4 leading-tight">
         Check Your Inbox
       </h1>
 
-      <p className="text-brown/70 text-lg max-w-md mx-auto mb-3 leading-relaxed">
+      <p className="text-cream/60 text-lg max-w-md mx-auto mb-3 leading-relaxed">
         A confirmation link is on its way. Click it to complete your subscription and start receiving sermons and articles.
       </p>
 
-      <p className="text-brown/45 text-sm italic mb-10 max-w-sm mx-auto">
+      <p className="text-cream/35 text-sm italic mb-10 max-w-sm mx-auto">
         &ldquo;Blessed are those who hunger and thirst for righteousness,
         for they will be filled.&rdquo; — Matthew 5:6
       </p>
@@ -53,7 +53,7 @@ export default function ConfirmEmailPage() {
       </div>
 
       {/* Next steps */}
-      <p className="text-xs font-bold uppercase tracking-widest text-brown/40 mb-5">
+      <p className="text-xs font-bold uppercase tracking-widest text-cream/30 mb-5">
         While you wait
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -65,7 +65,7 @@ export default function ConfirmEmailPage() {
         </Link>
         <Link
           href="/about"
-          className="border-2 border-brown/25 hover:border-orange text-brown hover:text-orange font-semibold px-8 py-3.5 rounded-full transition-all duration-200 text-sm"
+          className="border border-cream/30 hover:border-cream/60 text-cream font-semibold px-8 py-3.5 rounded-full transition-all duration-200 text-sm"
         >
           About the Ministry
         </Link>

@@ -61,7 +61,7 @@ function linkScripture(text: string): React.ReactNode[] {
         href={bibleUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-orange underline hover:text-orange-hover transition-colors"
+        className="text-gold underline hover:text-gold transition-colors"
         title={`Read ${fullMatch} on BibleGateway`}
       >
         {fullMatch}
@@ -84,27 +84,27 @@ const components: PortableTextComponents = {
   // Block-level elements
   block: {
     normal: ({ children }) => (
-      <p className="mb-4 leading-relaxed text-brown/90">
+      <p className="mb-4 leading-relaxed text-cream/80">
         {children}
       </p>
     ),
     h2: ({ children }) => (
-      <h2 className="font-serif text-2xl font-bold text-brown mt-8 mb-3">
+      <h2 className="font-serif text-2xl font-bold text-cream mt-8 mb-3">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="font-serif text-xl font-bold text-brown mt-6 mb-2">
+      <h3 className="font-serif text-xl font-bold text-cream mt-6 mb-2">
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="font-serif text-lg font-semibold text-brown mt-4 mb-2">
+      <h4 className="font-serif text-lg font-semibold text-cream mt-4 mb-2">
         {children}
       </h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-gold pl-5 italic text-brown-light my-6 text-lg leading-relaxed">
+      <blockquote className="border-l-4 border-gold pl-5 italic text-cream/70 my-6 text-lg leading-relaxed">
         {children}
       </blockquote>
     ),
@@ -113,12 +113,12 @@ const components: PortableTextComponents = {
   // List types
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside mb-4 space-y-1 text-brown/90">
+      <ul className="list-disc list-inside mb-4 space-y-1 text-cream/80">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside mb-4 space-y-1 text-brown/90">
+      <ol className="list-decimal list-inside mb-4 space-y-1 text-cream/80">
         {children}
       </ol>
     ),
@@ -127,7 +127,7 @@ const components: PortableTextComponents = {
   // Inline marks (bold, italic, links)
   marks: {
     strong: ({ children }) => (
-      <strong className="font-semibold text-brown">{children}</strong>
+      <strong className="font-semibold text-cream">{children}</strong>
     ),
     em: ({ children }) => <em className="italic">{children}</em>,
     underline: ({ children }) => <span className="underline">{children}</span>,
@@ -152,7 +152,7 @@ const components: PortableTextComponents = {
             href={href}
             target={value?.blank ? "_blank" : undefined}
             rel={value?.blank ? "noopener noreferrer" : undefined}
-            className="text-orange underline hover:text-orange-hover transition-colors"
+            className="text-gold underline hover:text-gold transition-colors"
           >
             {children}
           </a>
@@ -163,7 +163,7 @@ const components: PortableTextComponents = {
       return (
         <Link
           href={href}
-          className="text-orange underline hover:text-orange-hover transition-colors"
+          className="text-gold underline hover:text-gold transition-colors"
         >
           {children}
         </Link>
@@ -186,7 +186,7 @@ const components: PortableTextComponents = {
             className="rounded-lg w-full h-auto"
           />
           {value.caption && (
-            <figcaption className="text-xs text-brown/50 text-center mt-2 italic">
+            <figcaption className="text-xs text-cream/40 text-center mt-2 italic">
               {value.caption}
             </figcaption>
           )}

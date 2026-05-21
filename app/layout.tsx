@@ -85,7 +85,7 @@ export default async function RootLayout({
   return (
     // lang="en" is required for accessibility (screen readers)
     <html lang="en" className={`${lora.variable} ${inter.variable}`}>
-      <body className="bg-cream text-brown font-sans antialiased">
+      <body className="bg-[#1a0f05] text-cream font-sans antialiased">
         {children}
         {/* Analytics — only activates after cookie consent */}
         <GoogleAnalytics nonce={nonce} />

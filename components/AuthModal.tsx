@@ -116,13 +116,13 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       }}
     >
       <div
-        className="bg-cream rounded-2xl shadow-2xl w-full max-w-md relative"
+        className="bg-[#2a1a0e] rounded-2xl shadow-2xl w-full max-w-md relative border border-white/[0.06]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-brown/40 hover:text-brown hover:bg-brown/10 transition-colors"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-cream/40 hover:text-cream hover:bg-cream/10 transition-colors"
           aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -131,15 +131,15 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         </button>
 
         {/* Tab header */}
-        <div className="flex border-b border-brown/10">
+        <div className="flex border-b border-cream/[0.06]">
           <button
-            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-brown border-b-2 border-orange" : "text-brown/50 hover:text-brown/70"}`}
+            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/40 hover:text-cream/60"}`}
             onClick={() => switchTab("signin")}
           >
             Sign In
           </button>
           <button
-            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-brown border-b-2 border-orange" : "text-brown/50 hover:text-brown/70"}`}
+            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/40 hover:text-cream/60"}`}
             onClick={() => switchTab("register")}
           >
             Create Account
@@ -150,7 +150,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
           {/* Google sign-in */}
           <button
             onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-3 bg-white border border-brown/15 text-brown font-medium py-3 rounded-xl hover:bg-brown/5 transition-colors mb-5"
+            className="w-full flex items-center justify-center gap-3 bg-cream/[0.05] border border-cream/[0.1] text-cream font-medium py-3 rounded-xl hover:bg-cream/[0.1] transition-colors mb-5"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -174,13 +174,13 @@ function ModalContent({ onClose }: { onClose: () => void }) {
           </button>
 
           <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-brown/10" />
-            <span className="text-xs text-brown/40 uppercase tracking-wide">or</span>
-            <div className="flex-1 h-px bg-brown/10" />
+            <div className="flex-1 h-px bg-cream/[0.08]" />
+            <span className="text-xs text-cream/30 uppercase tracking-wide">or</span>
+            <div className="flex-1 h-px bg-cream/[0.08]" />
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-700 text-sm px-4 py-2.5 rounded-lg mb-4">
+            <div className="bg-red-900/30 text-red-300 text-sm px-4 py-2.5 rounded-lg mb-4 border border-red-700/20">
               {error}
             </div>
           )}
@@ -188,7 +188,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
           {tab === "signin" ? (
             <form onSubmit={handleSignIn} className="space-y-4">
               <div>
-                <label htmlFor="signin-email" className="block text-sm font-medium text-brown/70 mb-1">
+                <label htmlFor="signin-email" className="block text-sm font-medium text-cream/60 mb-1">
                   Email
                 </label>
                 <input
@@ -197,11 +197,11 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-brown/15 bg-white text-brown focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
-                <label htmlFor="signin-password" className="block text-sm font-medium text-brown/70 mb-1">
+                <label htmlFor="signin-password" className="block text-sm font-medium text-cream/60 mb-1">
                   Password
                 </label>
                 <input
@@ -210,7 +210,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-brown/15 bg-white text-brown focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <button
@@ -224,7 +224,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label htmlFor="register-name" className="block text-sm font-medium text-brown/70 mb-1">
+                <label htmlFor="register-name" className="block text-sm font-medium text-cream/60 mb-1">
                   Name
                 </label>
                 <input
@@ -232,11 +232,11 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-brown/15 bg-white text-brown focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
-                <label htmlFor="register-email" className="block text-sm font-medium text-brown/70 mb-1">
+                <label htmlFor="register-email" className="block text-sm font-medium text-cream/60 mb-1">
                   Email
                 </label>
                 <input
@@ -245,11 +245,11 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-brown/15 bg-white text-brown focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
-                <label htmlFor="register-password" className="block text-sm font-medium text-brown/70 mb-1">
+                <label htmlFor="register-password" className="block text-sm font-medium text-cream/60 mb-1">
                   Password
                 </label>
                 <input
@@ -259,11 +259,11 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-brown/15 bg-white text-brown focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
-                <label htmlFor="register-confirm" className="block text-sm font-medium text-brown/70 mb-1">
+                <label htmlFor="register-confirm" className="block text-sm font-medium text-cream/60 mb-1">
                   Confirm Password
                 </label>
                 <input
@@ -272,7 +272,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-brown/15 bg-white text-brown focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <button

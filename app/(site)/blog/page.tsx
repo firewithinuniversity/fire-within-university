@@ -35,10 +35,10 @@ export default async function BlogIndexPage() {
           </svg>
         </div>
 
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-brown">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
           Sermons &amp; Articles
         </h1>
-        <p className="text-brown/60 max-w-xl mx-auto text-lg">
+        <p className="text-cream/50 max-w-xl mx-auto text-lg">
           Biblical teaching, devotionals, and resources to strengthen your faith
           and deepen your walk with Jesus.
         </p>
@@ -54,16 +54,16 @@ export default async function BlogIndexPage() {
       ) : (
         <div className="max-w-lg mx-auto text-center py-14 space-y-6">
           {/* Cross icon in soft orange circle — matches the About page value cards */}
-          <div className="w-16 h-16 rounded-full bg-orange/10 flex items-center justify-center mx-auto">
-            <svg width="22" height="34" viewBox="0 0 32 48" className="text-orange/60" fill="currentColor" aria-hidden="true">
+          <div className="w-16 h-16 rounded-full bg-gold/[0.08] flex items-center justify-center mx-auto">
+            <svg width="22" height="34" viewBox="0 0 32 48" className="text-gold/60" fill="currentColor" aria-hidden="true">
               <rect x="13" y="0" width="6" height="48" rx="3" />
               <rect x="0" y="14" width="32" height="6" rx="3" />
             </svg>
           </div>
 
           <div className="space-y-2">
-            <p className="font-serif text-3xl font-bold text-brown">Content Coming Soon</p>
-            <p className="text-brown/60 leading-relaxed">
+            <p className="font-serif text-3xl font-bold text-cream">Content Coming Soon</p>
+            <p className="text-cream/50 leading-relaxed">
               Be the first to know when we publish. Drop your email below and we will
               notify you the moment the first sermon goes live.
             </p>
@@ -75,14 +75,14 @@ export default async function BlogIndexPage() {
           </div>
 
           {/* Encouraging scripture */}
-          <p className="text-brown/45 text-sm italic pt-4 border-t border-brown/10">
+          <p className="text-cream/35 text-sm italic pt-4 border-t border-cream/[0.06]">
             &ldquo;Blessed are those who hunger and thirst for righteousness, for they will be filled.&rdquo;
             {" "}
             <a
               href="https://www.biblegateway.com/passage/?search=Matthew+5%3A6&version=NIV"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-orange hover:text-orange-hover not-italic font-semibold text-xs transition-colors"
+              className="text-gold hover:text-gold not-italic font-semibold text-xs transition-colors"
             >
               — Matthew 5:6
             </a>

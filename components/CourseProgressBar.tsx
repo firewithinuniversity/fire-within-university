@@ -27,13 +27,13 @@ export default function CourseProgressBar({
 
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-xs text-brown/60">
+      <div className="flex items-center justify-between text-xs text-cream/50">
         <span>
           {completedCount} of {totalLessons} complete
         </span>
         <span className="font-semibold">{pct}%</span>
       </div>
-      <div className="h-2 rounded-full bg-brown/10 overflow-hidden">
+      <div className="h-2 rounded-full bg-cream/[0.08] overflow-hidden">
         <div
           className="h-full rounded-full bg-gradient-to-r from-orange to-gold transition-all duration-500"
           style={{ width: `${pct}%` }}

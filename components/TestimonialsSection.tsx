@@ -78,24 +78,24 @@ function Avatar({ testimonial }: { testimonial: Testimonial }) {
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <article className="bg-white rounded-2xl p-7 shadow-card border border-brown/[0.07] flex flex-col gap-5 hover:shadow-lg transition-shadow duration-300">
+    <article className="bg-[#4A2A12]/70 rounded-2xl p-7 border border-white/[0.06] flex flex-col gap-5 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] transition-shadow duration-300">
       {/* Quote mark */}
       <QuoteMark />
 
       {/* The quote itself */}
       <blockquote className="flex-1">
-        <p className="text-brown/80 leading-relaxed text-base italic">
+        <p className="text-cream/70 leading-relaxed text-base italic">
           &ldquo;{testimonial.quote}&rdquo;
         </p>
       </blockquote>
 
       {/* Attribution */}
-      <footer className="flex items-center gap-3 pt-2 border-t border-brown/[0.07]">
+      <footer className="flex items-center gap-3 pt-2 border-t border-cream/[0.06]">
         <Avatar testimonial={testimonial} />
         <div>
-          <p className="font-semibold text-brown text-sm">{testimonial.name}</p>
+          <p className="font-semibold text-cream text-sm">{testimonial.name}</p>
           {testimonial.location && (
-            <p className="text-brown/45 text-xs">{testimonial.location}</p>
+            <p className="text-cream/35 text-xs">{testimonial.location}</p>
           )}
         </div>
       </footer>
@@ -111,17 +111,17 @@ export default async function TestimonialsSection() {
 
   return (
     <section
-      className="bg-gradient-to-b from-cream-dark to-cream border-t border-brown/[0.06] py-24 px-4"
+      className="border-t border-cream/[0.06] py-24 px-4"
       aria-label="Testimonials"
     >
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-14 space-y-4">
           {/* Eyebrow */}
-          <p className="text-orange font-bold text-xs uppercase tracking-widest">
+          <p className="text-gold font-bold text-xs uppercase tracking-widest">
             Fruit of the Ministry
           </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-brown leading-tight">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream leading-tight">
             Lives Being Transformed
           </h2>
           {/* Decorative accent */}
