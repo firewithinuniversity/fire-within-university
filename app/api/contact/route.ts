@@ -23,6 +23,7 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
 import { getContactFormEmail, getResendApiKey } from "@/lib/env";
+import { prisma } from "@/lib/prisma";
 
 // ── Input validation schema ───────────────────────────────────────────────────
 const ContactSchema = z.object({
@@ -75,9 +76,20 @@ export async function POST(request: Request) {
   }
 
   // ── Parse and validate ────────────────────────────────────────────────────
+  let rawText: string;
+  try {
+    rawText = await request.text();
+  } catch {
+    return NextResponse.json({ message: "Invalid request." }, { status: 400 });
+  }
+
+  if (rawText.length > MAX_BODY_SIZE) {
+    return NextResponse.json({ message: "Request too large." }, { status: 413 });
+  }
+
   let body: unknown;
   try {
-    body = await request.json();
+    body = JSON.parse(rawText);
   } catch {
     return NextResponse.json({ message: "Invalid request." }, { status: 400 });
   }
@@ -103,6 +115,15 @@ export async function POST(request: Request) {
     prayer: "Prayer Request",
     other: "Other Inquiry",
   };
+
+  // ── Persist to database ────────────────────────────────────────────────────
+  try {
+    await prisma.contactSubmission.create({
+      data: { name, email, subject, message },
+    });
+  } catch (err) {
+    console.error("[Contact DB Error]", err);
+  }
 
   // ── Send email via Resend ─────────────────────────────────────────────────
   try {

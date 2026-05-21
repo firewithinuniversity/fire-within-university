@@ -1,72 +1,102 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
-export default async function AdminDashboardPage() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== "ADMIN") {
-    redirect("/");
-  }
+export default async function AdminOverviewPage() {
+  const session = (await getServerSession(authOptions))!;
+  // Auth is enforced by app/admin/template.tsx — session is guaranteed non-null here
+
+  const [totalUsers, totalCompletions, unreadMessages, recentUsers] =
+    await Promise.all([
+      prisma.user.count(),
+      prisma.lessonProgress.count(),
+      prisma.contactSubmission.count({ where: { read: false } }),
+      prisma.user.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: { name: true, email: true, createdAt: true },
+      }),
+    ]);
+
+  const stats = [
+    { label: "Total Users", value: totalUsers, href: "/admin/users" },
+    { label: "Lessons Completed", value: totalCompletions, href: "/admin/analytics" },
+    { label: "Unread Messages", value: unreadMessages, href: "/admin/contacts" },
+  ];
 
   return (
-    <div className="min-h-screen bg-cream">
-      <header className="bg-brown text-cream px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="font-serif text-xl font-bold">FWU Admin</h1>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-cream/70">{session.user.name}</span>
-          <Link href="/" className="text-sm text-cream/50 hover:text-cream transition-colors">
-            Back to Site
-          </Link>
-        </div>
-      </header>
+    <div className="px-8 py-8">
+      <div className="mb-8">
+        <h1 className="font-serif text-2xl font-bold text-brown">Dashboard</h1>
+        <p className="text-sm text-brown/50 mt-1">
+          Welcome back, {session.user.name ?? "Admin"}
+        </p>
+      </div>
 
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        <h2 className="font-serif text-3xl font-bold text-brown mb-8">Dashboard</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-brown/10">
-            <h3 className="font-semibold text-brown mb-2">Content</h3>
-            <p className="text-sm text-brown/60">Manage posts, series, and site content through Sanity Studio.</p>
-            <Link
-              href="/studio"
-              className="inline-block mt-4 text-sm font-medium text-orange hover:text-orange-hover transition-colors"
-            >
-              Open Studio →
-            </Link>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-brown/10">
-            <h3 className="font-semibold text-brown mb-2">Quick Links</h3>
-            <ul className="space-y-2 mt-3 text-sm">
-              <li>
-                <Link href="/blog" className="text-brown/70 hover:text-orange transition-colors">
-                  View Blog →
-                </Link>
-              </li>
-              <li>
-                <Link href="/series" className="text-brown/70 hover:text-orange transition-colors">
-                  View Series →
-                </Link>
-              </li>
-              <li>
-                <Link href="/donate" className="text-brown/70 hover:text-orange transition-colors">
-                  Donate Page →
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-brown/10">
-            <h3 className="font-semibold text-brown mb-2">Account</h3>
-            <p className="text-sm text-brown/60">
-              Signed in as <span className="font-medium">{session.user.email}</span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        {stats.map((s) => (
+          <Link
+            key={s.label}
+            href={s.href}
+            className="bg-white rounded-xl p-5 shadow-sm border border-brown/[0.06] hover:border-orange/30 transition-colors group"
+          >
+            <p className="text-sm text-brown/50 font-medium">{s.label}</p>
+            <p className="text-3xl font-bold text-brown mt-1 group-hover:text-orange transition-colors">
+              {s.value}
             </p>
-          </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-brown/[0.06]">
+          <h2 className="font-semibold text-brown mb-4">Recent Sign-ups</h2>
+          {recentUsers.length === 0 ? (
+            <p className="text-sm text-brown/40">No users yet.</p>
+          ) : (
+            <ul className="space-y-3">
+              {recentUsers.map((u) => (
+                <li key={u.email} className="flex items-center justify-between text-sm">
+                  <div>
+                    <span className="text-brown font-medium">{u.name ?? "—"}</span>
+                    <span className="text-brown/40 ml-2">{u.email}</span>
+                  </div>
+                  <span className="text-brown/30 text-xs">
+                    {new Date(u.createdAt).toLocaleDateString()}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </main>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-brown/[0.06]">
+          <h2 className="font-semibold text-brown mb-4">Quick Links</h2>
+          <ul className="space-y-2.5 text-sm">
+            <li>
+              <Link href="/studio" className="text-brown/70 hover:text-orange transition-colors">
+                Sanity Studio (Content) →
+              </Link>
+            </li>
+            <li>
+              <Link href="/blog" className="text-brown/70 hover:text-orange transition-colors">
+                View Blog →
+              </Link>
+            </li>
+            <li>
+              <Link href="/courses" className="text-brown/70 hover:text-orange transition-colors">
+                View Courses →
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/game" className="text-brown/70 hover:text-orange transition-colors">
+                Kindling Game →
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

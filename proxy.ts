@@ -23,11 +23,32 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // ── Admin route protection ──────────────────────────────────────────────────
-  if (request.nextUrl.pathname.startsWith("/admin")) {
+  // ── Admin API rate limiting (60 requests / min per IP) ──────────────────────
+  if (request.nextUrl.pathname.startsWith("/api/admin/")) {
+    const ip =
+      request.headers.get("x-real-ip") ??
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      "unknown";
+
+    if (!checkRateLimit(`admin-api:${ip}`, { maxRequests: 60, windowMs: 60 * 1000 })) {
+      return NextResponse.json(
+        { message: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+  }
+
+  // ── Admin route protection (pages + API defense-in-depth) ───────────────────
+  if (
+    request.nextUrl.pathname.startsWith("/admin") ||
+    request.nextUrl.pathname.startsWith("/api/admin/")
+  ) {
     const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
 
     if (token?.role !== "ADMIN") {
+      if (request.nextUrl.pathname.startsWith("/api/admin/")) {
+        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+      }
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   }
@@ -35,8 +56,9 @@ export async function proxy(request: NextRequest) {
   // ── Generate a per-request CSP nonce ───────────────────────────────────────
   const nonce = crypto.randomUUID();
 
-  // ── Origin validation for POST /api/* (CSRF protection) ────────────────────
-  if (request.method === "POST" && request.nextUrl.pathname.startsWith("/api/")) {
+  // ── Origin validation for mutating /api/* requests (CSRF protection) ────────
+  const isMutatingMethod = ["POST", "PUT", "PATCH", "DELETE"].includes(request.method);
+  if (isMutatingMethod && request.nextUrl.pathname.startsWith("/api/")) {
     const origin = request.headers.get("origin");
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 

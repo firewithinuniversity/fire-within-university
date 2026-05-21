@@ -17,11 +17,10 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 export const adminEmails = [
   process.env.ADMIN_EMAIL_1,
   process.env.ADMIN_EMAIL_2,
-].filter(Boolean) as string[];
+].filter(Boolean).map((e) => (e as string).toLowerCase());
 
 function isAdminEmail(email: string): boolean {
-  return adminEmails.includes(email.toLowerCase()) ||
-    adminEmails.includes(email);
+  return adminEmails.includes(email.toLowerCase());
 }
 
 // ── Admin session timeout ────────────────────────────────────────────────────
