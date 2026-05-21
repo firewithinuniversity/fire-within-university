@@ -3,7 +3,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-[#3D1F0A] to-[#2A1506] text-cream/80 mt-20 border-t-4 border-gold/60">
+    <footer className="bg-[#1a0f05] text-cream/80 mt-0 border-t border-cream/10">
       <div className="max-w-6xl mx-auto px-4 pt-14 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Brand column */}
@@ -24,6 +24,7 @@ export default function Footer() {
             <ul className="space-y-1 list-none">
               {[
                 { href: "/blog", label: "Sermons & Articles" },
+                { href: "/courses", label: "Courses" },
                 { href: "/series", label: "Teaching Series" },
                 { href: "/ethos", label: "Our Ethos" },
                 { href: "/resources", label: "Resources" },

@@ -313,3 +313,125 @@ export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
     []
   );
 }
+
+// ─── Courses ────────────────────────────────────────────────────────────────
+
+export type CourseSummary = {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  description?: string;
+  coverImage?: SanityImage & { alt?: string };
+  instructor?: string;
+  lessonCount: number;
+  featured?: boolean;
+};
+
+export type CourseDetail = CourseSummary & {
+  whatYoullLearn?: string[];
+  lessons?: {
+    _id: string;
+    title: string;
+    slug: { current: string };
+    lessonNumber?: number;
+    scripture?: string;
+    duration?: string;
+  }[];
+};
+
+export type LessonDetail = {
+  course: {
+    title: string;
+    slug: { current: string };
+    lessons: {
+      _id: string;
+      title: string;
+      slug: { current: string };
+      lessonNumber?: number;
+    }[];
+  };
+  currentLesson: {
+    _id: string;
+    title: string;
+    lessonNumber?: number;
+    youtubeUrl?: string;
+    body?: unknown[];
+    downloads?: { label: string; fileUrl: string }[];
+    scripture?: string;
+    duration?: string;
+  };
+};
+
+export async function getAllCourses(): Promise<CourseSummary[]> {
+  return safeFetch(
+    () =>
+      client.fetch(
+        `*[_type == "course"] | order(publishedAt desc) {
+          _id, title, slug, description, coverImage, instructor, featured,
+          "lessonCount": count(lessons)
+        }`
+      ),
+    []
+  );
+}
+
+export async function getFeaturedCourses(): Promise<CourseSummary[]> {
+  return safeFetch(
+    () =>
+      client.fetch(
+        `*[_type == "course" && featured == true] | order(publishedAt desc) {
+          _id, title, slug, description, coverImage, instructor, featured,
+          "lessonCount": count(lessons)
+        }`
+      ),
+    []
+  );
+}
+
+export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
+  return safeFetch(
+    () =>
+      client.fetch(
+        `*[_type == "course" && slug.current == $slug][0] {
+          _id, title, slug, description, coverImage, instructor, featured,
+          "lessonCount": count(lessons),
+          whatYoullLearn,
+          "lessons": lessons[]-> {
+            _id, title, slug, lessonNumber, scripture, duration
+          }
+        }`,
+        { slug }
+      ),
+    null
+  );
+}
+
+export async function getAllCourseSlugs(): Promise<{ slug: string }[]> {
+  return safeFetch(
+    () => client.fetch(`*[_type == "course"] { "slug": slug.current }`),
+    []
+  );
+}
+
+export async function getLessonBySlug(
+  courseSlug: string,
+  lessonSlug: string
+): Promise<LessonDetail | null> {
+  return safeFetch(
+    () =>
+      client.fetch(
+        `{
+          "course": *[_type == "course" && slug.current == $courseSlug][0] {
+            title, slug,
+            "lessons": lessons[]-> { _id, title, slug, lessonNumber }
+          },
+          "currentLesson": *[_type == "lesson" && slug.current == $lessonSlug][0] {
+            _id, title, lessonNumber, youtubeUrl, body, scripture, duration,
+            "downloads": downloads[] { label, fileUrl }
+          }
+        }`,
+        { courseSlug, lessonSlug }
+      ),
+    null
+  );
+}

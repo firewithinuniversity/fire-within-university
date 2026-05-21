@@ -48,9 +48,14 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "fade-in-up": "fadeInUp 0.5s ease forwards",
+        shimmer: "shimmer 3s ease-in-out infinite",
       },
     },
   },

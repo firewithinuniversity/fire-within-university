@@ -14,5 +14,7 @@ import { category } from "./category";
 import { series } from "./series";
 import { affiliateProduct } from "./affiliateProduct";
 import { testimonial } from "./testimonial";
+import { course } from "./course";
+import { lesson } from "./lesson";
 
-export const schemaTypes = [post, author, category, series, affiliateProduct, testimonial];
+export const schemaTypes = [post, author, category, series, affiliateProduct, testimonial, course, lesson];

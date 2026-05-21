@@ -70,7 +70,11 @@ export default function EmailSignup({ variant = "hero" }: Props) {
           required
           autoComplete="email"
           disabled={status === "loading"}
-          className="flex-grow px-4 py-3 rounded-full border-2 border-brown/20 bg-white text-brown text-sm focus:outline-none focus:border-orange focus:ring-0 placeholder:text-brown/35 disabled:opacity-60 transition-colors duration-150"
+          className={`flex-grow px-4 py-3 rounded-full border-2 text-sm focus:outline-none focus:ring-0 disabled:opacity-60 transition-colors duration-150 ${
+            isHero
+              ? "border-[#D4B896]/40 bg-cream text-brown focus:border-orange placeholder:text-[#B07040]"
+              : "border-brown/20 bg-white text-brown focus:border-orange placeholder:text-brown/35"
+          }`}
           aria-label="Email address"
         />
         <button

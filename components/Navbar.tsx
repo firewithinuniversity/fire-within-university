@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthDropdown from "./AuthDropdown";
+
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/blog", label: "Sermons & Articles" },
+  { href: "/courses", label: "Courses" },
   { href: "/series", label: "Series" },
   { href: "/ethos", label: "Ethos" },
   { href: "/about", label: "About" },
@@ -15,10 +17,26 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 20);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="bg-brown/95 backdrop-blur-md text-cream border-b border-cream/10 shadow-[0_2px_16px_rgba(61,31,10,0.3)] sticky top-0 z-50">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 text-cream transition-all duration-300 ${
+        scrolled
+          ? "bg-[#1a0f05]/90 backdrop-blur-md border-b border-cream/10 shadow-[0_2px_16px_rgba(26,15,5,0.5)]"
+          : "bg-transparent"
+      }`}
+    >
       <nav
         className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between"
         aria-label="Main navigation"
@@ -31,7 +49,6 @@ export default function Navbar() {
           Fire Within University
         </Link>
 
-        {/* Desktop nav links with animated underline */}
         <ul className="hidden md:flex items-center gap-8 list-none">
           {navLinks.map(({ href, label }) => (
             <li key={href}>
@@ -61,7 +78,6 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {/* Hamburger — 44px touch target */}
         <button
           className="md:hidden p-3 text-cream rounded-lg hover:bg-cream/10 transition-colors min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1.5"
           onClick={() => setMobileOpen((prev) => !prev)}
@@ -75,10 +91,9 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu — always rendered, animated with max-height */}
       <div
         id="mobile-menu"
-        className={`md:hidden bg-brown/95 backdrop-blur-md border-t border-cream/20 overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden bg-[#1a0f05]/95 backdrop-blur-md border-t border-cream/20 overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? "max-h-[28rem] opacity-100" : "max-h-0 opacity-0"}`}
       >
         <ul className="flex flex-col px-4 pb-4 gap-1 list-none">
           {navLinks.map(({ href, label }) => (
