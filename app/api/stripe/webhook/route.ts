@@ -60,8 +60,7 @@ export async function POST(request: Request) {
       getStripeWebhookSecret()
     );
   } catch (err) {
-    // Signature mismatch — reject the request
-    console.error("[Stripe Webhook] Signature verification failed:", err);
+    console.error("[Stripe Webhook] Signature verification failed");
     return NextResponse.json(
       { message: "Webhook signature verification failed." },
       { status: 400 }

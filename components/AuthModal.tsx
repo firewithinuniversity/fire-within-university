@@ -3,11 +3,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
 
 type Tab = "signin" | "register";
 
 function ModalContent({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -57,7 +59,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       setError("Invalid email or password.");
     } else {
       onClose();
-      window.location.reload();
+      router.refresh();
     }
   }
 
@@ -100,7 +102,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       setError("Account created but sign-in failed. Please sign in manually.");
     } else {
       onClose();
-      window.location.reload();
+      router.refresh();
     }
   }
 

@@ -45,15 +45,17 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        const email = credentials.email.toLowerCase().trim();
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email },
         });
 
         if (!user || !user.password) {
-          if (isAdminEmail(credentials.email)) {
+          if (isAdminEmail(email)) {
             logAuditEvent({
               event: "ADMIN_LOGIN_FAILURE",
-              email: credentials.email,
+              email,
               metadata: { reason: "user_not_found" },
             });
           }
@@ -63,10 +65,10 @@ export const authOptions: NextAuthOptions = {
         const valid = await bcrypt.compare(credentials.password, user.password);
 
         if (!valid) {
-          if (isAdminEmail(credentials.email)) {
+          if (isAdminEmail(email)) {
             logAuditEvent({
               event: "ADMIN_LOGIN_FAILURE",
-              email: credentials.email,
+              email,
               userId: user.id,
               metadata: { reason: "invalid_password" },
             });
@@ -74,20 +76,21 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Auto-promote whitelisted admin emails
-        let effectiveRole: UserRole = user.role as UserRole;
-        if (isAdminEmail(credentials.email) && user.role !== UserRole.ADMIN) {
+        const effectiveRole: UserRole = isAdminEmail(email)
+          ? UserRole.ADMIN
+          : (user.role as UserRole);
+
+        if (effectiveRole === UserRole.ADMIN && user.role !== UserRole.ADMIN) {
           await prisma.user.update({
             where: { id: user.id },
             data: { role: UserRole.ADMIN },
           });
-          effectiveRole = UserRole.ADMIN;
         }
 
         if (effectiveRole === UserRole.ADMIN) {
           logAuditEvent({
             event: "ADMIN_LOGIN_SUCCESS",
-            email: credentials.email,
+            email,
             userId: user.id,
           });
         }

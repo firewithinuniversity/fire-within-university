@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
 import { adminEmails } from "@/lib/auth";
 import { isPasswordValid, getPasswordErrors } from "@/lib/passwordValidation";
+import { logAuditEvent } from "@/lib/auditLog";
 
 export async function POST(request: Request) {
   const ip = getIpFromRequest(request);
@@ -24,7 +25,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Email and password are required." }, { status: 400 });
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (typeof name === "string" && name.trim().length > 100) {
+    return NextResponse.json({ message: "Name is too long." }, { status: 400 });
+  }
+
+  const normalizedEmail = email.toLowerCase().trim();
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
     return NextResponse.json({ message: "Invalid email address." }, { status: 400 });
   }
 
@@ -36,12 +43,17 @@ export async function POST(request: Request) {
     );
   }
 
-  // Block registration with admin-whitelisted emails (generic message to prevent info leak)
-  if (adminEmails.includes(email)) {
+  if (adminEmails.includes(normalizedEmail)) {
+    logAuditEvent({
+      event: "ADMIN_REGISTER_BLOCKED",
+      email: normalizedEmail,
+      ip,
+      metadata: { reason: "admin_email_registration_attempt" },
+    });
     return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) {
     return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
   }
@@ -50,8 +62,8 @@ export async function POST(request: Request) {
 
   await prisma.user.create({
     data: {
-      name: name?.trim() || null,
-      email,
+      name: name?.trim().slice(0, 100) || null,
+      email: normalizedEmail,
       password: hashedPassword,
       role: "USER",
     },

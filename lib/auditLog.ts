@@ -4,6 +4,7 @@ type AuditEvent =
   | "ADMIN_LOGIN_SUCCESS"
   | "ADMIN_LOGIN_FAILURE"
   | "ADMIN_ACCESS_DENIED"
+  | "ADMIN_REGISTER_BLOCKED"
   | "LOGIN_RATE_LIMITED";
 
 type AuditPayload = {

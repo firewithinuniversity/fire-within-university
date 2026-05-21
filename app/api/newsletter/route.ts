@@ -100,8 +100,6 @@ export async function POST(request: Request) {
           email_address: email,
           // "pending" triggers double opt-in confirmation email (GDPR compliant)
           status_if_new: "pending",
-          // If already subscribed, don't change their status
-          status: "pending",
         }),
       }
     );

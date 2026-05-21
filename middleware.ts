@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import type { NextRequest, ProxyConfig } from "next/server";
+import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { checkRateLimit } from "@/lib/rateLimit";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // ── Login rate limiting (5 attempts / 15 min per IP) ────────────────────────
   if (
     request.method === "POST" &&
@@ -142,7 +142,7 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
-export const config: ProxyConfig = {
+export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|css|js|woff|woff2|ttf|eot)).*)",
   ],

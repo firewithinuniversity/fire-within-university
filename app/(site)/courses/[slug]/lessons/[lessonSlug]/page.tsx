@@ -4,6 +4,14 @@ import { getLessonBySlug, getAllCourseSlugs, getCourseBySlug } from "@/lib/sanit
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 
+function sanitizeHref(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (["https:", "http:"].includes(parsed.protocol)) return url;
+  } catch {}
+  return "#";
+}
+
 type Props = { params: Promise<{ slug: string; lessonSlug: string }> };
 
 export async function generateStaticParams() {
@@ -102,7 +110,7 @@ export default async function LessonPage({ params }: Props) {
               {currentLesson.downloads.map((dl, i) => (
                 <li key={i}>
                   <a
-                    href={dl.fileUrl}
+                    href={sanitizeHref(dl.fileUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-cream/80 hover:text-gold transition-colors text-sm py-2"

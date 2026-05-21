@@ -10,6 +10,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
 
+  const ip = getIpFromRequest(request);
+  if (!checkRateLimit(`progress-read:${ip}`, { maxRequests: 120, windowMs: 60 * 1000 })) {
+    return NextResponse.json({ message: "Too many requests." }, { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const courseSlug = searchParams.get("courseSlug");
 
@@ -61,6 +66,11 @@ export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
+  }
+
+  const ip = getIpFromRequest(request);
+  if (!checkRateLimit(`progress-del:${ip}`, { maxRequests: 30, windowMs: 60 * 1000 })) {
+    return NextResponse.json({ message: "Too many requests." }, { status: 429 });
   }
 
   const { searchParams } = new URL(request.url);
