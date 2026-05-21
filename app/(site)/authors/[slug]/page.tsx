@@ -7,9 +7,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { getAuthorBySlug, getPostsByAuthor, getAllAuthors } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import PostCard from "@/components/PostCard";
+import { canonicalUrl } from "@/lib/metadata";
 
 export async function generateStaticParams() {
   const authors = await getAllAuthors();
@@ -26,9 +28,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const author = await getAuthorBySlug(slug);
   if (!author) return { title: "Author Not Found" };
+  const description = author.bio ?? `Posts and sermons by ${author.name} at Fire Within University.`;
   return {
     title: author.name,
-    description: author.bio ?? `Posts and sermons by ${author.name} at Fire Within University.`,
+    description,
+    alternates: { canonical: canonicalUrl(`/authors/${slug}`) },
+    openGraph: {
+      title: `${author.name} — Fire Within University`,
+      description,
+      url: canonicalUrl(`/authors/${slug}`),
+    },
   };
 }
 
@@ -49,6 +58,15 @@ export default async function AuthorPage({
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
+      {/* Breadcrumb */}
+      <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+        <Link href="/about" className="hover:text-gold transition-colors">
+          About
+        </Link>
+        <span aria-hidden="true">/</span>
+        <span className="text-cream/60">{author.name}</span>
+      </nav>
+
       {/* Author card */}
       <div className="flex flex-col sm:flex-row gap-6 items-start mb-14 bg-brown-card/70 rounded-2xl p-8 border border-white/[0.06]">
         {photoUrl ? (

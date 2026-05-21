@@ -67,8 +67,17 @@ export default async function CourseDetailPage({ params }: Props) {
         }}
       />
 
+      {/* Breadcrumb */}
+      <nav className="max-w-4xl mx-auto px-4 pt-8 text-sm text-cream/35 flex items-center gap-2" aria-label="Breadcrumb">
+        <Link href="/courses" className="hover:text-gold transition-colors">
+          Courses
+        </Link>
+        <span aria-hidden="true">/</span>
+        <span className="text-cream/60">{course.title}</span>
+      </nav>
+
       {/* Hero */}
-      <section className="relative pt-16 pb-12 px-4">
+      <section className="relative pt-6 pb-12 px-4">
         <div className="max-w-4xl mx-auto">
           {course.coverImage && (
             <div className="relative aspect-video sm:aspect-[21/9] rounded-2xl overflow-hidden mb-8">

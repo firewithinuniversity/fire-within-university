@@ -8,25 +8,30 @@ export async function GET(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"));
-  const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "20")));
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1") || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "20") || 20));
   const skip = (page - 1) * limit;
   const unreadOnly = searchParams.get("unread") === "true";
 
   const where = unreadOnly ? { read: false } : {};
 
-  const [submissions, total, unreadCount] = await Promise.all([
-    prisma.contactSubmission.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.contactSubmission.count({ where }),
-    prisma.contactSubmission.count({ where: { read: false } }),
-  ]);
+  try {
+    const [submissions, total, unreadCount] = await Promise.all([
+      prisma.contactSubmission.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.contactSubmission.count({ where }),
+      prisma.contactSubmission.count({ where: { read: false } }),
+    ]);
 
-  return NextResponse.json({ submissions, total, unreadCount, page, limit });
+    return NextResponse.json({ submissions, total, unreadCount, page, limit });
+  } catch (err) {
+    console.error("[Admin Contacts GET] Database error:", err);
+    return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
+  }
 }
 
 export async function PATCH(request: Request) {
@@ -49,15 +54,20 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ message: "Invalid id format." }, { status: 400 });
   }
 
-  const existing = await prisma.contactSubmission.findUnique({ where: { id: body.id } });
-  if (!existing) {
-    return NextResponse.json({ message: "Submission not found." }, { status: 404 });
+  try {
+    const existing = await prisma.contactSubmission.findUnique({ where: { id: body.id } });
+    if (!existing) {
+      return NextResponse.json({ message: "Submission not found." }, { status: 404 });
+    }
+
+    const updated = await prisma.contactSubmission.update({
+      where: { id: body.id },
+      data: { read: body.read },
+    });
+
+    return NextResponse.json({ submission: updated });
+  } catch (err) {
+    console.error("[Admin Contacts PATCH] Database error:", err);
+    return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
-
-  const updated = await prisma.contactSubmission.update({
-    where: { id: body.id },
-    data: { read: body.read },
-  });
-
-  return NextResponse.json({ submission: updated });
 }

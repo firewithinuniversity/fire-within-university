@@ -11,15 +11,18 @@
  */
 import type { Metadata } from "next";
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Our Ethos",
   description:
     "The prophetic heartbeat of Fire Within University — a cry for the Ancient One, the unreduced Christ, the burning mystery that hell has always feared most.",
+  alternates: { canonical: canonicalUrl("/ethos") },
   openGraph: {
     title: "Our Ethos — Fire Within University",
     description:
       "A cry for the unreduced Christ. The burning mystery. The One hell has always feared most.",
+    url: canonicalUrl("/ethos"),
     type: "article",
   },
 };

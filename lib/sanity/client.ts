@@ -6,6 +6,8 @@ export const client = createClient({
   dataset: SANITY_DATASET,
   apiVersion: "2024-01-01",
   useCdn: true,
+  requestTagPrefix: "fwu",
+  timeout: 10_000, // 10s timeout — prevents hung requests from blocking page renders
 });
 
 export function getWriteClient() {

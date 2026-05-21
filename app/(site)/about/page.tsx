@@ -4,11 +4,18 @@ import Link from "next/link";
 import EmailSignup from "@/components/EmailSignup";
 import { getAllAuthors } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "About",
   description:
     "Learn about Fire Within University — our mission, team, and the heart behind this ministry.",
+  alternates: { canonical: canonicalUrl("/about") },
+  openGraph: {
+    title: "About — Fire Within University",
+    description: "Learn about Fire Within University — our mission, team, and the heart behind this ministry.",
+    url: canonicalUrl("/about"),
+  },
 };
 
 export default async function AboutPage() {

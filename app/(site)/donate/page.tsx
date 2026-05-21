@@ -12,11 +12,18 @@
  */
 import type { Metadata } from "next";
 import DonateForm from "./DonateForm";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Give",
   description:
     "Support the ministry of Fire Within University. Your generosity makes this work possible.",
+  alternates: { canonical: canonicalUrl("/donate") },
+  openGraph: {
+    title: "Give — Fire Within University",
+    description: "Support the ministry of Fire Within University. Your generosity makes this work possible.",
+    url: canonicalUrl("/donate"),
+  },
 };
 
 export default function DonatePage() {

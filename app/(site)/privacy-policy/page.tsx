@@ -5,11 +5,18 @@
  * Mailchimp ToS, and Stripe requirements.
  */
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy Policy for Fire Within University.",
   robots: { index: true, follow: true },
+  alternates: { canonical: canonicalUrl("/privacy-policy") },
+  openGraph: {
+    title: "Privacy Policy — Fire Within University",
+    description: "Privacy Policy for Fire Within University.",
+    url: canonicalUrl("/privacy-policy"),
+  },
 };
 
 const CONTACT_EMAIL = "firewithinuniversity@gmail.com";

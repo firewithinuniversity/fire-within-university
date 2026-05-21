@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Contact & Prayer Requests",
   description:
     "Reach out to Fire Within University — for prayer requests, general questions, or just to say hello.",
+  alternates: { canonical: canonicalUrl("/contact") },
+  openGraph: {
+    title: "Contact & Prayer Requests — Fire Within University",
+    description: "Reach out to Fire Within University — for prayer requests, general questions, or just to say hello.",
+    url: canonicalUrl("/contact"),
+  },
 };
 
 export default function ContactPage() {

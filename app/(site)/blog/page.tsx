@@ -33,7 +33,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
   const params = await searchParams;
   const searchQuery = params.q?.trim() ?? "";
   const categorySlug = params.category ?? "";
-  const currentPage = Math.max(1, parseInt(params.page ?? "1", 10));
+  const currentPage = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
 
   // Run in parallel: categories, filtered posts, and unfiltered total
   const [categories, { posts, total }, { total: totalUnfiltered }] = await Promise.all([

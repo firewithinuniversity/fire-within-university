@@ -61,21 +61,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
   }
 
-  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
-  if (existing) {
-    return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
+  try {
+    const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+    if (existing) {
+      return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    await prisma.user.create({
+      data: {
+        name: name?.trim().slice(0, 100) || null,
+        email: normalizedEmail,
+        password: hashedPassword,
+        role: "USER",
+      },
+    });
+
+    return NextResponse.json({ message: "Account created successfully." }, { status: 201 });
+  } catch (err) {
+    console.error("[Register] Database error:", err);
+    return NextResponse.json({ message: "Something went wrong. Please try again." }, { status: 500 });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 12);
-
-  await prisma.user.create({
-    data: {
-      name: name?.trim().slice(0, 100) || null,
-      email: normalizedEmail,
-      password: hashedPassword,
-      role: "USER",
-    },
-  });
-
-  return NextResponse.json({ message: "Account created successfully." }, { status: 201 });
 }

@@ -7,17 +7,26 @@ export default async function AdminOverviewPage() {
   const session = (await getServerSession(authOptions))!;
   // Auth is enforced by app/admin/template.tsx — session is guaranteed non-null here
 
-  const [totalUsers, totalCompletions, unreadMessages, recentUsers] =
-    await Promise.all([
-      prisma.user.count(),
-      prisma.lessonProgress.count(),
-      prisma.contactSubmission.count({ where: { read: false } }),
-      prisma.user.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        select: { name: true, email: true, createdAt: true },
-      }),
-    ]);
+  let totalUsers = 0;
+  let totalCompletions = 0;
+  let unreadMessages = 0;
+  let recentUsers: { name: string | null; email: string; createdAt: Date }[] = [];
+
+  try {
+    [totalUsers, totalCompletions, unreadMessages, recentUsers] =
+      await Promise.all([
+        prisma.user.count(),
+        prisma.lessonProgress.count(),
+        prisma.contactSubmission.count({ where: { read: false } }),
+        prisma.user.findMany({
+          orderBy: { createdAt: "desc" },
+          take: 5,
+          select: { name: true, email: true, createdAt: true },
+        }),
+      ]);
+  } catch (err) {
+    console.error("[Admin Dashboard] Database error:", err);
+  }
 
   const stats = [
     { label: "Total Users", value: totalUsers, href: "/admin/users" },

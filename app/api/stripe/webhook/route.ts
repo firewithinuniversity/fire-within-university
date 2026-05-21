@@ -11,8 +11,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Request too large." }, { status: 413 });
   }
 
-  const rawBody = await request.arrayBuffer();
-  const rawBodyBuffer = Buffer.from(rawBody);
+  let rawBodyBuffer: Buffer;
+  try {
+    rawBodyBuffer = Buffer.from(await request.arrayBuffer());
+  } catch {
+    return NextResponse.json({ message: "Could not read request body." }, { status: 400 });
+  }
 
   const signature = request.headers.get("stripe-signature");
 

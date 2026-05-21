@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLessonBySlug, getAllCourseSlugs, getCourseBySlug } from "@/lib/sanity/queries";
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
+import { canonicalUrl } from "@/lib/metadata";
 
 function sanitizeHref(url: string): string {
   try {
@@ -28,13 +30,22 @@ export async function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, lessonSlug } = await params;
   const data = await getLessonBySlug(slug, lessonSlug);
+  if (!data?.currentLesson || !data?.course) return { title: "Lesson Not Found" };
+
+  const title = `${data.currentLesson.title} — ${data.course.title}`;
+  const description = data.currentLesson.scripture
+    ? `${data.currentLesson.title} — ${data.currentLesson.scripture}. Part of the ${data.course.title} course at Fire Within University.`
+    : `${data.currentLesson.title}. Part of the ${data.course.title} course at Fire Within University.`;
+  const url = canonicalUrl(`/courses/${slug}/lessons/${lessonSlug}`);
+
   return {
-    title: data?.currentLesson
-      ? `${data.currentLesson.title} | ${data.course?.title} | Fire Within University`
-      : "Lesson Not Found",
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url },
   };
 }
 

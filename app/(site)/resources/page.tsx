@@ -9,11 +9,18 @@
 import type { Metadata } from "next";
 import { getAllAffiliateProducts } from "@/lib/sanity/queries";
 import AffiliateCard from "@/components/AffiliateCard";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Recommended Resources",
   description:
     "Books, tools, and resources hand-picked by the Fire Within University team to fuel your faith and deepen your study of scripture.",
+  alternates: { canonical: canonicalUrl("/resources") },
+  openGraph: {
+    title: "Recommended Resources — Fire Within University",
+    description: "Books, tools, and resources hand-picked by the Fire Within University team to fuel your faith and deepen your study of scripture.",
+    url: canonicalUrl("/resources"),
+  },
 };
 
 export default async function ResourcesPage() {

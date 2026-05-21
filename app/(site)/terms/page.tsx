@@ -5,11 +5,18 @@
  * DMCA, CAN-SPAM, limitation of liability, and governing law.
  */
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms of Service for Fire Within University.",
   robots: { index: true, follow: true },
+  alternates: { canonical: canonicalUrl("/terms") },
+  openGraph: {
+    title: "Terms of Service — Fire Within University",
+    description: "Terms of Service for Fire Within University.",
+    url: canonicalUrl("/terms"),
+  },
 };
 
 const CONTACT_EMAIL = "firewithinuniversity@gmail.com";

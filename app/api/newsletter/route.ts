@@ -73,6 +73,7 @@ export async function POST(request: Request) {
           email_address: email,
           status_if_new: "pending", // triggers double opt-in (GDPR)
         }),
+        signal: AbortSignal.timeout(10_000), // 10s timeout to prevent hung requests
       }
     );
 

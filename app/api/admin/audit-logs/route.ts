@@ -16,8 +16,8 @@ export async function GET(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"));
-  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") ?? "30")));
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1") || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") ?? "30") || 30));
   const skip = (page - 1) * limit;
   const eventParam = searchParams.get("event");
   const event = VALID_EVENTS.includes(eventParam as (typeof VALID_EVENTS)[number])
@@ -26,15 +26,20 @@ export async function GET(request: Request) {
 
   const where = event ? { event } : {};
 
-  const [logs, total] = await Promise.all([
-    prisma.auditLog.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.auditLog.count({ where }),
-  ]);
+  try {
+    const [logs, total] = await Promise.all([
+      prisma.auditLog.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.auditLog.count({ where }),
+    ]);
 
-  return NextResponse.json({ logs, total, page, limit });
+    return NextResponse.json({ logs, total, page, limit });
+  } catch (err) {
+    console.error("[Admin Audit Logs] Database error:", err);
+    return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
+  }
 }

@@ -18,7 +18,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: "Fire Within University",
     url: BASE_URL,
-    logo: `${BASE_URL}/logo.png`,
+    logo: `${BASE_URL}/favicon.ico`,
     description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
     sameAs: [] as string[], // Add social URLs when ready
   };
