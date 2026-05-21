@@ -4,16 +4,14 @@ import { getToken } from "next-auth/jwt";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function middleware(request: NextRequest) {
-  // ── Login rate limiting (5 attempts / 15 min per IP) ────────────────────────
-  if (
-    request.method === "POST" &&
-    request.nextUrl.pathname === "/api/auth/callback/credentials"
-  ) {
-    const ip =
-      request.headers.get("x-real-ip") ??
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-      "unknown";
+  const { pathname } = request.nextUrl;
+  const ip =
+    request.headers.get("x-real-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown";
 
+  // Login rate limiting (5 attempts / 15 min)
+  if (request.method === "POST" && pathname === "/api/auth/callback/credentials") {
     if (!checkRateLimit(ip, { maxRequests: 5, windowMs: 15 * 60 * 1000 })) {
       console.warn(`[Security] Login rate limited: ${ip}`);
       return NextResponse.json(
@@ -23,13 +21,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // ── Admin API rate limiting (60 requests / min per IP) ──────────────────────
-  if (request.nextUrl.pathname.startsWith("/api/admin/")) {
-    const ip =
-      request.headers.get("x-real-ip") ??
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-      "unknown";
-
+  // Admin API rate limiting (60 req / min)
+  if (pathname.startsWith("/api/admin/")) {
     if (!checkRateLimit(`admin-api:${ip}`, { maxRequests: 60, windowMs: 60 * 1000 })) {
       return NextResponse.json(
         { message: "Too many requests. Please try again later." },
@@ -38,27 +31,26 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // ── Admin route protection (pages + API defense-in-depth) ───────────────────
+  // Admin route protection
   if (
-    request.nextUrl.pathname.startsWith("/admin") ||
-    request.nextUrl.pathname.startsWith("/api/admin/")
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/api/admin/")
   ) {
     const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
 
     if (token?.role !== "ADMIN") {
-      if (request.nextUrl.pathname.startsWith("/api/admin/")) {
+      if (pathname.startsWith("/api/admin/")) {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   }
 
-  // ── Generate a per-request CSP nonce ───────────────────────────────────────
   const nonce = crypto.randomUUID();
 
-  // ── Origin validation for mutating /api/* requests (CSRF protection) ────────
+  // CSRF: validate origin on mutating API requests
   const isMutatingMethod = ["POST", "PUT", "PATCH", "DELETE"].includes(request.method);
-  if (isMutatingMethod && request.nextUrl.pathname.startsWith("/api/")) {
+  if (isMutatingMethod && pathname.startsWith("/api/")) {
     const origin = request.headers.get("origin");
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
@@ -74,8 +66,8 @@ export async function middleware(request: NextRequest) {
       origin?.startsWith("http://localhost:") ||
       origin?.startsWith("http://127.0.0.1:");
 
-    const isStripeWebhook = request.nextUrl.pathname === "/api/stripe/webhook";
-    const isNextAuth = request.nextUrl.pathname.startsWith("/api/auth/");
+    const isStripeWebhook = pathname === "/api/stripe/webhook";
+    const isNextAuth = pathname.startsWith("/api/auth/");
 
     if (!isStripeWebhook && !isNextAuth) {
       if (!origin) {
@@ -89,7 +81,6 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    // Content-Type validation for POST /api/*
     if (!isStripeWebhook && !isNextAuth) {
       const contentType = request.headers.get("content-type") ?? "";
       if (!contentType.includes("application/json")) {
@@ -98,7 +89,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // ── Build Content Security Policy with nonce ───────────────────────────────
+  // CSP
   const unsafeEval = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
 
   const csp = [
@@ -117,7 +108,6 @@ export async function middleware(request: NextRequest) {
     `upgrade-insecure-requests`,
   ].join("; ");
 
-  // ── Forward nonce on request headers so the layout can read it ─────────────
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
 

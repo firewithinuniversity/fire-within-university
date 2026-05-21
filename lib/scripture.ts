@@ -1,25 +1,3 @@
-/**
- * lib/scripture.ts — Daily scripture rotation
- *
- * A curated list of scriptures hand-picked for this ministry.
- * WHY NO EXTERNAL API:
- * - Zero network dependency — can never fail or go down
- * - Zero rate limits or API keys
- * - The ministry intentionally selects every verse shown on their site
- *   (rather than whatever a random API returns)
- * - Works perfectly at build time and at request time
- *
- * HOW ROTATION WORKS:
- * We calculate the day of the year (1–365) and use modulo to pick
- * a verse from the array. The same verse shows all day, changes at midnight.
- * It cycles through all verses and repeats — a visitor who comes back
- * regularly will see a fresh verse every day of the year.
- *
- * TO ADD MORE VERSES:
- * Simply push a new entry to the SCRIPTURES array below. The rotation
- * adjusts automatically.
- */
-
 export type Scripture = {
   reference: string; // e.g. "John 3:16"
   text: string;       // The verse text (NIV)
@@ -227,7 +205,6 @@ export const SCRIPTURES: Scripture[] = [
     text: "For I am not ashamed of the gospel, because it is the power of God that brings salvation to everyone who believes.",
     bibleGatewayUrl: "https://www.biblegateway.com/passage/?search=Romans+1%3A16&version=NIV",
   },
-  // ── Fire Within ethos verses — hunger, fire, the Word, discipleship ────────
   {
     reference: "Matthew 5:6",
     text: "Blessed are those who hunger and thirst for righteousness, for they will be filled.",
@@ -280,16 +257,7 @@ export const SCRIPTURES: Scripture[] = [
   },
 ];
 
-/**
- * Returns today's scripture based on the day of the year.
- * The same verse shows all day and changes at midnight.
- * Cycles through all verses and repeats.
- *
- * WHY NOT random():
- * Math.random() picks a different verse on every server render (or page refresh).
- * Day-of-year gives a stable, predictable verse that every visitor sees the same
- * scripture on the same day — which is the expected behavior for "of the day."
- */
+// Day-of-year rotation so every visitor sees the same verse on the same day
 export function getTodaysScripture(): Scripture {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);

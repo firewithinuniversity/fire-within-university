@@ -6,14 +6,12 @@ import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { logAuditEvent } from "@/lib/auditLog";
 
-// ── Role constant ────────────────────────────────────────────────────────────
 export const UserRole = {
   USER: "USER",
   ADMIN: "ADMIN",
 } as const;
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
-// ── Admin whitelist (from env) ───────────────────────────────────────────────
 export const adminEmails = [
   process.env.ADMIN_EMAIL_1,
   process.env.ADMIN_EMAIL_2,
@@ -23,7 +21,6 @@ function isAdminEmail(email: string): boolean {
   return adminEmails.includes(email.toLowerCase());
 }
 
-// ── Admin session timeout ────────────────────────────────────────────────────
 const ADMIN_SESSION_MAX_SECONDS = 4 * 60 * 60; // 4 hours
 
 export const authOptions: NextAuthOptions = {
@@ -34,7 +31,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
 
-    // Single unified credentials provider — handles both regular users and admins
     CredentialsProvider({
       id: "credentials",
       name: "Email & Password",
@@ -111,18 +107,15 @@ export const authOptions: NextAuthOptions = {
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  // 7-day sessions for regular users (admin timeout handled in JWT callback)
   session: { strategy: "jwt", maxAge: 7 * 24 * 60 * 60 },
 
   callbacks: {
     async jwt({ token, user, account }) {
-      // Initial sign-in: populate token from user object
       if (user) {
         token.id = user.id;
         token.role = (user as { role?: UserRole }).role ?? UserRole.USER;
       }
 
-      // Google OAuth: check admin whitelist and sync DB role
       if (account?.provider === "google" && token.email) {
         token.role = isAdminEmail(token.email) ? UserRole.ADMIN : UserRole.USER;
 
@@ -140,7 +133,6 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      // Admin session timeout: downgrade after 4 hours
       if (token.role === UserRole.ADMIN && typeof token.iat === "number") {
         const elapsed = Math.floor(Date.now() / 1000) - token.iat;
         if (elapsed > ADMIN_SESSION_MAX_SECONDS) {

@@ -1,26 +1,4 @@
-/**
- * lib/sanity/queries.ts — All GROQ queries
- *
- * GROQ (Graph-Relational Object Queries) is Sanity's query language.
- * Keeping all queries in one file means:
- * - Easy to audit what data is being fetched
- * - Change a field name? Fix it in one place.
- * - Consistent data shapes across the app
- *
- * GROQ BASICS:
- *   *[_type == "post"]          — all documents of type "post"
- *   *[_type == "post"][0..9]    — first 10 posts
- *   { title, slug, author-> }  — projection: pick these fields
- *   author->                    — dereference: follow the reference and return the author doc
- *   | order(publishedAt desc)   — sort by date, newest first
- *   [slug.current == $slug][0]  — filter by slug, take first result
- *
- * TypeScript types: we define the shape of each query result so our
- * components get full type safety when they use the data.
- */
 import { client } from "./client";
-
-// ─── TypeScript types for query results ──────────────────────────────────────
 
 export type SanityImage = {
   asset: { _ref: string };
@@ -59,7 +37,6 @@ export type AffiliateProduct = {
   disclosureText?: string;
 };
 
-// Post summary — used on blog index cards (less data = faster load)
 export type PostSummary = {
   _id: string;
   title: string;
@@ -72,16 +49,12 @@ export type PostSummary = {
   series?: Pick<Series, "_id" | "title" | "slug">;
 };
 
-// Full post — used on single post page (includes body and affiliate products)
 export type Post = PostSummary & {
   body: unknown[]; // Portable Text blocks — typed by @portabletext/react
   youtubeUrl?: string;
   affiliateProducts?: AffiliateProduct[];
 };
 
-// ─── Queries ─────────────────────────────────────────────────────────────────
-
-// Reusable projection fragment for the summary fields (avoids repeating this in every query)
 const POST_SUMMARY_FIELDS = `
   _id,
   title,
@@ -94,11 +67,6 @@ const POST_SUMMARY_FIELDS = `
   "series": series-> { _id, title, slug }
 `;
 
-/**
- * Get all published posts, newest first.
- * Used on the blog index page.
- */
-// Helper: returns a fallback value if Sanity is unreachable (e.g. placeholder credentials in dev)
 async function safeFetch<T>(query: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await query();
@@ -117,10 +85,6 @@ export async function getAllPosts(): Promise<PostSummary[]> {
   );
 }
 
-/**
- * Get a single post by slug.
- * Used on individual article/sermon pages.
- */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   return safeFetch(
     () => client.fetch(
@@ -138,9 +102,6 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   );
 }
 
-/**
- * Get the 3 most recent posts for the homepage featured section.
- */
 export async function getFeaturedPosts(): Promise<PostSummary[]> {
   return safeFetch(
     () => client.fetch(`*[_type == "post"] | order(publishedAt desc) [0..2] { ${POST_SUMMARY_FIELDS} }`),
@@ -148,10 +109,6 @@ export async function getFeaturedPosts(): Promise<PostSummary[]> {
   );
 }
 
-/**
- * Get all post slugs — used by Next.js generateStaticParams to pre-render
- * all blog pages at build time (static generation = fastest possible load).
- */
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
   return safeFetch(
     () => client.fetch(`*[_type == "post"] { "slug": slug.current }`),
@@ -159,21 +116,12 @@ export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
   );
 }
 
-/**
- * Get all authors — used on the About page.
- */
 export async function getAllAuthors(): Promise<Author[]> {
   return safeFetch(
     () => client.fetch(`*[_type == "author"] | order(name asc) { _id, name, role, bio, photo, slug }`),
     []
   );
 }
-
-// ─── Reading time ─────────────────────────────────────────────────────────────
-// PostSummary intentionally omits body for performance. Full post includes body
-// so reading time is calculated from it in the single post page.
-
-// ─── Series ───────────────────────────────────────────────────────────────────
 
 export type SeriesSummary = {
   _id: string;
@@ -222,8 +170,6 @@ export async function getPostsBySeries(seriesId: string): Promise<PostSummary[]>
   );
 }
 
-// ─── Related posts ────────────────────────────────────────────────────────────
-
 export async function getRelatedPosts(
   currentSlug: string,
   categoryId?: string
@@ -239,7 +185,6 @@ export async function getRelatedPosts(
     );
     if (results.length > 0) return results;
   }
-  // Fallback: just get latest posts (excluding current)
   return safeFetch(
     () =>
       client.fetch(
@@ -249,8 +194,6 @@ export async function getRelatedPosts(
     []
   );
 }
-
-// ─── Resources (Affiliate Products) ──────────────────────────────────────────
 
 export async function getAllAffiliateProducts(): Promise<AffiliateProduct[]> {
   return safeFetch(
@@ -263,8 +206,6 @@ export async function getAllAffiliateProducts(): Promise<AffiliateProduct[]> {
     []
   );
 }
-
-// ─── Authors ─────────────────────────────────────────────────────────────────
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
   return safeFetch(
@@ -288,8 +229,6 @@ export async function getPostsByAuthor(authorId: string): Promise<PostSummary[]>
   );
 }
 
-// ─── Testimonial ──────────────────────────────────────────────────────────────
-
 export type Testimonial = {
   _id: string;
   name: string;
@@ -298,10 +237,6 @@ export type Testimonial = {
   photo?: SanityImage;
 };
 
-/**
- * Get featured testimonials for the homepage, sorted by display order.
- * Only returns testimonials with featured: true.
- */
 export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
   return safeFetch(
     () =>
@@ -313,8 +248,6 @@ export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
     []
   );
 }
-
-// ─── Courses ────────────────────────────────────────────────────────────────
 
 export type CourseSummary = {
   _id: string;
