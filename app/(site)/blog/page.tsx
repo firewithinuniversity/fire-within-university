@@ -1,14 +1,3 @@
-/**
- * app/(site)/blog/page.tsx — Blog / Sermon index
- *
- * Shows all posts in a grid, newest first.
- * Server Component — fetches posts at build time (static generation).
- *
- * PATTERN — generateMetadata:
- * This exported async function lets each page set its own SEO metadata.
- * It runs on the server before the page renders and returns a Metadata object.
- * The root layout sets defaults; page-level metadata overrides specific fields.
- */
 import type { Metadata } from "next";
 import PostCard from "@/components/PostCard";
 import EmailSignup from "@/components/EmailSignup";
@@ -27,7 +16,6 @@ export default async function BlogIndexPage() {
     <div className="max-w-6xl mx-auto px-4 py-12">
       {/* Page header */}
       <div className="text-center mb-14 space-y-4">
-        {/* Cross accent */}
         <div className="flex justify-center" aria-hidden="true">
           <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
             <rect x="6" y="0" width="4" height="24" rx="2" />
@@ -44,7 +32,6 @@ export default async function BlogIndexPage() {
         </p>
       </div>
 
-      {/* Post grid */}
       {posts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
@@ -53,7 +40,6 @@ export default async function BlogIndexPage() {
         </div>
       ) : (
         <div className="max-w-lg mx-auto text-center py-14 space-y-6">
-          {/* Cross icon in soft orange circle — matches the About page value cards */}
           <div className="w-16 h-16 rounded-full bg-gold/[0.08] flex items-center justify-center mx-auto">
             <svg width="22" height="34" viewBox="0 0 32 48" className="text-gold/60" fill="currentColor" aria-hidden="true">
               <rect x="13" y="0" width="6" height="48" rx="3" />
@@ -69,12 +55,10 @@ export default async function BlogIndexPage() {
             </p>
           </div>
 
-          {/* Warm email capture — same handler as the homepage hero */}
           <div className="pt-2">
             <EmailSignup variant="inline" />
           </div>
 
-          {/* Encouraging scripture */}
           <p className="text-cream/35 text-sm italic pt-4 border-t border-cream/[0.06]">
             &ldquo;Blessed are those who hunger and thirst for righteousness, for they will be filled.&rdquo;
             {" "}

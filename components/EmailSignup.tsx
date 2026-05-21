@@ -7,7 +7,7 @@ type Props = { variant?: "hero" | "inline" };
 
 export default function EmailSignup({ variant = "hero" }: Props) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
   const router = useRouter();
 
@@ -37,17 +37,6 @@ export default function EmailSignup({ variant = "hero" }: Props) {
       setStatus("error");
       setMessage("Something went wrong. Please try again.");
     }
-  }
-
-  if (status === "success") {
-    return (
-      <div className="text-center py-4 px-6 bg-gold/[0.1] rounded-2xl border border-gold/20" role="alert" aria-live="polite">
-        <p className="text-cream font-semibold">
-          <span className="text-gold mr-2" aria-hidden="true">✦</span>
-          {message}
-        </p>
-      </div>
-    );
   }
 
   const isHero = variant === "hero";
@@ -96,7 +85,6 @@ export default function EmailSignup({ variant = "hero" }: Props) {
         <p className="text-red-600 text-xs mt-2 text-center" role="alert" aria-live="polite">{message}</p>
       )}
 
-      {/* Caption colour follows background: cream on dark hero, muted brown on light sections */}
       <p className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/50" : "text-cream/35"}`}>
         No spam, ever. Unsubscribe anytime.
       </p>

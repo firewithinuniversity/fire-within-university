@@ -1,9 +1,3 @@
-/**
- * app/(site)/contact/page.tsx — Contact & Prayer Request page
- *
- * The form itself is a Client Component (ContactForm) because it manages
- * state and handles form submission. The page shell is a Server Component.
- */
 import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
 
@@ -17,7 +11,6 @@ export default function ContactPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-16">
       <div className="text-center mb-12 space-y-5">
-        {/* Cross accent */}
         <div className="flex justify-center" aria-hidden="true">
           <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
             <rect x="6" y="0" width="4" height="24" rx="2" />

@@ -1,25 +1,8 @@
-/**
- * components/TestimonialsSection.tsx — "Fruit of the Ministry" testimonials
- *
- * Server Component — fetches testimonials from Sanity and renders them.
- * No client-side JS needed for a static grid of quotes.
- *
- * EMPTY STATE:
- * If no testimonials exist yet (fresh Sanity project), this section renders
- * nothing — it simply returns null. Add testimonials via the Studio and they
- * appear automatically without touching code.
- *
- * DESIGN INTENT:
- * Social proof builds trust before a visitor donates or subscribes.
- * Real names + locations signal authenticity. The warm cream background
- * visually separates this from the dark "Give CTA" section below.
- */
 import Image from "next/image";
 import { getFeaturedTestimonials } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import type { Testimonial } from "@/lib/sanity/queries";
 
-// Large decorative quote mark — rendered via SVG so it never adds a font request
 function QuoteMark() {
   return (
     <svg
@@ -38,7 +21,6 @@ function QuoteMark() {
   );
 }
 
-// Avatar circle — shows photo if available, initials otherwise
 function Avatar({ testimonial }: { testimonial: Testimonial }) {
   if (testimonial.photo) {
     const src = imageUrlFor(testimonial.photo)
@@ -58,7 +40,6 @@ function Avatar({ testimonial }: { testimonial: Testimonial }) {
     );
   }
 
-  // Initials fallback
   const initials = testimonial.name
     .split(" ")
     .map((n) => n[0])
@@ -79,17 +60,14 @@ function Avatar({ testimonial }: { testimonial: Testimonial }) {
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <article className="bg-[#4A2A12]/70 rounded-2xl p-7 border border-white/[0.06] flex flex-col gap-5 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] transition-shadow duration-300">
-      {/* Quote mark */}
       <QuoteMark />
 
-      {/* The quote itself */}
       <blockquote className="flex-1">
         <p className="text-cream/70 leading-relaxed text-base italic">
           &ldquo;{testimonial.quote}&rdquo;
         </p>
       </blockquote>
 
-      {/* Attribution */}
       <footer className="flex items-center gap-3 pt-2 border-t border-cream/[0.06]">
         <Avatar testimonial={testimonial} />
         <div>
@@ -106,7 +84,6 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 export default async function TestimonialsSection() {
   const testimonials = await getFeaturedTestimonials();
 
-  // Don't render the section at all if no testimonials are published yet
   if (testimonials.length === 0) return null;
 
   return (
@@ -115,16 +92,13 @@ export default async function TestimonialsSection() {
       aria-label="Testimonials"
     >
       <div className="max-w-6xl mx-auto">
-        {/* Section header */}
         <div className="text-center mb-14 space-y-4">
-          {/* Eyebrow */}
           <p className="text-gold font-bold text-xs uppercase tracking-widest">
             Fruit of the Ministry
           </p>
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream leading-tight">
             Lives Being Transformed
           </h2>
-          {/* Decorative accent */}
           <div className="flex items-center justify-center gap-3 pt-1" aria-hidden="true">
             <div className="w-10 h-px bg-gold/40" />
             <div className="w-1.5 h-1.5 rounded-full bg-gold/60" />
@@ -132,7 +106,6 @@ export default async function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Grid — 1 col on mobile, up to 3 on desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((t) => (
             <TestimonialCard key={t._id} testimonial={t} />

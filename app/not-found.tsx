@@ -1,23 +1,8 @@
-/**
- * app/not-found.tsx — Custom 404 page
- *
- * In Next.js App Router, this file is automatically rendered whenever:
- * - A URL doesn't match any route
- * - A Server Component calls notFound() (like our post page does for missing slugs)
- *
- * PATTERN: This is at app/ level so it applies site-wide.
- * It renders OUTSIDE the (site) layout (no Navbar/Footer) because it's in
- * the root app/ directory. We add a minimal nav link manually.
- *
- * Note: This uses the root layout (fonts, body styles) but not the site layout.
- * If you want Navbar/Footer on 404, move this to app/(site)/not-found.tsx.
- */
 import Link from "next/link";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-[#1a0f05] flex flex-col items-center justify-center px-4 text-center">
-      {/* Warm visual with gold glow */}
       <div className="relative inline-block mb-6" aria-hidden="true">
         <div className="absolute inset-0 blur-3xl bg-gold/30 rounded-full scale-150" />
         <span className="relative text-8xl">🔥</span>

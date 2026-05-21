@@ -1,9 +1,3 @@
-/**
- * app/(site)/about/page.tsx — About page
- *
- * Shows the ministry mission and author/team profiles pulled from Sanity.
- * Server Component — fetches authors at build time.
- */
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +18,6 @@ export default async function AboutPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       {/* Mission section */}
       <section className="text-center mb-20 space-y-6">
-        {/* Small cross accent */}
         <div className="flex justify-center" aria-hidden="true">
           <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
             <rect x="6" y="0" width="4" height="24" rx="2" />
@@ -46,7 +39,6 @@ export default async function AboutPage() {
           drives people into Scripture and deeper relationship with Christ.
         </p>
 
-        {/* Foundation verse */}
         <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto">
           <p className="text-cream/60 text-sm italic leading-relaxed">
             &ldquo;For the word of God is alive and active. Sharper than any double-edged sword, it penetrates even to dividing soul and spirit.&rdquo;
@@ -62,7 +54,6 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Core values — emoji replaced with clean brand-colored SVG icons */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
         {[
           {
@@ -119,7 +110,6 @@ export default async function AboutPage() {
         ))}
       </section>
 
-      {/* Call to action — real email capture, not a link-away */}
       <section className="mb-20 py-12 px-6 md:px-10 bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl text-center">
         <h2 className="font-serif text-2xl md:text-3xl font-bold text-cream mb-3">
           Join the Mission
@@ -128,12 +118,10 @@ export default async function AboutPage() {
           Drop your email below to get new sermons and articles delivered to your inbox.
         </p>
 
-        {/* Wired to the same /api/newsletter handler the homepage uses */}
         <div className="max-w-md mx-auto">
           <EmailSignup variant="inline" />
         </div>
 
-        {/* Secondary path — supporting the ministry stays visible but no longer required */}
         <div className="mt-8 pt-6 border-t border-cream/[0.06] flex flex-col sm:flex-row gap-3 justify-center items-center">
           <span className="text-xs text-cream/40 uppercase tracking-widest font-semibold">
             Or

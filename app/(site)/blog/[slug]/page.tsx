@@ -1,22 +1,3 @@
-/**
- * app/(site)/blog/[slug]/page.tsx — Single post page
- *
- * Renders a full sermon or article. The [slug] part of the URL is
- * dynamic — Next.js passes the actual slug value as a param.
- *
- * PATTERN — generateStaticParams:
- * This function tells Next.js to pre-render ALL post pages at build time.
- * Without it, pages would be rendered on-demand at request time (slower).
- * With it, every /blog/some-slug is a static HTML file on the CDN — fastest possible.
- *
- * PATTERN — generateMetadata:
- * Async function that runs before the page renders to set SEO tags.
- * Each post gets its own title, description, and Open Graph image.
- *
- * PATTERN — notFound():
- * If getPostBySlug returns null (post doesn't exist or was deleted),
- * we call notFound() which renders the 404 page.
- */
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -32,15 +13,10 @@ import EmailSignup from "@/components/EmailSignup";
 import ShareButtons from "@/components/ShareButtons";
 import RelatedPosts from "@/components/RelatedPosts";
 
-// ── Static generation ─────────────────────────────────────────────────────────
-
-// Pre-render every post slug at build time
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
   return slugs.map(({ slug }) => ({ slug }));
 }
-
-// ── SEO metadata per post ─────────────────────────────────────────────────────
 
 export async function generateMetadata({
   params,
@@ -70,8 +46,6 @@ export async function generateMetadata({
   };
 }
 
-// ── Page component ────────────────────────────────────────────────────────────
-
 export default async function PostPage({
   params,
 }: {
@@ -80,12 +54,9 @@ export default async function PostPage({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
-  // If no post found, render 404
   if (!post) notFound();
 
-  const [relatedPosts] = await Promise.all([
-    getRelatedPosts(slug, post.category?._id),
-  ]);
+  const relatedPosts = await getRelatedPosts(slug, post.category?._id);
 
   const { title, publishedAt, author, category, series, mainImage, youtubeUrl, body, affiliateProducts } = post;
   const readTime = body ? readingTimeLabel(body as unknown[]) : null;
@@ -167,7 +138,7 @@ export default async function PostPage({
             width={1200}
             height={500}
             className="w-full h-auto"
-            priority // loads eagerly — above the fold
+            priority
           />
         </div>
       )}

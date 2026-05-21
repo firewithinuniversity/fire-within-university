@@ -1,11 +1,3 @@
-/**
- * components/RelatedPosts.tsx — "You might also like" section
- *
- * Shows 2–3 posts from the same category. Falls back to latest posts
- * if no category match exists. Keeps readers in the Word.
- *
- * Server Component — receives posts as props (caller does the fetching).
- */
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import type { PostSummary } from "@/lib/sanity/queries";

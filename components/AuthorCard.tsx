@@ -1,11 +1,3 @@
-/**
- * components/AuthorCard.tsx — Author bio card
- *
- * Shown at the bottom of every article page.
- * Displays the author's photo, name, role, and bio.
- *
- * Server Component — no interactivity needed.
- */
 import Image from "next/image";
 import type { Author } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
@@ -21,7 +13,6 @@ export default function AuthorCard({ author }: Props) {
 
   return (
     <div className="flex gap-5 items-start p-6 bg-[#4A2A12]/60 rounded-2xl border border-white/[0.06]">
-      {/* Author photo with gold accent ring */}
       {photoUrl ? (
         <Image
           src={photoUrl}
@@ -41,7 +32,6 @@ export default function AuthorCard({ author }: Props) {
         </div>
       )}
 
-      {/* Author info */}
       <div className="space-y-1.5">
         <p className="font-serif font-bold text-cream text-lg">{author.name}</p>
         {author.role && (

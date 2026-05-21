@@ -39,7 +39,7 @@ export default function AdminNav() {
                   : "text-cream/60 hover:text-cream hover:bg-cream/[0.06]"
               }`}
             >
-              <svg className="w-4.5 h-4.5 shrink-0 w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <svg className="w-[18px] h-[18px] shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
               </svg>
               {item.label}

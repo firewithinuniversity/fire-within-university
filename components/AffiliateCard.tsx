@@ -1,21 +1,3 @@
-/**
- * components/AffiliateCard.tsx — Recommended product card
- *
- * Shown in the "Resources we recommend" section at the bottom of post pages.
- * Only renders if the post has affiliate products attached in Sanity.
- *
- * LEGAL/FTC REQUIREMENTS:
- * - The FTC requires clear disclosure that affiliate links exist
- * - The disclosure is shown above the card grid (in the post page),
- *   but each card also links visibly to an external URL
- *
- * SECURITY:
- * - rel="noopener noreferrer" prevents the new tab from accessing window.opener
- *   (an attack vector where the opened page could redirect the opener)
- * - target="_blank" opens in new tab (standard for external links)
- *
- * Server Component — no interactivity needed.
- */
 import Image from "next/image";
 import type { AffiliateProduct } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
@@ -36,7 +18,6 @@ export default function AffiliateCard({ product }: Props) {
       rel="noopener noreferrer"
       className="flex gap-4 p-4 bg-[#4A2A12]/70 rounded-2xl border border-white/[0.06] hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-0.5 transition-all duration-300 group"
     >
-      {/* Product image */}
       {imageUrl && (
         <Image
           src={imageUrl}
@@ -47,7 +28,6 @@ export default function AffiliateCard({ product }: Props) {
         />
       )}
 
-      {/* Product info */}
       <div className="flex flex-col justify-between space-y-2">
         <div>
           <h4 className="font-serif font-bold text-cream text-sm leading-snug group-hover:text-gold transition-colors duration-150">
