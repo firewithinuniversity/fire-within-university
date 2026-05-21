@@ -71,7 +71,7 @@ export default async function CourseDetailPage({ params }: Props) {
       <section className="relative pt-16 pb-12 px-4">
         <div className="max-w-4xl mx-auto">
           {course.coverImage && (
-            <div className="relative aspect-[21/9] rounded-2xl overflow-hidden mb-8">
+            <div className="relative aspect-video sm:aspect-[21/9] rounded-2xl overflow-hidden mb-8">
               <Image
                 src={imageUrlFor(course.coverImage).width(1200).height(514).url()}
                 alt={course.coverImage.alt || course.title}

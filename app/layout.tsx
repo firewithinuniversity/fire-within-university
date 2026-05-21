@@ -61,7 +61,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${lora.variable} ${inter.variable}`}>
-      <body className="bg-brown-deep text-cream font-sans antialiased">
+      <body className="bg-brown-deep text-cream font-sans antialiased overflow-x-hidden">
         {/* Structured data for Google rich results */}
         <script
           type="application/ld+json"

@@ -43,6 +43,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Portable Text article styles */
+.prose-ministry {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
 .prose-ministry h2 {
   @apply text-2xl font-serif font-bold text-brown mt-10 mb-4 leading-snug tracking-tight;
 }

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function EthosPage() {
   return (
-    <article className="max-w-2xl mx-auto px-4 py-16 md:py-24">
+    <article className="max-w-2xl mx-auto px-4 py-16 md:py-24 overflow-x-hidden">
       {/* ── Eyebrow & title ─────────────────────────────────────────── */}
       <header className="mb-16 text-center space-y-5">
         <p className="text-gold font-bold text-xs uppercase tracking-[0.3em]">
