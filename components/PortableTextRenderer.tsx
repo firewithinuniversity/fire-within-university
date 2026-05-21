@@ -101,6 +101,7 @@ const components: PortableTextComponents = {
             alt={value.alt ?? "Article image"}
             width={800}
             height={450}
+            sizes="(max-width: 768px) 100vw, 800px"
             className="rounded-lg w-full h-auto"
           />
           {value.caption && (

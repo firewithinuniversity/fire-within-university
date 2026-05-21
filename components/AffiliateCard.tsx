@@ -24,6 +24,7 @@ export default function AffiliateCard({ product }: Props) {
           alt={product.name}
           width={80}
           height={80}
+          sizes="80px"
           loading="lazy"
           className="rounded-xl w-20 h-20 object-cover flex-shrink-0"
         />

@@ -15,6 +15,7 @@ const nextConfig = {
 
   // next/image configuration: allows images from Sanity's CDN
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
