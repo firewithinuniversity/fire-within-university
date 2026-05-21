@@ -214,7 +214,7 @@ export default async function HomePage() {
               <SectionReveal key={p.href} delay={i * 80} distance={20}>
                 <Link
                   href={p.href}
-                  className="group block bg-[#4A2A12]/50 border border-white/[0.06] rounded-2xl p-7 transition-all duration-500 hover:bg-[#4A2A12]/80 hover:border-gold/15 hover:-translate-y-1"
+                  className="group flex flex-col h-full bg-[#4A2A12]/50 border border-white/[0.06] rounded-2xl p-7 transition-all duration-500 hover:bg-[#4A2A12]/80 hover:border-gold/15 hover:-translate-y-1"
                 >
                   <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-colors duration-500 group-hover:bg-gold/[0.12]">
                     <PathwayIcon type={p.icon} />
@@ -222,7 +222,7 @@ export default async function HomePage() {
                   <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-2 leading-snug">
                     {p.title}
                   </h3>
-                  <p className="text-cream/40 text-[13px] leading-relaxed mb-4">{p.description}</p>
+                  <p className="text-cream/40 text-[13px] leading-relaxed mb-4 flex-grow">{p.description}</p>
                   <span className="text-gold/50 text-xs font-semibold uppercase tracking-wider transition-all duration-300 group-hover:text-gold/80 flex items-center gap-1">
                     Explore
                     <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>

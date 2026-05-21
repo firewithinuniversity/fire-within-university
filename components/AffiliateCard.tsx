@@ -24,15 +24,21 @@ export default function AffiliateCard({ product }: Props) {
           alt={product.name}
           width={80}
           height={80}
+          loading="lazy"
           className="rounded-xl w-20 h-20 object-cover flex-shrink-0"
         />
       )}
 
       <div className="flex flex-col justify-between space-y-2">
         <div>
-          <h4 className="font-serif font-bold text-cream text-sm leading-snug group-hover:text-gold transition-colors duration-150">
-            {product.name}
-          </h4>
+          <div className="flex items-center gap-2 mb-0.5">
+            <h4 className="font-serif font-bold text-cream text-sm leading-snug group-hover:text-gold transition-colors duration-150">
+              {product.name}
+            </h4>
+            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-cream/30 border border-cream/10 rounded px-1.5 py-0.5 leading-none">
+              Affiliate
+            </span>
+          </div>
           <p className="text-xs text-cream/50 leading-relaxed mt-1">
             {product.description}
           </p>

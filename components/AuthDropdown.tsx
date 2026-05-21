@@ -79,12 +79,12 @@ export default function AuthDropdown() {
       </button>
 
       {showDropdown && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-[#4A2A12] rounded-xl shadow-xl border border-white/[0.06] py-2 z-[100]">
+        <div className="absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-2rem)] bg-[#4A2A12] rounded-xl shadow-xl border border-white/[0.06] py-2 z-[100]">
           <div className="px-4 py-2 border-b border-cream/[0.06]">
             <p className="text-sm font-semibold text-cream truncate">
               {session.user.name || "User"}
             </p>
-            <p className="text-xs text-cream/40 truncate">{session.user.email}</p>
+            <p className="text-xs text-cream/60 truncate">{session.user.email}</p>
           </div>
 
           {isAdmin && (

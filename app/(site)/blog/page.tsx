@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import EmailSignup from "@/components/EmailSignup";
-import { getAllCategories, getFilteredPosts, getAllPosts } from "@/lib/sanity/queries";
+import { getAllCategories, getFilteredPosts } from "@/lib/sanity/queries";
 import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -35,8 +35,8 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
   const categorySlug = params.category ?? "";
   const currentPage = Math.max(1, parseInt(params.page ?? "1", 10));
 
-  // Run in parallel: categories, filtered posts, and total-post check
-  const [categories, { posts, total }, allPostsCheck] = await Promise.all([
+  // Run in parallel: categories, filtered posts, and unfiltered total
+  const [categories, { posts, total }, { total: totalUnfiltered }] = await Promise.all([
     getAllCategories(),
     getFilteredPosts({
       search: searchQuery,
@@ -44,13 +44,13 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
       page: currentPage,
       limit: POSTS_PER_PAGE,
     }),
-    // Only needed to decide whether to show "Content Coming Soon" vs "No results"
-    getAllPosts(),
+    // Cheap count-only query (no post data) to check if site has any posts at all
+    getFilteredPosts({ page: 1, limit: 1 }),
   ]);
 
   const totalPages = Math.ceil(total / POSTS_PER_PAGE);
   const hasActiveFilter = searchQuery !== "" || categorySlug !== "";
-  const siteHasPosts = allPostsCheck.length > 0;
+  const siteHasPosts = totalUnfiltered > 0;
 
   // Build a URL helper that preserves other params
   function buildHref(overrides: { q?: string; category?: string; page?: number }) {

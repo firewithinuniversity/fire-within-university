@@ -6,10 +6,18 @@ import { adminEmails } from "@/lib/auth";
 import { isPasswordValid, getPasswordErrors } from "@/lib/passwordValidation";
 import { logAuditEvent } from "@/lib/auditLog";
 
+const MAX_BODY_SIZE = 2 * 1024; // 2 KB
+
 export async function POST(request: Request) {
   const ip = getIpFromRequest(request);
   if (!checkRateLimit(ip, { maxRequests: 5, windowMs: 60 * 60 * 1000 })) {
     return NextResponse.json({ message: "Too many requests. Try again later." }, { status: 429 });
+  }
+
+  // Reject oversized payloads
+  const contentLength = parseInt(request.headers.get("content-length") ?? "0", 10);
+  if (contentLength > MAX_BODY_SIZE) {
+    return NextResponse.json({ message: "Request too large." }, { status: 413 });
   }
 
   let body: { name?: string; email?: string; password?: string };

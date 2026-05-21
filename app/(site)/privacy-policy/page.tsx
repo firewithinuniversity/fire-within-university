@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const CONTACT_EMAIL = "firewithinuniversity@gmail.com";
-const LAST_UPDATED = "April 10, 2026";
+const LAST_UPDATED = "May 21, 2026";
 const SITE_URL = "firewithinuniversity.com";
 
 export default function PrivacyPolicyPage() {
@@ -71,8 +71,9 @@ export default function PrivacyPolicyPage() {
               Stored by Mailchimp on our behalf.
             </li>
             <li>
-              <strong>Contact form:</strong> Your name, email address, and message. Sent directly
-              to our inbox via Resend. Not stored in a database.
+              <strong>Contact form:</strong> Your name, email address, and message. Stored securely
+              in our database so we can follow up, and also sent to our inbox via Resend for
+              immediate review.
             </li>
             <li>
               <strong>Donations:</strong> Your name and email address as entered during Stripe
@@ -237,7 +238,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="font-serif text-xl font-bold text-cream mb-3">9. Data Retention</h2>
           <ul className="list-disc list-inside space-y-2 text-sm text-cream/70">
             <li>Newsletter subscribers: retained until you unsubscribe.</li>
-            <li>Contact form messages: retained in our email inbox until deleted by us.</li>
+            <li>Contact form messages: stored in our database and email inbox until deleted upon your request.</li>
             <li>Donation records: retained as required by financial record-keeping practices.</li>
             <li>Analytics data: retained per Google Analytics default settings (up to 14 months).</li>
           </ul>

@@ -25,6 +25,8 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
             alt={mainImage?.alt ?? title}
             width={600}
             height={340}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-700"
           />
         </Link>
@@ -51,7 +53,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
         </h3>
 
         {excerpt && (
-          <p className="text-[13px] text-cream/45 leading-relaxed mb-4 flex-grow line-clamp-3">{excerpt}</p>
+          <p className="text-[13px] text-cream/60 leading-relaxed mb-4 flex-grow line-clamp-3">{excerpt}</p>
         )}
 
         <div className="flex items-center gap-3 mt-auto pt-4 border-t border-cream/[0.06]">
@@ -64,9 +66,9 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
               className="rounded-full w-9 h-9 object-cover ring-2 ring-cream/10"
             />
           )}
-          <div className="text-xs text-cream/40 leading-snug">
-            <span className="block font-semibold text-cream/65">{author.name}</span>
-            <span className="text-cream/30">
+          <div className="text-xs text-cream/60 leading-snug">
+            <span className="block font-semibold text-cream/80">{author.name}</span>
+            <span className="text-cream/50">
               <time dateTime={publishedAt}>{formattedDate}</time>
               {readingTimeMinutes && (
                 <> &middot; {readingTimeMinutes} min read</>

@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { logAuditEvent } from "@/lib/auditLog";
+import { getNextAuthSecret } from "@/lib/env";
 
 export const UserRole = {
   USER: "USER",
@@ -105,7 +106,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: getNextAuthSecret(),
 
   session: { strategy: "jwt", maxAge: 7 * 24 * 60 * 60 },
 

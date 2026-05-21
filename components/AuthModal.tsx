@@ -18,6 +18,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -90,6 +91,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setAgeConfirmed(false);
     setError("");
   }
 
@@ -122,6 +124,10 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     setError("");
 
+    if (!ageConfirmed) {
+      setError("You must confirm you are at least 13 years old.");
+      return;
+    }
     if (!isPasswordValid(password)) {
       setError("Please meet all password requirements.");
       return;
@@ -195,17 +201,21 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         </button>
 
         {/* Tab header */}
-        <div className="flex border-b border-cream/[0.06]">
+        <div className="flex border-b border-cream/[0.06]" role="tablist">
           <button
             id={tab === "signin" ? headingId : undefined}
-            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/40 hover:text-cream/60"}`}
+            role="tab"
+            aria-selected={tab === "signin"}
+            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
             onClick={() => switchTab("signin")}
           >
             Sign In
           </button>
           <button
             id={tab === "register" ? headingId : undefined}
-            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/40 hover:text-cream/60"}`}
+            role="tab"
+            aria-selected={tab === "register"}
+            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
             onClick={() => switchTab("register")}
           >
             Create Account
@@ -263,7 +273,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
@@ -276,7 +286,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <button
@@ -298,7 +308,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
@@ -311,7 +321,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
@@ -324,7 +334,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
                 {password.length > 0 && (
                   <ul className="mt-2 space-y-1">
@@ -355,9 +365,28 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={ageConfirmed}
+                  onChange={(e) => setAgeConfirmed(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-cream/20 bg-[#1a0f05] text-gold focus:ring-gold/40 focus:ring-offset-0 accent-[#E8A020]"
+                />
+                <span className="text-xs text-cream/50 leading-relaxed">
+                  I confirm that I am at least 13 years old and agree to the{" "}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
+                    Privacy Policy
+                  </a>
+                  .
+                </span>
+              </label>
               <button
                 type="submit"
                 disabled={loading}

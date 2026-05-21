@@ -146,7 +146,7 @@ export default function ContactForm() {
           value={form.subject}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/25"
         >
           <option value="general">General question</option>
           <option value="prayer">Prayer request</option>
@@ -171,7 +171,7 @@ export default function ContactForm() {
           required
           maxLength={100}
           autoComplete="name"
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/25"
         />
       </div>
 
@@ -192,7 +192,7 @@ export default function ContactForm() {
           required
           maxLength={254}
           autoComplete="email"
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/25"
         />
       </div>
 
@@ -213,7 +213,7 @@ export default function ContactForm() {
           minLength={10}
           maxLength={2000}
           rows={5}
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-0 resize-none transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 resize-none transition-colors duration-150 placeholder:text-cream/25"
           placeholder={
             form.subject === "prayer"
               ? "Share your prayer request. We will pray for you personally."
@@ -231,6 +231,16 @@ export default function ContactForm() {
           {responseMessage}
         </p>
       )}
+
+      {/* Consent notice */}
+      <p className="text-xs text-cream/30 leading-relaxed">
+        By submitting this form, you agree that we may store your name, email, and
+        message to respond to your inquiry. See our{" "}
+        <a href="/privacy-policy" className="text-gold underline hover:text-gold/80 transition-colors">
+          Privacy Policy
+        </a>{" "}
+        for details. You can request deletion of your data at any time.
+      </p>
 
       {/* Submit — fixed width, left-aligned, matches navbar "Give" button style */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-1">

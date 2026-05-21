@@ -61,10 +61,10 @@ export default function EmailSignup({ variant = "hero" }: Props) {
           required
           autoComplete="email"
           disabled={status === "loading"}
-          className={`flex-grow px-4 py-3 rounded-full border-2 text-sm focus:outline-none focus:ring-0 disabled:opacity-60 transition-colors duration-150 ${
+          className={`flex-grow px-4 py-3 rounded-full border-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:opacity-60 transition-colors duration-150 ${
             isHero
-              ? "border-[#D4B896]/40 bg-cream text-brown focus:border-orange placeholder:text-[#B07040]"
-              : "border-cream/[0.1] bg-[#4A2A12]/60 text-cream focus:border-gold placeholder:text-cream/30"
+              ? "border-[#D4B896]/40 bg-cream text-brown focus:border-orange focus:ring-orange/30 placeholder:text-[#B07040]"
+              : "border-cream/[0.1] bg-[#4A2A12]/60 text-cream focus:border-gold focus:ring-gold/30 placeholder:text-cream/40"
           }`}
           aria-label="Email address"
         />
@@ -87,7 +87,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
         <p className="text-red-600 text-xs mt-2 text-center" role="alert" aria-live="polite">{message}</p>
       )}
 
-      <p className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/50" : "text-cream/35"}`}>
+      <p className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/60" : "text-cream/50"}`}>
         No spam, ever. Unsubscribe anytime.
       </p>
     </form>

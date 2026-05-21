@@ -70,7 +70,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/40 pt-6 border-t border-cream/10">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/60 pt-6 border-t border-cream/10">
           <p>&copy; {currentYear} Fire Within University. All rights reserved.</p>
           <p className="text-gold/60 font-medium italic">Built for the Kingdom.</p>
         </div>

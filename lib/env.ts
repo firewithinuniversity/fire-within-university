@@ -70,6 +70,18 @@ export function getMailchimpServerPrefix(): string {
   return requireServerEnv("MAILCHIMP_SERVER_PREFIX");
 }
 
+// --- NextAuth ---
+export function getNextAuthSecret(): string {
+  const secret = requireServerEnv("NEXTAUTH_SECRET");
+  if (secret.length < 32) {
+    throw new Error(
+      "NEXTAUTH_SECRET must be at least 32 characters for secure JWT signing.\n" +
+        "Generate one with: openssl rand -base64 48"
+    );
+  }
+  return secret;
+}
+
 // --- Google Analytics ---
 export const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 
