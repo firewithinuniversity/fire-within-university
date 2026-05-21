@@ -1,21 +1,34 @@
 import { NextResponse } from "next/server";
 import type { NextRequest, ProxyConfig } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function proxy(request: NextRequest) {
-  // ── Admin route protection ──────────────────────────────────────────────────
-  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-  const isLoginPage = request.nextUrl.pathname === "/admin/login";
+  // ── Login rate limiting (5 attempts / 15 min per IP) ────────────────────────
+  if (
+    request.method === "POST" &&
+    request.nextUrl.pathname === "/api/auth/callback/credentials"
+  ) {
+    const ip =
+      request.headers.get("x-real-ip") ??
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      "unknown";
 
-  if (isAdminRoute) {
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-    const isAdmin = token?.role === "ADMIN";
-
-    if (!isAdmin && !isLoginPage) {
-      return NextResponse.redirect(new URL("/admin/login", request.nextUrl));
+    if (!checkRateLimit(ip, { maxRequests: 5, windowMs: 15 * 60 * 1000 })) {
+      console.warn(`[Security] Login rate limited: ${ip}`);
+      return NextResponse.json(
+        { message: "Too many login attempts. Please try again later." },
+        { status: 429 }
+      );
     }
-    if (isAdmin && isLoginPage) {
-      return NextResponse.redirect(new URL("/admin", request.nextUrl));
+  }
+
+  // ── Admin route protection ──────────────────────────────────────────────────
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+    if (token?.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   }
 

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
+import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
 
 type Tab = "signin" | "register";
 
@@ -45,7 +46,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     setError("");
     setLoading(true);
 
-    const res = await signIn("user-credentials", {
+    const res = await signIn("credentials", {
       redirect: false,
       email,
       password,
@@ -64,8 +65,8 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     setError("");
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+    if (!isPasswordValid(password)) {
+      setError("Please meet all password requirements.");
       return;
     }
     if (password !== confirmPassword) {
@@ -88,7 +89,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    const signInRes = await signIn("user-credentials", {
+    const signInRes = await signIn("credentials", {
       redirect: false,
       email,
       password,
@@ -256,11 +257,28 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   id="register-password"
                   type="password"
                   required
-                  minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold placeholder:text-cream/25"
                 />
+                {password.length > 0 && (
+                  <ul className="mt-2 space-y-1">
+                    {validatePassword(password).map((c) => (
+                      <li key={c.key} className={`flex items-center gap-1.5 text-xs ${c.met ? "text-green-400" : "text-cream/40"}`}>
+                        {c.met ? (
+                          <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        )}
+                        {c.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <div>
                 <label htmlFor="register-confirm" className="block text-sm font-medium text-cream/60 mb-1">

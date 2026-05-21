@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { adminEmails } from "@/lib/auth";
+import { isPasswordValid, getPasswordErrors } from "@/lib/passwordValidation";
 
 export async function POST(request: Request) {
   const ip = getIpFromRequest(request);
@@ -26,8 +28,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Invalid email address." }, { status: 400 });
   }
 
-  if (password.length < 8) {
-    return NextResponse.json({ message: "Password must be at least 8 characters." }, { status: 400 });
+  if (!isPasswordValid(password)) {
+    const errors = getPasswordErrors(password);
+    return NextResponse.json(
+      { message: `Password requirements not met: ${errors.join(", ")}.` },
+      { status: 400 },
+    );
+  }
+
+  // Block registration with admin-whitelisted emails (generic message to prevent info leak)
+  if (adminEmails.includes(email)) {
+    return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });

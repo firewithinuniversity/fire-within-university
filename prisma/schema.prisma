@@ -72,3 +72,18 @@ model LessonProgress {
   @@unique([userId, lessonSlug])
   @@index([userId, courseSlug])
 }
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  event     String
+  email     String?
+  userId    String?
+  ip        String?
+  userAgent String?
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  @@index([event])
+  @@index([email])
+  @@index([createdAt])
+}

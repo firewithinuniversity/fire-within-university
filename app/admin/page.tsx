@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function AdminDashboardPage() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "ADMIN") {
-    redirect("/admin/login");
+    redirect("/");
   }
 
   return (
