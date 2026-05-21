@@ -17,10 +17,11 @@ const FLOOR_Y = CANVAS_H - 50;
 const ROWS_VISIBLE = 10;
 const GAME_OVER_ROW = ROWS_VISIBLE;
 const TRAIL_LENGTH = 6;
-const COMBO_WINDOW = 20; // frames between kills to keep combo alive
-const BOSS_INTERVAL = 10; // boss spawns every N rounds
+const COMBO_WINDOW = 20;
+const BOSS_INTERVAL = 10;
 const SLOWMO_SPEED = 0.65;
-const SLOWMO_DURATION = 90; // frames (~1.5s) before auto-cancel
+const SLOWMO_DURATION = 90;
+const AMBIENT_COUNT = 18;
 
 // ── Sound engine ─────────────────────────────────────────────────────────────
 let audioCtx: AudioContext | null = null;
@@ -138,6 +139,26 @@ function hpColor(hp: number, maxHp: number): string {
   return "#f44336";
 }
 
+function lightenColor(hex: string, amount: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const lr = Math.min(255, r + amount);
+  const lg = Math.min(255, g + amount);
+  const lb = Math.min(255, b + amount);
+  return `rgb(${lr},${lg},${lb})`;
+}
+
+function darkenColor(hex: string, amount: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const dr = Math.max(0, r - amount);
+  const dg = Math.max(0, g - amount);
+  const db = Math.max(0, b - amount);
+  return `rgb(${dr},${dg},${db})`;
+}
+
 // ── Types ────────────────────────────────────────────────────────────────────
 type BlockShape = "square" | "circle" | "triangle";
 type BlockAbility = "normal" | "steel" | "explosive" | "ice";
@@ -155,7 +176,7 @@ type Block = {
   isBoss: boolean;
   bossW: number;
   bossH: number;
-  slideOffset: number; // for entry animation
+  slideOffset: number;
 };
 
 type Pickup = {
@@ -176,35 +197,38 @@ type Ball = {
   trail: { x: number; y: number }[];
   ballType: BallType;
   radius: number;
-  hitsLeft: number; // for fire balls (pierce count)
+  hitsLeft: number;
   hasSplit: boolean;
 };
 
 type GameState = "aiming" | "launching" | "running" | "gameover";
 
 type Particle = {
-  x: number;
-  y: number;
-  dx: number;
-  dy: number;
-  life: number;
-  maxLife: number;
-  color: string;
-  size: number;
+  x: number; y: number; dx: number; dy: number;
+  life: number; maxLife: number; color: string; size: number;
 };
 
 type FloatingText = {
-  x: number;
-  y: number;
-  text: string;
-  life: number;
-  color: string;
-  scale: number;
+  x: number; y: number; text: string; life: number; color: string; scale: number;
 };
 
 type FlashEffect = { row: number; alpha: number };
 type LevelBanner = { text: string; life: number };
 type Confetti = { x: number; y: number; dx: number; dy: number; life: number; color: string; rot: number; rotSpeed: number };
+
+type AmbientParticle = {
+  x: number; y: number; dx: number; dy: number;
+  size: number; alpha: number; maxAlpha: number;
+};
+
+type Ripple = {
+  x: number; y: number; radius: number; maxRadius: number; alpha: number;
+};
+
+type DeathBlock = {
+  x: number; y: number; w: number; h: number; color: string;
+  rot: number; rotSpeed: number; scale: number; alpha: number; shape: BlockShape;
+};
 
 interface GameData {
   state: GameState;
@@ -228,6 +252,9 @@ interface GameData {
   particles: Particle[];
   floatingTexts: FloatingText[];
   confetti: Confetti[];
+  ambientParticles: AmbientParticle[];
+  ripples: Ripple[];
+  deathBlocks: DeathBlock[];
   level: number;
   roundsThisLevel: number;
   shakeX: number;
@@ -263,9 +290,27 @@ function getLevelInfo(level: number) {
   return LEVELS[Math.min(level, LEVELS.length - 1)];
 }
 
+// ── Ambient particle spawner ────────────────────────────────────────────────
+function spawnAmbientParticle(): AmbientParticle {
+  const maxA = 0.08 + Math.random() * 0.12;
+  return {
+    x: Math.random() * CANVAS_W,
+    y: TOP_BAR + Math.random() * (FLOOR_Y - TOP_BAR),
+    dx: (Math.random() - 0.5) * 0.15,
+    dy: -0.1 - Math.random() * 0.2,
+    size: 1 + Math.random() * 2,
+    alpha: Math.random() * maxA,
+    maxAlpha: maxA,
+  };
+}
+
 function createGame(): GameData {
   let hs = 0;
   try { hs = parseInt(localStorage.getItem("ballz-hs") ?? "0") || 0; } catch {}
+
+  const ambient: AmbientParticle[] = [];
+  for (let i = 0; i < AMBIENT_COUNT; i++) ambient.push(spawnAmbientParticle());
+
   return {
     state: "aiming", round: 1, score: 0, highScore: hs,
     ballCount: 1, launchX: CANVAS_W / 2,
@@ -274,6 +319,7 @@ function createGame(): GameData {
     ballsToLaunch: 0, launchTimer: 0, firstSettledX: null,
     extraBalls: 0, animFrame: 0, speed: 1,
     flashes: [], particles: [], floatingTexts: [], confetti: [],
+    ambientParticles: ambient, ripples: [], deathBlocks: [],
     level: 0, roundsThisLevel: 0,
     shakeX: 0, shakeY: 0, levelBanner: null,
     blocksDestroyed: 0, ballsCollected: 0,
@@ -333,6 +379,24 @@ function spawnConfetti(g: GameData, count: number) {
   }
 }
 
+function spawnDeathBlock(g: GameData, blk: Block, color: string) {
+  const r = blockRect(blk);
+  g.deathBlocks.push({
+    x: r.x + r.w / 2, y: r.y + r.h / 2,
+    w: r.w, h: r.h, color,
+    rot: 0, rotSpeed: (Math.random() - 0.5) * 0.15,
+    scale: 1, alpha: 0.9, shape: blk.shape,
+  });
+}
+
+function spawnRipple(g: GameData, x: number) {
+  g.ripples.push({
+    x, y: FLOOR_Y,
+    radius: 3, maxRadius: 20 + Math.random() * 10,
+    alpha: 0.4,
+  });
+}
+
 // ── Spawning ─────────────────────────────────────────────────────────────────
 function makeBlock(col: number, row: number, hp: number, shape: BlockShape, ability: BlockAbility): Block {
   return { col, row, hp, maxHp: hp, shape, ability, hitScale: 1, isBoss: false, bossW: 1, bossH: 1, slideOffset: -CELL };
@@ -346,7 +410,6 @@ function spawnRow(g: GameData) {
   const isBossRound = g.round > 1 && g.round % BOSS_INTERVAL === 0;
 
   if (isBossRound) {
-    // Boss block: occupies 2 columns, higher HP
     const bossCol = Math.floor(Math.random() * (COLS - 1));
     const bossHp = g.round * 3 + info.hpBonus * 5;
     const boss: Block = {
@@ -356,7 +419,6 @@ function spawnRow(g: GameData) {
     };
     g.blocks.push(boss);
 
-    // Fill remaining cols with normal blocks
     const bossOccupied = new Set([bossCol, bossCol + 1]);
     for (let col = 0; col < COLS; col++) {
       if (bossOccupied.has(col)) continue;
@@ -387,21 +449,18 @@ function spawnRow(g: GameData) {
     if (!occupiedCols.has(c)) freeCols.push(c);
   }
 
-  // Always spawn a ball pickup
   if (freeCols.length > 0) {
     const idx = Math.floor(Math.random() * freeCols.length);
     g.pickups.push({ col: freeCols[idx], row: 0, collected: false, type: "ball" });
     freeCols.splice(idx, 1);
   }
 
-  // Lightning pickup (~20% from level 2)
   if (freeCols.length > 0 && g.level >= 2 && Math.random() < 0.20) {
     const idx = Math.floor(Math.random() * freeCols.length);
     g.pickups.push({ col: freeCols[idx], row: 0, collected: false, type: "lightning" });
     freeCols.splice(idx, 1);
   }
 
-  // Special ball pickups (~12% from level 3)
   if (freeCols.length > 0 && g.level >= 3 && Math.random() < 0.12) {
     const types: PickupType[] = ["fire", "split", "giant"];
     const type = types[Math.floor(Math.random() * types.length)];
@@ -462,6 +521,7 @@ function destroyBlock(g: GameData, idx: number) {
   g.roundBlocksDestroyed++;
 
   spawnParticles(g, c.x, c.y, color, blk.isBoss ? 20 : 8);
+  spawnDeathBlock(g, blk, blk.ability === "ice" ? "#29b6f6" : blk.ability === "explosive" ? "#ff7043" : color);
 
   const comboText = mult > 1 ? ` x${mult}` : "";
   g.floatingTexts.push({
@@ -492,7 +552,6 @@ function destroyBlock(g: GameData, idx: number) {
     }
   }
 
-  // Explosive ability: destroy adjacent blocks
   if (blk.ability === "explosive") {
     g.shakeX += (Math.random() - 0.5) * 6;
     g.shakeY += (Math.random() - 0.5) * 6;
@@ -508,12 +567,12 @@ function destroyBlock(g: GameData, idx: number) {
         toDestroy.push(j);
       }
     }
-    // Remove from highest index first
     toDestroy.sort((a, b) => b - a);
     for (const j of toDestroy) {
       const ob = g.blocks[j];
       const obc = blockCenter(ob);
       spawnParticles(g, obc.x, obc.y, hpColor(1, ob.maxHp), 5);
+      spawnDeathBlock(g, ob, hpColor(1, ob.maxHp));
       g.score++;
       g.blocksDestroyed++;
       g.roundBlocksDestroyed++;
@@ -521,7 +580,6 @@ function destroyBlock(g: GameData, idx: number) {
     }
   }
 
-  // Remove the block (adjust index if explosions already removed lower indices)
   const currentIdx = g.blocks.indexOf(blk);
   if (currentIdx >= 0) g.blocks.splice(currentIdx, 1);
 }
@@ -533,8 +591,10 @@ function triggerLightning(g: GameData, row: number) {
     if (g.blocks[i].row === row) toRemove.push(i);
   }
   for (const i of toRemove) {
-    const c = blockCenter(g.blocks[i]);
-    spawnParticles(g, c.x, c.y, hpColor(g.blocks[i].hp, g.blocks[i].maxHp), 6);
+    const blk = g.blocks[i];
+    const c = blockCenter(blk);
+    spawnParticles(g, c.x, c.y, hpColor(blk.hp, blk.maxHp), 6);
+    spawnDeathBlock(g, blk, hpColor(blk.hp, blk.maxHp));
     g.score++;
     g.blocksDestroyed++;
     g.roundBlocksDestroyed++;
@@ -647,7 +707,7 @@ function resolveCollisions(ball: Ball, g: GameData) {
 
   for (let i = g.blocks.length - 1; i >= 0; i--) {
     const blk = g.blocks[i];
-    if (blk.slideOffset > 0.5) continue; // still sliding in
+    if (blk.slideOffset > 0.5) continue;
     let hit = false;
 
     if (blk.shape === "circle" && !blk.isBoss) {
@@ -659,12 +719,10 @@ function resolveCollisions(ball: Ball, g: GameData) {
     }
 
     if (hit) {
-      // Steel blocks take half damage
       const dmg = blk.ability === "steel" ? 0.5 : 1;
       blk.hp -= dmg;
       blk.hitScale = 0.85;
 
-      // Ice blocks slow ball
       if (blk.ability === "ice" && ball.ballType !== "fire") {
         const currentSpeed = Math.hypot(ball.dx, ball.dy);
         const slowSpeed = Math.max(currentSpeed * 0.7, BALL_SPEED * 0.5);
@@ -679,21 +737,17 @@ function resolveCollisions(ball: Ball, g: GameData) {
         if (g.soundEnabled) playHitSound(0.8 + (blk.hp / blk.maxHp) * 0.6);
       }
 
-      // Fire ball pierces (doesn't bounce)
       if (ball.ballType === "fire") {
         ball.hitsLeft--;
         if (ball.hitsLeft <= 0) {
           ball.ballType = "normal";
           ball.radius = BALL_R;
         }
-        // Restore direction (undo reflection)
-        // Actually, let it bounce for feel but keep going fast
       }
       break;
     }
   }
 
-  // Pickup collection
   for (const p of g.pickups) {
     if (p.collected) continue;
     const pc = pickupCenter(p);
@@ -718,9 +772,7 @@ function resolveCollisions(ball: Ball, g: GameData) {
     }
   }
 
-  // Split ball: on first block hit, create 2 extra balls at angles
   if (ball.ballType === "split" && !ball.hasSplit) {
-    // Check if any block was just hit by checking hitScale
     for (const blk of g.blocks) {
       if (blk.hitScale < 0.9) {
         ball.hasSplit = true;
@@ -748,17 +800,23 @@ function resolveCollisions(ball: Ball, g: GameData) {
     ball.settledX = ball.x;
     ball.y = FLOOR_Y - ball.radius;
     if (g.firstSettledX === null) g.firstSettledX = ball.x;
+    spawnRipple(g, ball.x);
   }
 }
 
 // ── Game tick ─────────────────────────────────────────────────────────────────
 function tick(g: GameData) {
   if (g.state === "gameover") {
-    // Keep animating confetti in game over
     for (let i = g.confetti.length - 1; i >= 0; i--) {
       const c = g.confetti[i];
       c.x += c.dx; c.y += c.dy; c.dy += 0.12; c.rot += c.rotSpeed; c.life--;
       if (c.life <= 0) g.confetti.splice(i, 1);
+    }
+    // Keep death blocks animating through game over
+    for (let i = g.deathBlocks.length - 1; i >= 0; i--) {
+      const db = g.deathBlocks[i];
+      db.scale *= 0.92; db.alpha -= 0.04; db.rot += db.rotSpeed; db.y += 0.5;
+      if (db.alpha <= 0 || db.scale < 0.05) g.deathBlocks.splice(i, 1);
     }
     return;
   }
@@ -788,6 +846,37 @@ function tick(g: GameData) {
     g.floatingTexts[i].y -= 0.8;
     g.floatingTexts[i].life--;
     if (g.floatingTexts[i].life <= 0) g.floatingTexts.splice(i, 1);
+  }
+
+  // Ambient particles: drift upward, respawn when off-screen
+  for (const ap of g.ambientParticles) {
+    ap.x += ap.dx + Math.sin(g.animFrame * 0.01 + ap.y * 0.02) * 0.05;
+    ap.y += ap.dy;
+    ap.alpha += 0.003;
+    if (ap.alpha > ap.maxAlpha) ap.alpha = ap.maxAlpha;
+    if (ap.y < TOP_BAR - 10 || ap.x < -10 || ap.x > CANVAS_W + 10) {
+      ap.x = Math.random() * CANVAS_W;
+      ap.y = FLOOR_Y + Math.random() * 20;
+      ap.alpha = 0;
+    }
+  }
+
+  // Ripples: expand and fade
+  for (let i = g.ripples.length - 1; i >= 0; i--) {
+    const rp = g.ripples[i];
+    rp.radius += 1.2;
+    rp.alpha -= 0.025;
+    if (rp.alpha <= 0 || rp.radius >= rp.maxRadius) g.ripples.splice(i, 1);
+  }
+
+  // Death blocks: shrink, spin, fade
+  for (let i = g.deathBlocks.length - 1; i >= 0; i--) {
+    const db = g.deathBlocks[i];
+    db.scale *= 0.9;
+    db.alpha -= 0.05;
+    db.rot += db.rotSpeed;
+    db.y -= 0.5;
+    if (db.alpha <= 0 || db.scale < 0.05) g.deathBlocks.splice(i, 1);
   }
 
   // Shake decay
@@ -883,7 +972,6 @@ function endTurn(g: GameData) {
   g.combo = 0;
   g.comboTimer = 0;
 
-  // Star rating: based on % of blocks destroyed this round
   const pct = g.roundBlocksStart > 0 ? g.roundBlocksDestroyed / g.roundBlocksStart : 0;
   g.starRating = pct >= 0.5 ? 3 : pct >= 0.3 ? 2 : pct >= 0.1 ? 1 : 0;
 
@@ -966,15 +1054,157 @@ function drawAbilityBadge(ctx: CanvasRenderingContext2D, blk: Block, cx: number,
   }
 }
 
+function drawCrackLines(ctx: CanvasRenderingContext2D, blk: Block, r: { x: number; y: number; w: number; h: number }) {
+  const ratio = blk.hp / blk.maxHp;
+  if (ratio >= 0.5 || blk.maxHp <= 1) return;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(0,0,0,0.35)";
+  ctx.lineWidth = 1;
+  ctx.lineCap = "round";
+
+  const cx = r.x + r.w / 2;
+  const cy = r.y + r.h / 2;
+  const hw = r.w * 0.4;
+  const hh = r.h * 0.4;
+
+  // Main crack from center
+  ctx.beginPath();
+  ctx.moveTo(cx - hw * 0.2, cy - hh * 0.1);
+  ctx.lineTo(cx + hw * 0.3, cy + hh * 0.15);
+  ctx.lineTo(cx + hw * 0.6, cy - hh * 0.3);
+  ctx.stroke();
+
+  if (ratio < 0.25) {
+    // Extra cracks for heavily damaged blocks
+    ctx.strokeStyle = "rgba(0,0,0,0.5)";
+    ctx.beginPath();
+    ctx.moveTo(cx + hw * 0.1, cy + hh * 0.05);
+    ctx.lineTo(cx - hw * 0.4, cy + hh * 0.5);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(cx + hw * 0.3, cy + hh * 0.15);
+    ctx.lineTo(cx + hw * 0.2, cy + hh * 0.6);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawGradientBlock(ctx: CanvasRenderingContext2D, blk: Block, r: { x: number; y: number; w: number; h: number }, baseColor: string) {
+  const cx = r.x + r.w / 2;
+  const cy = r.y + r.h / 2;
+
+  // Main gradient fill: lighter at top-left, darker at bottom-right
+  const grad = ctx.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h);
+  grad.addColorStop(0, lightenColor(baseColor, 35));
+  grad.addColorStop(0.5, baseColor);
+  grad.addColorStop(1, darkenColor(baseColor, 40));
+
+  ctx.fillStyle = grad;
+
+  if (blk.shape === "circle" && !blk.isBoss) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r.w / 2, 0, Math.PI * 2);
+    ctx.fill();
+    // Glossy highlight
+    const shineGrad = ctx.createRadialGradient(cx - r.w * 0.2, cy - r.h * 0.2, 0, cx, cy, r.w / 2);
+    shineGrad.addColorStop(0, "rgba(255,255,255,0.25)");
+    shineGrad.addColorStop(0.5, "rgba(255,255,255,0.05)");
+    shineGrad.addColorStop(1, "rgba(0,0,0,0.1)");
+    ctx.fillStyle = shineGrad;
+    ctx.fill();
+    if (blk.ability === "steel") { ctx.strokeStyle = "rgba(200,200,200,0.5)"; ctx.lineWidth = 2; ctx.stroke(); }
+  } else if (blk.shape === "triangle" && !blk.isBoss) {
+    drawTriangle(ctx, r);
+    ctx.fill();
+    // Glossy overlay
+    ctx.fillStyle = "rgba(255,255,255,0.08)";
+    ctx.beginPath();
+    ctx.moveTo(cx, r.y);
+    ctx.lineTo(cx, cy);
+    ctx.lineTo(r.x, r.y + r.h);
+    ctx.closePath();
+    ctx.fill();
+    if (blk.ability === "steel") { ctx.strokeStyle = "rgba(200,200,200,0.5)"; ctx.lineWidth = 2; drawTriangle(ctx, r); ctx.stroke(); }
+  } else {
+    ctx.beginPath();
+    ctx.roundRect(r.x, r.y, r.w, r.h, blk.isBoss ? 6 : 4);
+    ctx.fill();
+    // Glossy highlight on top half
+    const shineGrad = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h * 0.5);
+    shineGrad.addColorStop(0, "rgba(255,255,255,0.18)");
+    shineGrad.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = shineGrad;
+    ctx.beginPath();
+    ctx.roundRect(r.x, r.y, r.w, r.h * 0.5, [blk.isBoss ? 6 : 4, blk.isBoss ? 6 : 4, 0, 0]);
+    ctx.fill();
+    // Subtle bottom shadow
+    ctx.fillStyle = "rgba(0,0,0,0.12)";
+    ctx.beginPath();
+    ctx.roundRect(r.x, r.y + r.h * 0.7, r.w, r.h * 0.3, [0, 0, blk.isBoss ? 6 : 4, blk.isBoss ? 6 : 4]);
+    ctx.fill();
+    if (blk.ability === "steel") { ctx.strokeStyle = "rgba(200,200,200,0.5)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(r.x, r.y, r.w, r.h, blk.isBoss ? 6 : 4); ctx.stroke(); }
+  }
+}
+
+function drawBall3D(ctx: CanvasRenderingContext2D, bx: number, by: number, radius: number, baseColor: string, glowColor?: string) {
+  // Outer glow (optional)
+  if (glowColor) {
+    ctx.beginPath();
+    ctx.arc(bx, by, radius + 3, 0, Math.PI * 2);
+    ctx.fillStyle = glowColor;
+    ctx.fill();
+  }
+
+  // Main ball with radial gradient
+  const grad = ctx.createRadialGradient(bx - radius * 0.3, by - radius * 0.3, radius * 0.1, bx, by, radius);
+  grad.addColorStop(0, lightenColor(baseColor, 80));
+  grad.addColorStop(0.6, baseColor);
+  grad.addColorStop(1, darkenColor(baseColor, 50));
+  ctx.beginPath();
+  ctx.arc(bx, by, radius, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Specular highlight — small white dot offset toward top-left
+  ctx.beginPath();
+  ctx.arc(bx - radius * 0.25, by - radius * 0.25, radius * 0.3, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.fill();
+}
+
 function draw(ctx: CanvasRenderingContext2D, g: GameData) {
   const dpr = window.devicePixelRatio || 1;
   ctx.save();
   ctx.scale(dpr, dpr);
   ctx.translate(g.shakeX, g.shakeY);
 
-  // Background
-  ctx.fillStyle = "#1a1a2e";
+  // Background gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, CANVAS_H);
+  bgGrad.addColorStop(0, "#1a1a2e");
+  bgGrad.addColorStop(0.5, "#16213e");
+  bgGrad.addColorStop(1, "#0f0f23");
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(-5, -5, CANVAS_W + 10, CANVAS_H + 10);
+
+  // Subtle grid lines
+  ctx.strokeStyle = "rgba(255,255,255,0.015)";
+  ctx.lineWidth = 1;
+  for (let col = 1; col < COLS; col++) {
+    ctx.beginPath();
+    ctx.moveTo(col * CELL, TOP_BAR);
+    ctx.lineTo(col * CELL, FLOOR_Y);
+    ctx.stroke();
+  }
+
+  // Ambient floating particles (behind everything)
+  for (const ap of g.ambientParticles) {
+    ctx.beginPath();
+    ctx.arc(ap.x, ap.y, ap.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 200, 100, ${ap.alpha})`;
+    ctx.fill();
+  }
 
   // Top bar
   ctx.fillStyle = "rgba(255,255,255,0.03)";
@@ -1029,10 +1259,10 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     ctx.fillRect(0, TOP_BAR + f.row * CELL, CANVAS_W, CELL);
   }
 
-  // Blocks
+  // Blocks (with gradients + crack lines)
   for (const blk of g.blocks) {
     const r = blockRect(blk);
-    const color = hpColor(blk.hp, blk.maxHp);
+    const baseColor = blk.ability === "ice" ? "#29b6f6" : blk.ability === "explosive" ? "#ff7043" : hpColor(blk.hp, blk.maxHp);
     const scale = blk.hitScale;
     const cx = r.x + r.w / 2;
     const cy = r.y + r.h / 2;
@@ -1042,29 +1272,22 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     ctx.scale(scale, scale);
     ctx.translate(-cx, -cy);
 
-    // Steel blocks get a metallic border
-    if (blk.ability === "steel") {
-      ctx.strokeStyle = "rgba(200,200,200,0.5)";
-      ctx.lineWidth = 2;
-    }
+    // Drop shadow
+    ctx.shadowColor = "rgba(0,0,0,0.3)";
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 2;
 
-    ctx.fillStyle = blk.ability === "ice" ? "#29b6f6" : blk.ability === "explosive" ? "#ff7043" : color;
+    drawGradientBlock(ctx, blk, r, baseColor);
 
-    if (blk.shape === "circle" && !blk.isBoss) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, r.w / 2, 0, Math.PI * 2);
-      ctx.fill();
-      if (blk.ability === "steel") ctx.stroke();
-    } else if (blk.shape === "triangle" && !blk.isBoss) {
-      drawTriangle(ctx, r);
-      ctx.fill();
-      if (blk.ability === "steel") ctx.stroke();
-    } else {
-      ctx.beginPath();
-      ctx.roundRect(r.x, r.y, r.w, r.h, blk.isBoss ? 6 : 4);
-      ctx.fill();
-      if (blk.ability === "steel") ctx.stroke();
-    }
+    // Reset shadow before drawing text/cracks
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // Crack lines on damaged blocks
+    drawCrackLines(ctx, blk, r);
 
     // Boss health bar
     if (blk.isBoss) {
@@ -1074,19 +1297,23 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
       const barY = r.y + r.h - 8;
       ctx.fillStyle = "rgba(0,0,0,0.4)";
       ctx.fillRect(barX, barY, barW, barH);
-      ctx.fillStyle = "#f44336";
+      const hpGrad = ctx.createLinearGradient(barX, barY, barX + barW * (blk.hp / blk.maxHp), barY);
+      hpGrad.addColorStop(0, "#ff5252");
+      hpGrad.addColorStop(1, "#f44336");
+      ctx.fillStyle = hpGrad;
       ctx.fillRect(barX, barY, barW * (blk.hp / blk.maxHp), barH);
     }
 
-    // HP text
-    ctx.fillStyle = "#ffffff";
+    // HP text with subtle shadow
+    ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.font = blk.hp >= 100 ? "bold 11px sans-serif" : "bold 14px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const textY = blk.shape === "triangle" && !blk.isBoss ? cy + 4 : cy - (blk.isBoss ? 2 : 0);
+    ctx.fillText(String(Math.ceil(blk.hp)), cx + 0.5, textY + 0.5);
+    ctx.fillStyle = "#ffffff";
     ctx.fillText(String(Math.ceil(blk.hp)), cx, textY);
 
-    // Boss label
     if (blk.isBoss) {
       ctx.fillStyle = "rgba(255,255,255,0.5)";
       ctx.font = "bold 8px sans-serif";
@@ -1094,6 +1321,34 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     }
 
     drawAbilityBadge(ctx, blk, cx, r.y);
+    ctx.restore();
+  }
+
+  // Death blocks (shrinking + spinning out)
+  for (const db of g.deathBlocks) {
+    ctx.save();
+    ctx.globalAlpha = db.alpha;
+    ctx.translate(db.x, db.y);
+    ctx.rotate(db.rot);
+    ctx.scale(db.scale, db.scale);
+
+    ctx.fillStyle = db.color;
+    if (db.shape === "circle") {
+      ctx.beginPath();
+      ctx.arc(0, 0, db.w / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (db.shape === "triangle") {
+      ctx.beginPath();
+      ctx.moveTo(0, -db.h / 2);
+      ctx.lineTo(-db.w / 2, db.h / 2);
+      ctx.lineTo(db.w / 2, db.h / 2);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.roundRect(-db.w / 2, -db.h / 2, db.w, db.h, 4);
+      ctx.fill();
+    }
     ctx.restore();
   }
 
@@ -1106,8 +1361,7 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     if (p.type === "ball") {
       ctx.beginPath(); ctx.arc(pc.x, pc.y, 10, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255,255,255,0.12)"; ctx.fill();
-      ctx.beginPath(); ctx.arc(pc.x, pc.y, 6, 0, Math.PI * 2);
-      ctx.fillStyle = "#ffffff"; ctx.fill();
+      drawBall3D(ctx, pc.x, pc.y, 6, "#ffffff");
     } else if (p.type === "lightning") {
       ctx.beginPath(); ctx.arc(pc.x, pc.y, 12 * pulse, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255, 235, 59, 0.15)"; ctx.fill();
@@ -1135,10 +1389,19 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     }
   }
 
-  // Floor line
-  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  // Floor line with subtle glow
+  ctx.strokeStyle = "rgba(255,255,255,0.06)";
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(0, FLOOR_Y); ctx.lineTo(CANVAS_W, FLOOR_Y); ctx.stroke();
+
+  // Floor ripples
+  for (const rp of g.ripples) {
+    ctx.beginPath();
+    ctx.arc(rp.x, rp.y, rp.radius, Math.PI, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255, 255, 255, ${rp.alpha})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
 
   // Aim line with bounce preview
   if (g.state === "aiming" && g.aimAngle !== null) {
@@ -1191,32 +1454,20 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     }
   }
 
-  // Balls
+  // Balls (with 3D shading + specular highlight)
   for (const ball of g.balls) {
     if (!ball.active && !ball.settled) continue;
     const bx = ball.active ? ball.x : ball.settledX;
     const by = ball.active ? ball.y : FLOOR_Y - ball.radius;
 
-    ctx.beginPath();
-    ctx.arc(bx, by, ball.radius, 0, Math.PI * 2);
-
     if (ball.ballType === "fire") {
-      ctx.fillStyle = "#ff5722";
-      ctx.fill();
-      // Fire glow
-      ctx.beginPath();
-      ctx.arc(bx, by, ball.radius + 3, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255, 87, 34, 0.3)";
-      ctx.fill();
+      drawBall3D(ctx, bx, by, ball.radius, "#ff5722", "rgba(255, 87, 34, 0.3)");
     } else if (ball.ballType === "giant") {
-      ctx.fillStyle = "#ce93d8";
-      ctx.fill();
+      drawBall3D(ctx, bx, by, ball.radius, "#ce93d8", "rgba(206, 147, 216, 0.15)");
     } else if (ball.ballType === "split") {
-      ctx.fillStyle = "#64b5f6";
-      ctx.fill();
+      drawBall3D(ctx, bx, by, ball.radius, "#64b5f6");
     } else {
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
+      drawBall3D(ctx, bx, by, ball.radius, "#e0e0e0");
     }
   }
 
@@ -1253,12 +1504,9 @@ function draw(ctx: CanvasRenderingContext2D, g: GameData) {
     ctx.restore();
   }
 
-  // Launcher ball (when aiming)
+  // Launcher ball (when aiming) — also 3D
   if (g.state === "aiming") {
-    ctx.beginPath();
-    ctx.arc(g.launchX, FLOOR_Y - BALL_R, BALL_R, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
+    drawBall3D(ctx, g.launchX, FLOOR_Y - BALL_R, BALL_R, "#e0e0e0");
   }
 
   // Ball count
