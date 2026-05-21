@@ -51,7 +51,7 @@ export default async function CourseDetailPage({ params }: Props) {
               url: courseUrl,
               instructor: course.instructor,
             })
-          ),
+          ).replace(/</g, "\\u003c"),
         }}
       />
       <script
@@ -63,7 +63,7 @@ export default async function CourseDetailPage({ params }: Props) {
               { name: "Courses", url: canonicalUrl("/courses") },
               { name: course.title, url: courseUrl },
             ])
-          ),
+          ).replace(/</g, "\\u003c"),
         }}
       />
 

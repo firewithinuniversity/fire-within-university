@@ -106,7 +106,7 @@ export default async function PostPage({
               authorName: author.name,
               imageUrl: ogImageUrl,
             })
-          ),
+          ).replace(/</g, "\\u003c"),
         }}
       />
       <script
@@ -118,7 +118,7 @@ export default async function PostPage({
               { name: "Sermons & Articles", url: canonicalUrl("/blog") },
               { name: title, url: postUrl },
             ])
-          ),
+          ).replace(/</g, "\\u003c"),
         }}
       />
 

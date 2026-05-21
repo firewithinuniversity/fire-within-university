@@ -68,7 +68,7 @@ export default async function SeriesDetailPage({
               { name: "Teaching Series", url: canonicalUrl("/series") },
               { name: series.title, url: canonicalUrl(`/series/${slug}`) },
             ])
-          ),
+          ).replace(/</g, "\\u003c"),
         }}
       />
 

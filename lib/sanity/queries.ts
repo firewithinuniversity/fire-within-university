@@ -122,20 +122,25 @@ export async function getFilteredPosts(opts: {
   const { search = "", categorySlug = "", page = 1, limit = 9 } = opts;
   const offset = (page - 1) * limit;
 
-  // Build GROQ filter conditions
+  // Build GROQ filter conditions using parameterized queries to prevent injection
   const conditions: string[] = [`_type == "post"`];
+  const params: Record<string, string | number> = {};
+
   if (search) {
-    // Match against title or excerpt (case-insensitive via lower())
+    // Use $params instead of string interpolation to prevent GROQ injection
     conditions.push(
-      `(lower(title) match lower("${search.replace(/"/g, "")}*") || lower(coalesce(excerpt, "")) match lower("${search.replace(/"/g, "")}*"))`
+      `(lower(title) match lower($searchTerm) || lower(coalesce(excerpt, "")) match lower($searchTerm))`
     );
+    params.searchTerm = `${search}*`;
   }
   if (categorySlug) {
-    conditions.push(`category->slug.current == "${categorySlug.replace(/"/g, "")}"`);
+    conditions.push(`category->slug.current == $categorySlug`);
+    params.categorySlug = categorySlug;
   }
 
   const filter = conditions.join(" && ");
 
+  // offset/limit are safe (derived from validated numbers, not user strings)
   type RawResult = { posts: PostSummary[]; total: number };
 
   const result = await safeFetch<RawResult>(
@@ -144,7 +149,8 @@ export async function getFilteredPosts(opts: {
         `{
           "posts": *[${filter}] | order(publishedAt desc) [${offset}...${offset + limit}] { ${POST_SUMMARY_FIELDS} },
           "total": count(*[${filter}])
-        }`
+        }`,
+        params
       ),
     { posts: [], total: 0 }
   );

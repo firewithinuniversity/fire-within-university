@@ -4,6 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
 
+/** Slug format: lowercase alphanumeric + hyphens, max 200 chars */
+const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,198}[a-z0-9]$/;
+
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -17,6 +20,10 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const courseSlug = searchParams.get("courseSlug");
+
+  if (courseSlug && !SLUG_RE.test(courseSlug)) {
+    return NextResponse.json({ message: "Invalid courseSlug format." }, { status: 400 });
+  }
 
   const where: { userId: string; courseSlug?: string } = { userId: session.user.id };
   if (courseSlug) where.courseSlug = courseSlug;
@@ -52,6 +59,9 @@ export async function POST(request: Request) {
   if (!lessonSlug || !courseSlug) {
     return NextResponse.json({ message: "lessonSlug and courseSlug are required." }, { status: 400 });
   }
+  if (typeof lessonSlug !== "string" || typeof courseSlug !== "string" || !SLUG_RE.test(lessonSlug) || !SLUG_RE.test(courseSlug)) {
+    return NextResponse.json({ message: "Invalid slug format." }, { status: 400 });
+  }
 
   const entry = await prisma.lessonProgress.upsert({
     where: { userId_lessonSlug: { userId: session.user.id, lessonSlug } },
@@ -77,6 +87,9 @@ export async function DELETE(request: Request) {
   const lessonSlug = searchParams.get("lessonSlug");
   if (!lessonSlug) {
     return NextResponse.json({ message: "lessonSlug is required." }, { status: 400 });
+  }
+  if (!SLUG_RE.test(lessonSlug)) {
+    return NextResponse.json({ message: "Invalid lessonSlug format." }, { status: 400 });
   }
 
   await prisma.lessonProgress.deleteMany({

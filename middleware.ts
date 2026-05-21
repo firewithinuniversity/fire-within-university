@@ -116,7 +116,8 @@ export async function middleware(request: NextRequest) {
   });
 
   response.headers.set("Content-Security-Policy", csp);
-  response.headers.set("x-csp-nonce", nonce);
+  // NOTE: nonce is passed to server components via the x-nonce REQUEST header (line 112).
+  // We intentionally do NOT expose it as a response header to prevent scripts from reading it.
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
