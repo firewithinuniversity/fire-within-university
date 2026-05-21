@@ -9,6 +9,9 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // Ensure native/heavy server-only packages are never bundled for the client
+  serverExternalPackages: ["bcrypt"],
+
   turbopack: {
     root: import.meta.dirname,
   },
