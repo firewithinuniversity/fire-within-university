@@ -3,11 +3,20 @@ import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import EmailSignup from "@/components/EmailSignup";
 import { getAllCategories, getFilteredPosts, getAllPosts } from "@/lib/sanity/queries";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Sermons & Articles",
   description:
     "Browse all sermons, articles, and devotionals from Fire Within University.",
+  alternates: {
+    canonical: canonicalUrl("/blog"),
+  },
+  openGraph: {
+    title: "Sermons & Articles",
+    description: "Browse all sermons, articles, and devotionals from Fire Within University.",
+    url: canonicalUrl("/blog"),
+  },
 };
 
 const POSTS_PER_PAGE = 9;

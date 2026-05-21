@@ -15,7 +15,7 @@ export default async function AboutPage() {
   const authors = await getAllAuthors();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
+    <div className="max-w-4xl mx-auto px-4 pt-20 pb-12">
       {/* Mission section */}
       <section className="text-center mb-20 space-y-6">
         <div className="flex justify-center" aria-hidden="true">

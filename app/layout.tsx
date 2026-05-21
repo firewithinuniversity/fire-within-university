@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import CookieBanner from "@/components/CookieBanner";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { organizationJsonLd, websiteJsonLd, canonicalUrl } from "@/lib/metadata";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -19,6 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(canonicalUrl()),
   title: {
     default: "Fire Within University",
     template: "%s | Fire Within University",
@@ -29,6 +31,19 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Fire Within University",
+    url: canonicalUrl(),
+    title: "Fire Within University",
+    description:
+      "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fire Within University",
+    description:
+      "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
+  },
+  alternates: {
+    canonical: canonicalUrl(),
   },
   robots: {
     index: true,
@@ -47,6 +62,15 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${lora.variable} ${inter.variable}`}>
       <body className="bg-[#1a0f05] text-cream font-sans antialiased">
+        {/* Structured data for Google rich results */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
+        />
         {children}
         <Toaster
           position="bottom-right"

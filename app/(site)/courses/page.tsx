@@ -1,13 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import SectionReveal from "@/components/SectionReveal";
 import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
+import { canonicalUrl } from "@/lib/metadata";
 
-export const metadata = {
-  title: "Courses | Fire Within University",
+export const metadata: Metadata = {
+  title: "Courses",
   description:
     "Explore our Bible courses and teaching series. Grow in the knowledge of Jesus Christ through structured study.",
+  alternates: {
+    canonical: canonicalUrl("/courses"),
+  },
+  openGraph: {
+    title: "Courses",
+    description: "Explore our Bible courses and teaching series. Grow in the knowledge of Jesus Christ through structured study.",
+    url: canonicalUrl("/courses"),
+  },
 };
 
 const PLACEHOLDER_COURSES: CourseSummary[] = [

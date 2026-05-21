@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getCourseBySlug, getAllCourseSlugs } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
+import { courseJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -14,9 +15,19 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const course = await getCourseBySlug(slug);
+  if (!course) return { title: "Course Not Found" };
   return {
-    title: course ? `${course.title} | Fire Within University` : "Course Not Found",
-    description: course?.description,
+    title: course.title,
+    description: course.description,
+    alternates: {
+      canonical: canonicalUrl(`/courses/${slug}`),
+    },
+    openGraph: {
+      title: course.title,
+      description: course.description,
+      type: "website",
+      url: canonicalUrl(`/courses/${slug}`),
+    },
   };
 }
 
@@ -25,8 +36,37 @@ export default async function CourseDetailPage({ params }: Props) {
   const course = await getCourseBySlug(slug);
   if (!course) notFound();
 
+  const courseUrl = canonicalUrl(`/courses/${slug}`);
+
   return (
     <div className="bg-[#1a0f05] min-h-screen">
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            courseJsonLd({
+              title: course.title,
+              description: course.description,
+              url: courseUrl,
+              instructor: course.instructor,
+            })
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbJsonLd([
+              { name: "Home", url: canonicalUrl() },
+              { name: "Courses", url: canonicalUrl("/courses") },
+              { name: course.title, url: courseUrl },
+            ])
+          ),
+        }}
+      />
+
       {/* Hero */}
       <section className="relative pt-16 pb-12 px-4">
         <div className="max-w-4xl mx-auto">

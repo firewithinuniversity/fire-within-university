@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getSeriesBySlug, getPostsBySeries, getAllSeries } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
 import PostCard from "@/components/PostCard";
 
 export async function generateStaticParams() {
@@ -28,10 +29,14 @@ export async function generateMetadata({
   return {
     title: series.title,
     description: series.description,
+    alternates: {
+      canonical: canonicalUrl(`/series/${slug}`),
+    },
     openGraph: {
       title: series.title,
       description: series.description,
       type: "website",
+      url: canonicalUrl(`/series/${slug}`),
     },
   };
 }
@@ -53,6 +58,20 @@ export default async function SeriesDetailPage({
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbJsonLd([
+              { name: "Home", url: canonicalUrl() },
+              { name: "Teaching Series", url: canonicalUrl("/series") },
+              { name: series.title, url: canonicalUrl(`/series/${slug}`) },
+            ])
+          ),
+        }}
+      />
+
       {/* Breadcrumb */}
       <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/series" className="hover:text-gold transition-colors">

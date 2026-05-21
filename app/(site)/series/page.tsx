@@ -10,11 +10,20 @@ import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
 import { getAllSeries } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
+import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Teaching Series",
   description:
     "Explore multi-part sermon and article series. Deep dives into scripture designed to transform your walk with Jesus.",
+  alternates: {
+    canonical: canonicalUrl("/series"),
+  },
+  openGraph: {
+    title: "Teaching Series",
+    description: "Explore multi-part sermon and article series. Deep dives into scripture designed to transform your walk with Jesus.",
+    url: canonicalUrl("/series"),
+  },
 };
 
 export default async function SeriesPage() {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getSeriesNavigation } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { readingTimeLabel } from "@/lib/readingTime";
+import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
 import PortableTextRenderer from "@/components/PortableTextRenderer";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import AuthorCard from "@/components/AuthorCard";
@@ -35,13 +36,22 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: canonicalUrl(`/blog/${slug}`),
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
       publishedTime: post.publishedAt,
       authors: [post.author.name],
+      url: canonicalUrl(`/blog/${slug}`),
       images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
     },
   };
 }
@@ -76,8 +86,42 @@ export default async function PostPage({
 
   const hasAffiliateProducts = affiliateProducts && affiliateProducts.length > 0;
 
+  const postUrl = canonicalUrl(`/blog/${slug}`);
+  const ogImageUrl = mainImage
+    ? imageUrlFor(mainImage).width(1200).height(630).fit("crop").auto("format").url()
+    : undefined;
+
   return (
     <article className="max-w-3xl mx-auto px-4 py-14">
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            articleJsonLd({
+              title,
+              description: post.excerpt,
+              url: postUrl,
+              publishedAt,
+              authorName: author.name,
+              imageUrl: ogImageUrl,
+            })
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbJsonLd([
+              { name: "Home", url: canonicalUrl() },
+              { name: "Sermons & Articles", url: canonicalUrl("/blog") },
+              { name: title, url: postUrl },
+            ])
+          ),
+        }}
+      />
+
       {/* ── Breadcrumb ──────────────────────────────────────────────── */}
       <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/blog" className="hover:text-gold transition-colors">

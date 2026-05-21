@@ -1,4 +1,9 @@
 import { client } from "./client";
+import { unstable_cache } from "next/cache";
+
+/* ─── Revalidation times (seconds) ─────────────────────────────── */
+const ONE_HOUR = 3600;
+const FIVE_MIN = 300;
 
 export type SanityImage = {
   asset: { _ref: string };
@@ -78,22 +83,30 @@ async function safeFetch<T>(query: () => Promise<T>, fallback: T): Promise<T> {
   }
 }
 
-export async function getAllPosts(): Promise<PostSummary[]> {
-  return safeFetch(
-    () => client.fetch(`*[_type == "post"] | order(publishedAt desc) { ${POST_SUMMARY_FIELDS} }`),
-    []
-  );
-}
+export const getAllPosts = unstable_cache(
+  async (): Promise<PostSummary[]> => {
+    return safeFetch(
+      () => client.fetch(`*[_type == "post"] | order(publishedAt desc) { ${POST_SUMMARY_FIELDS} }`),
+      []
+    );
+  },
+  ["all-posts"],
+  { revalidate: FIVE_MIN }
+);
 
-export async function getAllCategories(): Promise<Pick<Category, "_id" | "title" | "slug">[]> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "category"] | order(title asc) { _id, title, slug }`
-      ),
-    []
-  );
-}
+export const getAllCategories = unstable_cache(
+  async (): Promise<Pick<Category, "_id" | "title" | "slug">[]> => {
+    return safeFetch(
+      () =>
+        client.fetch(
+          `*[_type == "category"] | order(title asc) { _id, title, slug }`
+        ),
+      []
+    );
+  },
+  ["all-categories"],
+  { revalidate: ONE_HOUR }
+);
 
 export type FilteredPostsResult = {
   posts: PostSummary[];
@@ -140,28 +153,38 @@ export async function getFilteredPosts(opts: {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return safeFetch(
-    () => client.fetch(
-      `*[_type == "post" && slug.current == $slug][0] {
-        ${POST_SUMMARY_FIELDS},
-        body,
-        youtubeUrl,
-        "affiliateProducts": affiliateProducts[]-> {
-          _id, name, description, affiliateUrl, image, disclosureText
-        }
-      }`,
-      { slug }
-    ),
-    null
-  );
+  return unstable_cache(
+    async () =>
+      safeFetch(
+        () =>
+          client.fetch(
+            `*[_type == "post" && slug.current == $slug][0] {
+              ${POST_SUMMARY_FIELDS},
+              body,
+              youtubeUrl,
+              "affiliateProducts": affiliateProducts[]-> {
+                _id, name, description, affiliateUrl, image, disclosureText
+              }
+            }`,
+            { slug }
+          ),
+        null
+      ),
+    [`post-${slug}`],
+    { revalidate: FIVE_MIN }
+  )();
 }
 
-export async function getFeaturedPosts(): Promise<PostSummary[]> {
-  return safeFetch(
-    () => client.fetch(`*[_type == "post"] | order(publishedAt desc) [0..2] { ${POST_SUMMARY_FIELDS} }`),
-    []
-  );
-}
+export const getFeaturedPosts = unstable_cache(
+  async (): Promise<PostSummary[]> => {
+    return safeFetch(
+      () => client.fetch(`*[_type == "post"] | order(publishedAt desc) [0..2] { ${POST_SUMMARY_FIELDS} }`),
+      []
+    );
+  },
+  ["featured-posts"],
+  { revalidate: FIVE_MIN }
+);
 
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
   return safeFetch(
@@ -186,18 +209,22 @@ export type SeriesSummary = {
   postCount: number;
 };
 
-export async function getAllSeries(): Promise<SeriesSummary[]> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "series"] | order(title asc) {
-          _id, title, slug, description, coverImage,
-          "postCount": count(*[_type == "post" && references(^._id)])
-        }`
-      ),
-    []
-  );
-}
+export const getAllSeries = unstable_cache(
+  async (): Promise<SeriesSummary[]> => {
+    return safeFetch(
+      () =>
+        client.fetch(
+          `*[_type == "series"] | order(title asc) {
+            _id, title, slug, description, coverImage,
+            "postCount": count(*[_type == "post" && references(^._id)])
+          }`
+        ),
+      []
+    );
+  },
+  ["all-series"],
+  { revalidate: FIVE_MIN }
+);
 
 export async function getSeriesBySlug(slug: string): Promise<SeriesSummary | null> {
   return safeFetch(
@@ -332,17 +359,21 @@ export type Testimonial = {
   photo?: SanityImage;
 };
 
-export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "testimonial" && featured == true] | order(order asc) {
-          _id, name, location, quote, photo
-        }`
-      ),
-    []
-  );
-}
+export const getFeaturedTestimonials = unstable_cache(
+  async (): Promise<Testimonial[]> => {
+    return safeFetch(
+      () =>
+        client.fetch(
+          `*[_type == "testimonial" && featured == true] | order(order asc) {
+            _id, name, location, quote, photo
+          }`
+        ),
+      []
+    );
+  },
+  ["featured-testimonials"],
+  { revalidate: ONE_HOUR }
+);
 
 export type CourseSummary = {
   _id: string;
@@ -390,31 +421,39 @@ export type LessonDetail = {
   };
 };
 
-export async function getAllCourses(): Promise<CourseSummary[]> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "course"] | order(publishedAt desc) {
-          _id, title, slug, description, coverImage, instructor, featured,
-          "lessonCount": count(lessons)
-        }`
-      ),
-    []
-  );
-}
+export const getAllCourses = unstable_cache(
+  async (): Promise<CourseSummary[]> => {
+    return safeFetch(
+      () =>
+        client.fetch(
+          `*[_type == "course"] | order(publishedAt desc) {
+            _id, title, slug, description, coverImage, instructor, featured,
+            "lessonCount": count(lessons)
+          }`
+        ),
+      []
+    );
+  },
+  ["all-courses"],
+  { revalidate: FIVE_MIN }
+);
 
-export async function getFeaturedCourses(): Promise<CourseSummary[]> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "course" && featured == true] | order(publishedAt desc) {
-          _id, title, slug, description, coverImage, instructor, featured,
-          "lessonCount": count(lessons)
-        }`
-      ),
-    []
-  );
-}
+export const getFeaturedCourses = unstable_cache(
+  async (): Promise<CourseSummary[]> => {
+    return safeFetch(
+      () =>
+        client.fetch(
+          `*[_type == "course" && featured == true] | order(publishedAt desc) {
+            _id, title, slug, description, coverImage, instructor, featured,
+            "lessonCount": count(lessons)
+          }`
+        ),
+      []
+    );
+  },
+  ["featured-courses"],
+  { revalidate: FIVE_MIN }
+);
 
 export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
   return safeFetch(
