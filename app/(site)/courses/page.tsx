@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import SectionReveal from "@/components/SectionReveal";
 import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 
@@ -39,63 +40,69 @@ export default async function CoursesPage() {
   return (
     <div className="bg-[#1a0f05] min-h-screen">
       {/* Header */}
-      <section className="pt-20 pb-12 text-center px-4">
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-cream mb-4">
-          Courses
-        </h1>
-        <p className="text-cream/70 max-w-xl mx-auto text-lg">
-          Structured Bible study to deepen your walk with Christ. Each course
-          includes video lessons, Scripture readings, and downloadable resources.
-        </p>
+      <section className="pt-32 pb-16 text-center px-4 sm:px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#4A2A12]/20 to-transparent" />
+        <div className="relative">
+          <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-4">Learn at Your Own Pace</p>
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-cream mb-6 tracking-[-0.02em] leading-[0.95]">
+            Courses
+          </h1>
+          <p className="text-cream/55 max-w-lg mx-auto text-lg leading-[1.7]">
+            Structured Bible study to deepen your walk with Christ. Each course
+            includes video lessons, Scripture readings, and downloadable resources.
+          </p>
+        </div>
       </section>
 
       {/* Course grid */}
-      <section className="max-w-6xl mx-auto px-4 pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {courses.map((course) => (
-            <Link
-              key={course._id}
-              href={`/courses/${course.slug.current}`}
-              className="group bg-[#4A2A12] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_10px_28px_-4px_rgba(61,31,10,0.3)] hover:-translate-y-1"
-            >
-              <div className="relative aspect-[16/9] bg-[#3D1F0A]">
-                {course.coverImage ? (
-                  <Image
-                    src={imageUrlFor(course.coverImage).width(600).height(340).url()}
-                    alt={course.coverImage.alt || course.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg className="w-16 h-16 text-gold/30" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                    </svg>
-                  </div>
-                )}
-                {course.featured && (
-                  <span className="absolute top-3 left-3 bg-gold text-brown text-xs font-bold px-3 py-1 rounded-full">
-                    Featured
-                  </span>
-                )}
-              </div>
-
-              <div className="p-6">
-                <h2 className="font-serif text-xl font-bold text-cream mb-2 group-hover:text-gold transition-colors">
-                  {course.title}
-                </h2>
-                {course.description && (
-                  <p className="text-cream/60 text-sm leading-relaxed mb-4 line-clamp-2">
-                    {course.description}
-                  </p>
-                )}
-                <div className="flex items-center justify-between text-xs text-cream/50">
-                  {course.instructor && <span>{course.instructor}</span>}
-                  <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses.map((course, i) => (
+            <SectionReveal key={course._id} delay={i * 100} distance={20}>
+              <Link
+                href={`/courses/${course.slug.current}`}
+                className="group block bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-500 hover:border-gold/15 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1.5"
+              >
+                <div className="relative aspect-[16/9] bg-[#3D1F0A] overflow-hidden">
+                  {course.coverImage ? (
+                    <Image
+                      src={imageUrlFor(course.coverImage).width(600).height(340).url()}
+                      alt={course.coverImage.alt || course.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="w-14 h-14 text-gold/15 transition-colors duration-500 group-hover:text-gold/25" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                      </svg>
+                    </div>
+                  )}
+                  {course.featured && (
+                    <span className="absolute top-3 left-3 bg-gold/90 text-brown text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
+                      Featured
+                    </span>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#3D1F0A]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
-              </div>
-            </Link>
+
+                <div className="p-6">
+                  <h2 className="font-serif text-xl font-bold text-cream mb-2 group-hover:text-gold transition-colors duration-300 leading-snug">
+                    {course.title}
+                  </h2>
+                  {course.description && (
+                    <p className="text-cream/45 text-[13px] leading-relaxed mb-4 line-clamp-2">
+                      {course.description}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between text-[11px] text-cream/35 uppercase tracking-wider font-medium">
+                    {course.instructor && <span>{course.instructor}</span>}
+                    <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+                  </div>
+                </div>
+              </Link>
+            </SectionReveal>
           ))}
         </div>
       </section>

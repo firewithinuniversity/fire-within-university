@@ -31,9 +31,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 text-cream transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 text-cream transition-all duration-500 ${
         scrolled
-          ? "bg-[#1a0f05]/90 backdrop-blur-md border-b border-cream/10 shadow-[0_2px_16px_rgba(26,15,5,0.5)]"
+          ? "bg-[#1a0f05]/92 backdrop-blur-xl border-b border-cream/[0.06] shadow-[0_4px_24px_rgba(26,15,5,0.6)]"
           : "bg-transparent"
       }`}
     >
@@ -54,11 +54,11 @@ export default function Navbar() {
             <li key={href}>
               <Link
                 href={href}
-                className={`text-sm font-medium transition-colors duration-150 relative
-                  after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5
-                  after:bg-gold after:transition-transform after:duration-200 after:origin-left
+                className={`text-[13px] font-medium transition-all duration-300 relative
+                  after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1.5px]
+                  after:bg-gold after:transition-transform after:duration-300 after:origin-left
                   hover:text-gold hover:after:scale-x-100
-                  ${pathname === href ? "text-gold after:scale-x-100" : "text-cream/90 after:scale-x-0"}`}
+                  ${pathname === href ? "text-gold after:scale-x-100" : "text-cream/80 after:scale-x-0"}`}
                 aria-current={pathname === href ? "page" : undefined}
               >
                 {label}
@@ -68,7 +68,7 @@ export default function Navbar() {
           <li>
             <Link
               href="/donate"
-              className="bg-orange hover:bg-orange-hover text-cream text-sm font-semibold px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 min-h-[44px] flex items-center"
+              className="bg-orange hover:bg-orange-hover text-cream text-[13px] font-semibold px-5 py-2.5 rounded-full transition-all duration-300 shadow-[0_2px_12px_rgba(196,94,26,0.25)] hover:shadow-[0_4px_20px_rgba(196,94,26,0.4)] hover:-translate-y-0.5 min-h-[44px] flex items-center"
             >
               Give
             </Link>

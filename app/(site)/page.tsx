@@ -19,10 +19,10 @@ const SCRIPTURES = [
 ];
 
 const PATHWAYS = [
-  { title: "Sermons & Articles", description: "Weekly teachings to strengthen your faith", href: "/blog", icon: "book" },
-  { title: "Courses", description: "Structured Bible study with video lessons", href: "/courses", icon: "academic" },
-  { title: "Teaching Series", description: "Multi-part studies on focused topics", href: "/series", icon: "collection" },
-  { title: "Resources", description: "Tools and materials for your walk", href: "/resources", icon: "tool" },
+  { title: "Sermons & Articles", description: "Weekly teachings to strengthen your faith and sharpen your walk.", href: "/blog", icon: "book" },
+  { title: "Courses", description: "Structured Bible study with video lessons and downloadable resources.", href: "/courses", icon: "academic" },
+  { title: "Teaching Series", description: "Multi-part deep dives into scripture, theology, and the life of faith.", href: "/series", icon: "collection" },
+  { title: "Resources", description: "Curated tools and materials for your daily walk with God.", href: "/resources", icon: "tool" },
 ];
 
 const PLACEHOLDER_COURSES: CourseSummary[] = [
@@ -31,7 +31,7 @@ const PLACEHOLDER_COURSES: CourseSummary[] = [
 ];
 
 function PathwayIcon({ type }: { type: string }) {
-  const cls = "w-[34px] h-[34px] text-gold";
+  const cls = "w-8 h-8 text-gold";
   switch (type) {
     case "book":
       return <svg className={cls} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>;
@@ -54,8 +54,7 @@ export default async function HomePage() {
   return (
     <div className="bg-[#1a0f05]">
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden" aria-label="Hero">
-        {/* Background video (desktop) / image (mobile) */}
+      <section className="relative min-h-[100vh] flex items-center overflow-hidden" aria-label="Hero">
         <video
           autoPlay
           muted
@@ -75,52 +74,63 @@ export default async function HomePage() {
           sizes="100vw"
           quality={85}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a0f05]/90 via-[#1a0f05]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05] via-transparent to-[#1a0f05]/30" />
+        {/* Cinematic multi-layer gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1a0f05]/95 via-[#1a0f05]/70 to-[#1a0f05]/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05] via-transparent to-[#1a0f05]/40" />
+        <div className="absolute inset-0 bg-[#1a0f05]/10" />
 
-        <div className="relative max-w-6xl mx-auto px-4 py-20 w-full">
-          <div className="max-w-2xl space-y-6">
-            <p className="inline-block text-gold font-semibold text-sm uppercase tracking-[0.2em] border border-gold/40 rounded-full px-4 py-1.5 bg-gold/10">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full">
+          <div className="max-w-2xl space-y-8">
+            <p className="inline-block text-gold/90 font-semibold text-[11px] uppercase tracking-[0.25em] border border-gold/30 rounded-full px-5 py-2 bg-gold/[0.06] backdrop-blur-sm">
               Ministry · Teaching · Discipleship
             </p>
-            <h1 className="font-serif text-5xl md:text-7xl font-bold leading-[0.95] text-cream tracking-tight">
+            <h1 className="font-serif text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[0.92] text-cream tracking-[-0.02em]">
               Set Your Heart{" "}
               <span className="text-gold">On Fire</span>
             </h1>
-            <p className="text-cream/80 text-xl md:text-2xl leading-relaxed font-light max-w-lg">
+            <p className="text-cream/70 text-lg md:text-xl leading-[1.7] font-light max-w-lg">
               Sermons, articles, and resources to deepen your faith and ignite your walk with Jesus.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link
                 href="/blog"
-                className="bg-orange hover:bg-orange-hover text-cream font-semibold px-10 py-4 rounded-full transition-all duration-200 shadow-[0_4px_20px_rgba(196,94,26,0.4)] hover:shadow-[0_8px_30px_rgba(196,94,26,0.5)] hover:-translate-y-0.5 text-base text-center"
+                className="group bg-orange hover:bg-orange-hover text-cream font-semibold px-10 py-4 rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(196,94,26,0.35)] hover:shadow-[0_8px_32px_rgba(196,94,26,0.5)] hover:-translate-y-0.5 text-[15px] text-center"
               >
                 Read Sermons &amp; Articles
+                <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
               </Link>
               <Link
                 href="/courses"
-                className="border-2 border-cream/60 hover:border-cream hover:bg-cream/10 text-cream font-semibold px-10 py-4 rounded-full transition-all duration-200 text-base backdrop-blur-sm text-center"
+                className="group border border-cream/30 hover:border-cream/60 hover:bg-cream/[0.06] text-cream font-semibold px-10 py-4 rounded-full transition-all duration-300 text-[15px] backdrop-blur-sm text-center"
               >
                 Explore Courses
+                <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
               </Link>
             </div>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+          <span className="text-cream/60 text-[10px] uppercase tracking-[0.3em] font-medium">Scroll</span>
+          <div className="w-px h-8 bg-gradient-to-b from-cream/40 to-transparent" />
+        </div>
       </section>
 
       {/* ── Scripture of the Day ──────────────────────────────────── */}
-      <SectionReveal>
-        <section className="max-w-4xl mx-auto px-4 -mt-8 relative z-10 mb-16">
-          <div className="bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-8 md:p-10 text-center">
-            <p className="text-gold text-xs font-bold uppercase tracking-widest mb-4">Scripture of the Day</p>
-            <blockquote className="font-serif text-xl md:text-2xl text-cream/90 leading-relaxed italic max-w-2xl mx-auto">
+      <SectionReveal distance={32}>
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 mb-24">
+          <div className="bg-[#4A2A12]/80 backdrop-blur-sm border border-white/[0.08] rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+            <p className="text-gold/80 text-[10px] font-bold uppercase tracking-[0.3em] mb-6">Scripture of the Day</p>
+            <blockquote className="font-serif text-xl md:text-[1.65rem] text-cream/90 leading-[1.6] italic max-w-xl mx-auto">
               &ldquo;{scripture.text}&rdquo;
             </blockquote>
             <a
               href={scripture.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block mt-4 text-gold/70 hover:text-gold text-sm font-medium transition-colors"
+              className="inline-block mt-6 text-gold/60 hover:text-gold text-sm font-medium transition-colors duration-300"
             >
               — {scripture.ref}
             </a>
@@ -130,155 +140,183 @@ export default async function HomePage() {
 
       {/* ── Featured Courses ─────────────────────────────────────── */}
       <SectionReveal>
-        <section className="max-w-6xl mx-auto px-4 pb-20" aria-label="Featured courses">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28" aria-label="Featured courses">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
             <div>
-              <p className="text-gold font-bold text-xs uppercase tracking-widest mb-1">Learn & Grow</p>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream leading-tight">
+              <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-2">Learn &amp; Grow</p>
+              <h2 className="font-serif text-3xl md:text-[2.5rem] font-bold text-cream leading-tight tracking-[-0.01em]">
                 Featured Courses
               </h2>
             </div>
-            <Link href="/courses" className="text-gold hover:text-gold-light text-sm font-semibold transition-colors flex items-center gap-1 hover:gap-2 duration-150 self-start sm:self-auto">
-              View all <span aria-hidden="true">&rarr;</span>
+            <Link href="/courses" className="group text-gold/80 hover:text-gold text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 self-start sm:self-auto">
+              View all
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {displayCourses.map((course) => (
-              <Link
-                key={course._id}
-                href={`/courses/${course.slug.current}`}
-                className="group bg-[#4A2A12] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_10px_28px_-4px_rgba(61,31,10,0.3)] hover:-translate-y-1"
-              >
-                <div className="relative aspect-[16/10] bg-[#3D1F0A]">
-                  {course.coverImage ? (
-                    <Image
-                      src={imageUrlFor(course.coverImage).width(400).height(250).url()}
-                      alt={course.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <svg className="w-12 h-12 text-gold/20" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors mb-1">
-                    {course.title}
-                  </h3>
-                  {course.description && (
-                    <p className="text-cream/50 text-sm line-clamp-2 mb-3">{course.description}</p>
-                  )}
-                  <span className="text-xs text-cream/40">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
-                </div>
-              </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {displayCourses.map((course, i) => (
+              <SectionReveal key={course._id} delay={i * 100} distance={20}>
+                <Link
+                  href={`/courses/${course.slug.current}`}
+                  className="group block bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-500 hover:border-gold/15 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1.5"
+                >
+                  <div className="relative aspect-[16/10] bg-[#3D1F0A] overflow-hidden">
+                    {course.coverImage ? (
+                      <Image
+                        src={imageUrlFor(course.coverImage).width(400).height(250).url()}
+                        alt={course.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-10 h-10 text-gold/15 transition-colors duration-500 group-hover:text-gold/25" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#3D1F0A]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-serif text-[17px] font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-1.5 leading-snug">
+                      {course.title}
+                    </h3>
+                    {course.description && (
+                      <p className="text-cream/45 text-[13px] line-clamp-2 mb-3 leading-relaxed">{course.description}</p>
+                    )}
+                    <span className="text-[11px] text-cream/30 uppercase tracking-wider font-medium">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+                  </div>
+                </Link>
+              </SectionReveal>
             ))}
           </div>
         </section>
       </SectionReveal>
 
       {/* ── Content Pathways ─────────────────────────────────────── */}
-      <SectionReveal>
-        <section className="max-w-6xl mx-auto px-4 pb-20">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream text-center mb-12">
-            Where Would You Like to Start?
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PATHWAYS.map((p) => (
-              <Link
-                key={p.href}
-                href={p.href}
-                className="group bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-6 text-center transition-all duration-300 hover:border-gold/20 hover:-translate-y-1"
-              >
-                <div className="flex justify-center mb-4">
-                  <PathwayIcon type={p.icon} />
-                </div>
-                <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors mb-2">
-                  {p.title}
-                </h3>
-                <p className="text-cream/50 text-sm">{p.description}</p>
-              </Link>
+      <section className="relative py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#4A2A12]/10 to-transparent" />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+          <SectionReveal>
+            <div className="text-center mb-16">
+              <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-3">Find Your Way In</p>
+              <h2 className="font-serif text-3xl md:text-[2.75rem] font-bold text-cream leading-tight tracking-[-0.02em]">
+                Where Would You Like to Start?
+              </h2>
+            </div>
+          </SectionReveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {PATHWAYS.map((p, i) => (
+              <SectionReveal key={p.href} delay={i * 80} distance={20}>
+                <Link
+                  href={p.href}
+                  className="group block bg-[#4A2A12]/50 border border-white/[0.06] rounded-2xl p-7 transition-all duration-500 hover:bg-[#4A2A12]/80 hover:border-gold/15 hover:-translate-y-1"
+                >
+                  <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-colors duration-500 group-hover:bg-gold/[0.12]">
+                    <PathwayIcon type={p.icon} />
+                  </div>
+                  <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-2 leading-snug">
+                    {p.title}
+                  </h3>
+                  <p className="text-cream/40 text-[13px] leading-relaxed mb-4">{p.description}</p>
+                  <span className="text-gold/50 text-xs font-semibold uppercase tracking-wider transition-all duration-300 group-hover:text-gold/80 flex items-center gap-1">
+                    Explore
+                    <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+                  </span>
+                </Link>
+              </SectionReveal>
             ))}
           </div>
-        </section>
-      </SectionReveal>
+        </div>
+      </section>
 
       {/* ── Why We Exist ─────────────────────────────────────────── */}
-      <SectionReveal>
-        <section className="max-w-4xl mx-auto px-4 pb-20">
-          <div className="bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-8 md:p-12 text-center space-y-6">
-            <div className="flex items-center justify-center gap-3" aria-hidden="true">
-              <div className="w-8 h-px bg-gold/40" />
-              <div className="w-1.5 h-1.5 rounded-full bg-gold/60" />
-              <div className="w-8 h-px bg-gold/40" />
-            </div>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream">Our Mission</h2>
-            <p className="text-cream/70 text-lg leading-relaxed max-w-2xl mx-auto">
+      <SectionReveal distance={32}>
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-28">
+          <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl p-8 md:p-14 text-center space-y-8 relative overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+            <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em]">Why We Exist</p>
+            <h2 className="font-serif text-3xl md:text-[2.5rem] font-bold text-cream leading-[1.15] tracking-[-0.01em]">Our Mission</h2>
+            <p className="text-cream/60 text-lg leading-[1.8] max-w-xl mx-auto">
               Fire Within University exists to equip believers with sound biblical teaching, practical discipleship resources, and a community that stirs one another toward love and good deeds.
             </p>
-            <p className="text-cream/50 italic text-sm">
+            <p className="text-cream/40 italic text-sm leading-relaxed">
               &ldquo;And let us consider how we may spur one another on toward love and good deeds.&rdquo; — Hebrews 10:24
             </p>
-            <Link href="/about" className="inline-flex items-center gap-2 text-gold hover:text-gold-light font-semibold transition-all hover:gap-3 duration-200 text-sm">
-              Learn more about us <span aria-hidden="true">&rarr;</span>
+            <Link href="/about" className="group inline-flex items-center gap-2 text-gold/80 hover:text-gold font-semibold transition-all duration-300 text-sm">
+              Learn more about us
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
             </Link>
           </div>
         </section>
       </SectionReveal>
 
       {/* ── The Prayer ────────────────────────────────────────────── */}
-      <section className="relative py-24 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#4A2A12]/40 via-[#1a0f05] to-[#1a0f05]" />
-        <div className="relative max-w-3xl mx-auto text-center space-y-6">
-          <p className="text-gold text-xs font-bold uppercase tracking-widest">A Prayer for You</p>
-          <p className="font-serif text-2xl md:text-3xl text-cream/90 leading-relaxed italic">
-            &ldquo;Lord, set our hearts ablaze with a holy fire that cannot be quenched. Let every word we read, every sermon we hear, and every prayer we whisper draw us deeper into Your presence. Amen.&rdquo;
-          </p>
-        </div>
+      <section className="relative py-32 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f05] via-[#2a1508] to-[#1a0f05]" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(232,160,32,0.4) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
+        <SectionReveal distance={40} duration={1000}>
+          <div className="relative max-w-2xl mx-auto text-center space-y-8">
+            <div className="flex items-center justify-center gap-4" aria-hidden="true">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-gold/30" />
+              <div className="w-1.5 h-1.5 rounded-full bg-gold/50 animate-pulse-glow" />
+              <div className="w-12 h-px bg-gradient-to-l from-transparent to-gold/30" />
+            </div>
+            <p className="text-gold/70 text-[10px] font-bold uppercase tracking-[0.3em]">A Prayer for You</p>
+            <p className="font-serif text-2xl md:text-[1.85rem] text-cream/85 leading-[1.65] italic">
+              &ldquo;Lord, set our hearts ablaze with a holy fire that cannot be quenched. Let every word we read, every sermon we hear, and every prayer we whisper draw us deeper into Your presence. Amen.&rdquo;
+            </p>
+            <div className="flex items-center justify-center gap-4" aria-hidden="true">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-gold/30" />
+              <div className="w-1.5 h-1.5 rounded-full bg-gold/50 animate-pulse-glow" />
+              <div className="w-12 h-px bg-gradient-to-l from-transparent to-gold/30" />
+            </div>
+          </div>
+        </SectionReveal>
       </section>
 
       {/* ── Give CTA ──────────────────────────────────────────────── */}
-      <SectionReveal>
-        <section className="max-w-4xl mx-auto px-4 pb-20">
-          <div className="bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-8 md:p-12 text-center space-y-6">
-            <svg width="20" height="30" viewBox="0 0 20 30" fill="currentColor" className="text-gold/50 mx-auto" aria-hidden="true">
-              <rect x="8" y="0" width="4" height="30" rx="2" />
-              <rect x="0" y="9" width="20" height="4" rx="2" />
+      <SectionReveal distance={32}>
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 py-28">
+          <div className="bg-gradient-to-br from-[#4A2A12]/80 to-[#3D1F0A]/60 border border-white/[0.06] rounded-2xl p-8 md:p-14 text-center space-y-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gold/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+            <svg width="18" height="28" viewBox="0 0 18 28" fill="currentColor" className="text-gold/40 mx-auto" aria-hidden="true">
+              <rect x="7" y="0" width="4" height="28" rx="2" />
+              <rect x="0" y="8" width="18" height="4" rx="2" />
             </svg>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream">
+            <h2 className="font-serif text-3xl md:text-[2.5rem] font-bold text-cream leading-tight tracking-[-0.01em]">
               Sow Into <span className="text-gold">the Kingdom</span>
             </h2>
-            <p className="text-cream/70 text-lg leading-relaxed max-w-xl mx-auto">
+            <p className="text-cream/55 text-lg leading-[1.8] max-w-lg mx-auto">
               Every seed sown bears fruit. Your generosity fuels sermons, articles, and resources that reach souls for Christ.
             </p>
-            <p className="text-cream/50 text-sm italic">
+            <p className="text-cream/35 text-sm italic leading-relaxed">
               &ldquo;Remember this: Whoever sows generously will also reap generously.&rdquo; — 2 Corinthians 9:6
             </p>
             <Link
               href="/donate"
-              className="inline-block bg-gold hover:bg-gold-dark text-brown font-bold px-12 py-4 rounded-full transition-all duration-200 shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 text-base"
+              className="group inline-block bg-gold hover:bg-gold-dark text-brown font-bold px-14 py-4 rounded-full transition-all duration-300 shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 text-[15px]"
             >
               Give Today
+              <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
             </Link>
-            <p className="text-xs text-cream/35">We are not a 501(c)(3). Donations are not tax-deductible.</p>
+            <p className="text-[11px] text-cream/25 tracking-wide">We are not a 501(c)(3). Donations are not tax-deductible.</p>
           </div>
         </section>
       </SectionReveal>
 
       {/* ── Email Signup ──────────────────────────────────────────── */}
       <SectionReveal>
-        <section className="max-w-4xl mx-auto px-4 pb-24">
-          <div className="bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-8 md:p-10 text-center space-y-4">
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-cream">Stay Connected</h2>
-            <p className="text-cream/60 text-sm max-w-md mx-auto">
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-28">
+          <div className="bg-[#4A2A12]/50 border border-white/[0.06] rounded-2xl p-8 md:p-12 text-center space-y-5">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-cream tracking-[-0.01em]">Stay Connected</h2>
+            <p className="text-cream/50 text-sm max-w-md mx-auto leading-relaxed">
               Get new sermons, articles, and course updates delivered to your inbox.
             </p>
-            <div className="pt-2">
+            <div className="pt-3">
               <EmailSignup variant="hero" />
             </div>
           </div>
