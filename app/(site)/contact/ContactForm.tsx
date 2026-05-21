@@ -18,6 +18,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 type FormData = {
   name: string;
@@ -66,6 +67,11 @@ export default function ContactForm() {
         setStatus("success");
         setResponseMessage(data.message);
         setForm(initialForm);
+        toast.success(
+          form.subject === "prayer"
+            ? "Your prayer request has been received. We're praying for you."
+            : "Your message has been sent. We'll be in touch soon."
+        );
       } else {
         setStatus("error");
         setResponseMessage(data.message ?? "Something went wrong. Please try again.");

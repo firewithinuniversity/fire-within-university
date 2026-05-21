@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Props = { variant?: "hero" | "inline" };
 
@@ -28,6 +29,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
       const data = await res.json();
       if (res.ok) {
         setEmail("");
+        toast.success("Check your inbox to confirm your subscription!");
         router.push("/confirm-email");
       } else {
         setStatus("error");

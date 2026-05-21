@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import EmailSignup from "@/components/EmailSignup";
-import { getAllPosts } from "@/lib/sanity/queries";
+import { getAllCategories, getFilteredPosts, getAllPosts } from "@/lib/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Sermons & Articles",
@@ -9,20 +10,62 @@ export const metadata: Metadata = {
     "Browse all sermons, articles, and devotionals from Fire Within University.",
 };
 
-export default async function BlogIndexPage() {
-  const posts = await getAllPosts();
+const POSTS_PER_PAGE = 9;
+
+interface BlogIndexPageProps {
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    page?: string;
+  }>;
+}
+
+export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps) {
+  const params = await searchParams;
+  const searchQuery = params.q?.trim() ?? "";
+  const categorySlug = params.category ?? "";
+  const currentPage = Math.max(1, parseInt(params.page ?? "1", 10));
+
+  // Run in parallel: categories, filtered posts, and total-post check
+  const [categories, { posts, total }, allPostsCheck] = await Promise.all([
+    getAllCategories(),
+    getFilteredPosts({
+      search: searchQuery,
+      categorySlug,
+      page: currentPage,
+      limit: POSTS_PER_PAGE,
+    }),
+    // Only needed to decide whether to show "Content Coming Soon" vs "No results"
+    getAllPosts(),
+  ]);
+
+  const totalPages = Math.ceil(total / POSTS_PER_PAGE);
+  const hasActiveFilter = searchQuery !== "" || categorySlug !== "";
+  const siteHasPosts = allPostsCheck.length > 0;
+
+  // Build a URL helper that preserves other params
+  function buildHref(overrides: { q?: string; category?: string; page?: number }) {
+    const p = new URLSearchParams();
+    const q = overrides.q !== undefined ? overrides.q : searchQuery;
+    const cat = overrides.category !== undefined ? overrides.category : categorySlug;
+    const pg = overrides.page !== undefined ? overrides.page : currentPage;
+    if (q) p.set("q", q);
+    if (cat) p.set("category", cat);
+    if (pg > 1) p.set("page", String(pg));
+    const qs = p.toString();
+    return `/blog${qs ? `?${qs}` : ""}`;
+  }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
+    <div className="max-w-6xl mx-auto px-4 pt-20 pb-12">
       {/* Page header */}
-      <div className="text-center mb-14 space-y-4">
+      <div className="text-center mb-10 space-y-4">
         <div className="flex justify-center" aria-hidden="true">
           <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
             <rect x="6" y="0" width="4" height="24" rx="2" />
             <rect x="0" y="7" width="16" height="4" rx="2" />
           </svg>
         </div>
-
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
           Sermons &amp; Articles
         </h1>
@@ -32,13 +75,121 @@ export default async function BlogIndexPage() {
         </p>
       </div>
 
+      {/* ── Search + Category filters ── */}
+      <div className="mb-10 space-y-5">
+        {/* Search input — uses a GET form so it's pure server-side */}
+        <form method="GET" action="/blog" className="relative max-w-lg mx-auto">
+          {/* Preserve category when submitting search */}
+          {categorySlug && (
+            <input type="hidden" name="category" value={categorySlug} />
+          )}
+          <label htmlFor="blog-search" className="sr-only">
+            Search posts
+          </label>
+          <div className="relative">
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-cream/30" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+            <input
+              id="blog-search"
+              type="search"
+              name="q"
+              defaultValue={searchQuery}
+              placeholder="Search sermons and articles…"
+              className="w-full rounded-full border border-cream/10 bg-cream/[0.03] pl-11 pr-4 py-3 text-cream placeholder-cream/30 text-sm focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-colors"
+            />
+            {searchQuery && (
+              <Link
+                href={buildHref({ q: "", page: 1 })}
+                className="absolute inset-y-0 right-4 flex items-center text-cream/30 hover:text-cream/60 transition-colors text-xs"
+                aria-label="Clear search"
+              >
+                ✕
+              </Link>
+            )}
+          </div>
+        </form>
+
+        {/* Category pills */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 justify-center">
+            <Link
+              href={buildHref({ category: "", page: 1 })}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 border ${
+                categorySlug === ""
+                  ? "border-gold text-gold bg-gold/[0.08]"
+                  : "border-cream/20 text-cream/50 hover:border-cream/40 hover:text-cream/70"
+              }`}
+            >
+              All
+            </Link>
+            {categories.map((cat) => {
+              const isActive = categorySlug === cat.slug.current;
+              return (
+                <Link
+                  key={cat._id}
+                  href={buildHref({ category: isActive ? "" : cat.slug.current, page: 1 })}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 border ${
+                    isActive
+                      ? "border-gold text-gold bg-gold/[0.08]"
+                      : "border-cream/20 text-cream/50 hover:border-cream/40 hover:text-cream/70"
+                  }`}
+                >
+                  {cat.title}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ── Results ── */}
       {posts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => (
-            <PostCard key={post._id} post={post} />
-          ))}
-        </div>
-      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-12">
+              <Link
+                href={buildHref({ page: currentPage - 1 })}
+                aria-disabled={currentPage <= 1}
+                className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
+                  currentPage <= 1
+                    ? "border-cream/[0.06] text-cream/20 pointer-events-none select-none"
+                    : "border-cream/10 text-cream/60 hover:bg-cream/[0.04] hover:border-cream/20"
+                }`}
+              >
+                ← Previous
+              </Link>
+
+              <span className="text-sm text-cream/40 px-2">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <Link
+                href={buildHref({ page: currentPage + 1 })}
+                aria-disabled={currentPage >= totalPages}
+                className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
+                  currentPage >= totalPages
+                    ? "border-cream/[0.06] text-cream/20 pointer-events-none select-none"
+                    : "border-cream/10 text-cream/60 hover:bg-cream/[0.04] hover:border-cream/20"
+                }`}
+              >
+                Next →
+              </Link>
+            </div>
+          )}
+        </>
+      ) : !siteHasPosts && !hasActiveFilter ? (
+        /* ── No posts at all: Content Coming Soon ── */
         <div className="max-w-lg mx-auto text-center py-14 space-y-6">
           <div className="w-16 h-16 rounded-full bg-gold/[0.08] flex items-center justify-center mx-auto">
             <svg width="22" height="34" viewBox="0 0 32 48" className="text-gold/60" fill="currentColor" aria-hidden="true">
@@ -71,6 +222,30 @@ export default async function BlogIndexPage() {
               — Matthew 5:6
             </a>
           </p>
+        </div>
+      ) : (
+        /* ── Search / filter returned no results ── */
+        <div className="max-w-md mx-auto text-center py-16 space-y-4">
+          <div className="w-14 h-14 rounded-full bg-cream/[0.04] flex items-center justify-center mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-cream/30">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+          <p className="font-serif text-2xl font-bold text-cream">No results found</p>
+          <p className="text-cream/45 text-sm leading-relaxed">
+            {searchQuery && categorySlug
+              ? `No posts matched "${searchQuery}" in this category.`
+              : searchQuery
+              ? `No posts matched "${searchQuery}".`
+              : "No posts in this category yet."}
+          </p>
+          <Link
+            href="/blog"
+            className="inline-block mt-2 text-sm text-gold hover:text-gold/70 transition-colors underline underline-offset-2"
+          >
+            Clear filters
+          </Link>
         </div>
       )}
     </div>

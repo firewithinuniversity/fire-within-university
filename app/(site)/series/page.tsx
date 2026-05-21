@@ -21,16 +21,16 @@ export default async function SeriesPage() {
   const allSeries = await getAllSeries();
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14">
+    <div className="max-w-6xl mx-auto px-4 pt-20 pb-14">
       {/* Header */}
-      <div className="mb-12 space-y-3">
+      <div className="text-center mb-12 space-y-3">
         <p className="text-gold font-bold text-xs uppercase tracking-widest">
           Structured Teaching
         </p>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream leading-tight">
           Teaching Series
         </h1>
-        <p className="text-cream/55 text-lg max-w-xl">
+        <p className="text-cream/55 text-lg max-w-xl mx-auto">
           Multi-part studies to go deep into scripture. Start at part one and
           let the Spirit lead you through.
         </p>

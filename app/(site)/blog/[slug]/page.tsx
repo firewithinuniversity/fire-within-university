@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllPostSlugs, getPostBySlug, getRelatedPosts } from "@/lib/sanity/queries";
+import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getSeriesNavigation } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { readingTimeLabel } from "@/lib/readingTime";
 import PortableTextRenderer from "@/components/PortableTextRenderer";
@@ -57,6 +57,9 @@ export default async function PostPage({
   if (!post) notFound();
 
   const relatedPosts = await getRelatedPosts(slug, post.category?._id);
+  const seriesNav = post.series?._id
+    ? await getSeriesNavigation(post.series._id, post._id)
+    : null;
 
   const { title, publishedAt, author, category, series, mainImage, youtubeUrl, body, affiliateProducts } = post;
   const readTime = body ? readingTimeLabel(body as unknown[]) : null;
@@ -153,6 +156,45 @@ export default async function PostPage({
         <div className="mb-10">
           <PortableTextRenderer value={body} />
         </div>
+      )}
+
+      {/* ── Series navigation ───────────────────────────────────────── */}
+      {seriesNav && (
+        <nav
+          className="border-t border-b border-cream/[0.06] py-4 mb-10"
+          aria-label="Series navigation"
+        >
+          <p className="text-xs text-cream/40 text-center mb-3 font-medium uppercase tracking-wider">
+            {seriesNav.seriesTitle} &mdash; Part {seriesNav.currentIndex} of {seriesNav.totalPosts}
+          </p>
+          <div className="flex items-center justify-between gap-4">
+            {/* Previous */}
+            {seriesNav.prev ? (
+              <Link
+                href={`/blog/${seriesNav.prev.slug}`}
+                className="group flex items-center gap-2 text-sm text-cream/40 hover:text-gold transition-colors duration-150 max-w-[45%]"
+              >
+                <span className="text-lg leading-none group-hover:-translate-x-0.5 transition-transform duration-150" aria-hidden="true">←</span>
+                <span className="truncate">{seriesNav.prev.title}</span>
+              </Link>
+            ) : (
+              <span className="flex-1" />
+            )}
+
+            {/* Next */}
+            {seriesNav.next ? (
+              <Link
+                href={`/blog/${seriesNav.next.slug}`}
+                className="group flex items-center gap-2 text-sm text-cream/40 hover:text-gold transition-colors duration-150 max-w-[45%] ml-auto"
+              >
+                <span className="truncate text-right">{seriesNav.next.title}</span>
+                <span className="text-lg leading-none group-hover:translate-x-0.5 transition-transform duration-150" aria-hidden="true">→</span>
+              </Link>
+            ) : (
+              <span className="flex-1" />
+            )}
+          </div>
+        </nav>
       )}
 
       {/* ── Affiliate products ──────────────────────────────────────── */}

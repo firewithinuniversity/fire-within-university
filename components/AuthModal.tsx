@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
 
 type Tab = "signin" | "register";
+
+const FOCUSABLE_SELECTORS =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function ModalContent({ onClose }: { onClose: () => void }) {
   const router = useRouter();
@@ -18,6 +21,10 @@ function ModalContent({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  // Escape key + body scroll lock (existing behaviour preserved)
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -29,6 +36,54 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       document.body.style.overflow = "";
     };
   }, [onClose]);
+
+  // Focus trap
+  useEffect(() => {
+    // Store the element that had focus before the modal opened
+    previousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Move focus to the first focusable element inside the dialog
+    const dialog = dialogRef.current;
+    if (dialog) {
+      const firstFocusable = dialog.querySelector<HTMLElement>(FOCUSABLE_SELECTORS);
+      firstFocusable?.focus();
+    }
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !dialog) return;
+
+      const focusableElements = Array.from(
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
+      ).filter((el) => !el.closest("[aria-hidden='true']"));
+
+      if (focusableElements.length === 0) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: if focus is on the first element, wrap to the last
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        // Tab: if focus is on the last element, wrap to the first
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleTab);
+
+    return () => {
+      document.removeEventListener("keydown", handleTab);
+      // Restore focus to the element that was focused before the modal opened
+      previousFocusRef.current?.focus();
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function resetForm() {
     setName("");
@@ -110,6 +165,8 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     signIn("google", { callbackUrl: window.location.href });
   }
 
+  const headingId = "auth-modal-heading";
+
   return (
     <div
       style={{ position: "fixed", inset: 0, zIndex: 9999 }}
@@ -119,6 +176,10 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
         className="bg-[#2a1a0e] rounded-2xl shadow-2xl w-full max-w-md relative border border-white/[0.06]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -136,12 +197,14 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         {/* Tab header */}
         <div className="flex border-b border-cream/[0.06]">
           <button
+            id={tab === "signin" ? headingId : undefined}
             className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/40 hover:text-cream/60"}`}
             onClick={() => switchTab("signin")}
           >
             Sign In
           </button>
           <button
+            id={tab === "register" ? headingId : undefined}
             className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/40 hover:text-cream/60"}`}
             onClick={() => switchTab("register")}
           >

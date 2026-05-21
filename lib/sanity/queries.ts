@@ -85,6 +85,60 @@ export async function getAllPosts(): Promise<PostSummary[]> {
   );
 }
 
+export async function getAllCategories(): Promise<Pick<Category, "_id" | "title" | "slug">[]> {
+  return safeFetch(
+    () =>
+      client.fetch(
+        `*[_type == "category"] | order(title asc) { _id, title, slug }`
+      ),
+    []
+  );
+}
+
+export type FilteredPostsResult = {
+  posts: PostSummary[];
+  total: number;
+};
+
+export async function getFilteredPosts(opts: {
+  search?: string;
+  categorySlug?: string;
+  page?: number;
+  limit?: number;
+}): Promise<FilteredPostsResult> {
+  const { search = "", categorySlug = "", page = 1, limit = 9 } = opts;
+  const offset = (page - 1) * limit;
+
+  // Build GROQ filter conditions
+  const conditions: string[] = [`_type == "post"`];
+  if (search) {
+    // Match against title or excerpt (case-insensitive via lower())
+    conditions.push(
+      `(lower(title) match lower("${search.replace(/"/g, "")}*") || lower(coalesce(excerpt, "")) match lower("${search.replace(/"/g, "")}*"))`
+    );
+  }
+  if (categorySlug) {
+    conditions.push(`category->slug.current == "${categorySlug.replace(/"/g, "")}"`);
+  }
+
+  const filter = conditions.join(" && ");
+
+  type RawResult = { posts: PostSummary[]; total: number };
+
+  const result = await safeFetch<RawResult>(
+    () =>
+      client.fetch(
+        `{
+          "posts": *[${filter}] | order(publishedAt desc) [${offset}...${offset + limit}] { ${POST_SUMMARY_FIELDS} },
+          "total": count(*[${filter}])
+        }`
+      ),
+    { posts: [], total: 0 }
+  );
+
+  return result;
+}
+
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   return safeFetch(
     () => client.fetch(
@@ -205,6 +259,47 @@ export async function getAllAffiliateProducts(): Promise<AffiliateProduct[]> {
       ),
     []
   );
+}
+
+export type SeriesNavigation = {
+  seriesTitle: string;
+  totalPosts: number;
+  currentIndex: number; // 1-based
+  prev: { title: string; slug: string } | null;
+  next: { title: string; slug: string } | null;
+};
+
+export async function getSeriesNavigation(
+  seriesId: string,
+  currentPostId: string
+): Promise<SeriesNavigation | null> {
+  return safeFetch(async () => {
+    const posts: { _id: string; title: string; slug: { current: string } }[] =
+      await client.fetch(
+        `*[_type == "post" && series._ref == $seriesId] | order(publishedAt asc) {
+          _id, title, slug
+        }`,
+        { seriesId }
+      );
+
+    if (!posts || posts.length === 0) return null;
+
+    const seriesData: { title: string } | null = await client.fetch(
+      `*[_type == "series" && _id == $seriesId][0] { title }`,
+      { seriesId }
+    );
+
+    const idx = posts.findIndex((p) => p._id === currentPostId);
+    if (idx === -1) return null;
+
+    return {
+      seriesTitle: seriesData?.title ?? "",
+      totalPosts: posts.length,
+      currentIndex: idx + 1,
+      prev: idx > 0 ? { title: posts[idx - 1].title, slug: posts[idx - 1].slug.current } : null,
+      next: idx < posts.length - 1 ? { title: posts[idx + 1].title, slug: posts[idx + 1].slug.current } : null,
+    };
+  }, null);
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {

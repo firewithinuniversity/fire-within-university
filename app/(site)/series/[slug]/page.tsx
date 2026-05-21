@@ -42,13 +42,8 @@ export default async function SeriesDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [series, posts] = await Promise.all([
-    getSeriesBySlug(slug),
-    (async () => {
-      const s = await getSeriesBySlug(slug);
-      return s ? getPostsBySeries(s._id) : [];
-    })(),
-  ]);
+  const series = await getSeriesBySlug(slug);
+  const posts = series ? await getPostsBySeries(series._id) : [];
 
   if (!series) notFound();
 

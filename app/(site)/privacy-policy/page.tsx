@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const CONTACT_EMAIL = "firewithinuniveristy@gmail.com";
+const CONTACT_EMAIL = "firewithinuniversity@gmail.com";
 const LAST_UPDATED = "April 10, 2026";
 const SITE_URL = "firewithinuniversity.com";
 

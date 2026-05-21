@@ -45,6 +45,9 @@ export default function AdminAuditLogsPage() {
   const eventColors: Record<string, string> = {
     ADMIN_LOGIN_SUCCESS: "bg-green-50 text-green-700",
     ADMIN_LOGIN_FAILURE: "bg-red-50 text-red-700",
+    ADMIN_ACCESS_DENIED: "bg-yellow-50 text-yellow-700",
+    ADMIN_REGISTER_BLOCKED: "bg-orange-50 text-orange-700",
+    LOGIN_RATE_LIMITED: "bg-purple-50 text-purple-700",
   };
 
   return (
@@ -66,6 +69,9 @@ export default function AdminAuditLogsPage() {
           <option value="">All events</option>
           <option value="ADMIN_LOGIN_SUCCESS">Admin Login Success</option>
           <option value="ADMIN_LOGIN_FAILURE">Admin Login Failure</option>
+          <option value="ADMIN_ACCESS_DENIED">Admin Access Denied</option>
+          <option value="ADMIN_REGISTER_BLOCKED">Admin Register Blocked</option>
+          <option value="LOGIN_RATE_LIMITED">Login Rate Limited</option>
         </select>
       </div>
 

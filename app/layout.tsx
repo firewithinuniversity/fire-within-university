@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lora, Inter } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
+import { Toaster } from "sonner";
 import CookieBanner from "@/components/CookieBanner";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
@@ -47,6 +48,17 @@ export default async function RootLayout({
     <html lang="en" className={`${lora.variable} ${inter.variable}`}>
       <body className="bg-[#1a0f05] text-cream font-sans antialiased">
         {children}
+        <Toaster
+          position="bottom-right"
+          theme="dark"
+          toastOptions={{
+            style: {
+              background: "#2d1a0a",
+              border: "1px solid rgba(212,184,150,0.15)",
+              color: "#F5EFE6",
+            },
+          }}
+        />
         <GoogleAnalytics nonce={nonce} />
         <CookieBanner />
       </body>
