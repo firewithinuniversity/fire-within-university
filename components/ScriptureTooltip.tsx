@@ -75,7 +75,12 @@ export default function ScriptureTooltip({ reference, children }: Props) {
         aria-expanded={isOpen}
         aria-label={`Show verse: ${reference}`}
         onClick={handleToggle}
-        onKeyDown={(e) => e.key === "Enter" && handleToggle()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleToggle();
+          }
+        }}
         className="text-gold font-medium underline decoration-dotted underline-offset-2 cursor-pointer hover:text-gold transition-colors duration-150"
       >
         {children}

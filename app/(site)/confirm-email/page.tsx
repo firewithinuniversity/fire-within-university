@@ -38,7 +38,7 @@ export default function ConfirmEmailPage() {
         <div className="w-10 h-px bg-gold/40" />
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-widest text-cream/30 mb-5">
+      <p className="text-xs font-bold uppercase tracking-widest text-cream/40 mb-5">
         While you wait
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -21,7 +21,7 @@ export default function NotFound() {
         &ldquo;Your word is a lamp for my feet, a light on my path.&rdquo; — Psalm 119:105
       </p>
 
-      <p className="text-cream/30 text-sm max-w-sm mx-auto mb-8">
+      <p className="text-cream/40 text-sm max-w-sm mx-auto mb-8">
         Let us light the way back.
       </p>
 

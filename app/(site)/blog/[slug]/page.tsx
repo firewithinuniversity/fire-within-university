@@ -167,11 +167,11 @@ export default async function PostPage({
           <div className="text-sm text-cream/50">
             <span className="font-medium text-cream/80">{author.name}</span>
             {author.role && (
-              <span className="text-cream/30"> · {author.role}</span>
+              <span className="text-cream/40"> · {author.role}</span>
             )}
             <br />
             <time dateTime={publishedAt}>{formattedDate}</time>
-            {readTime && <span className="text-cream/30"> · {readTime}</span>}
+            {readTime && <span className="text-cream/40"> · {readTime}</span>}
           </div>
         </div>
       </header>
@@ -248,7 +248,7 @@ export default async function PostPage({
           aria-label="Recommended resources"
         >
           {/* FTC disclosure — legally required */}
-          <p className="text-xs text-cream/30 italic mb-4">
+          <p className="text-xs text-cream/40 italic mb-4">
             This page contains affiliate links. We may earn a small commission
             at no cost to you if you purchase through these links.
           </p>

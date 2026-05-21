@@ -60,7 +60,7 @@ export default function AdminNav() {
         </Link>
         {session?.user && (
           <div className="px-3 flex items-center justify-between">
-            <span className="text-xs text-cream/30 truncate max-w-[120px]">{session.user.email}</span>
+            <span className="text-xs text-cream/40 truncate max-w-[120px]">{session.user.email}</span>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
               className="text-xs text-cream/40 hover:text-gold transition-colors"

@@ -157,7 +157,7 @@ export default function DonateForm() {
                 setIsCustom(true);
               }}
               onFocus={() => setIsCustom(true)}
-              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-brown-deep text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/25 ${
+              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-brown-deep text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/35 ${
                 isCustom
                   ? "border-gold"
                   : "border-cream/[0.1] focus:border-gold"
@@ -165,7 +165,7 @@ export default function DonateForm() {
               aria-label="Custom donation amount in dollars"
             />
           </div>
-          <p className="text-xs text-cream/30 mt-1">
+          <p className="text-xs text-cream/40 mt-1">
             Minimum ${MIN_CUSTOM_DOLLARS}
           </p>
         </div>
@@ -198,7 +198,7 @@ export default function DonateForm() {
             : `Give $${finalAmountDollars > 0 ? finalAmountDollars.toFixed(0) : "—"} ${frequency === "monthly" ? "/ month" : ""}`}
         </button>
 
-        <p className="text-xs text-cream/30 text-center">
+        <p className="text-xs text-cream/40 text-center">
           🔒 Secure checkout powered by Stripe. We never store your card information.
         </p>
       </div>

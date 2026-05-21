@@ -59,7 +59,7 @@ export default function AuthDropdown() {
         {session.user.image ? (
           <img
             src={session.user.image}
-            alt=""
+            alt={`${session.user.name || "User"} avatar`}
             className="w-8 h-8 rounded-full border-2 border-cream/30 group-hover:border-gold transition-colors"
           />
         ) : (

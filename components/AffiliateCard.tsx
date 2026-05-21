@@ -35,7 +35,7 @@ export default function AffiliateCard({ product }: Props) {
             <h4 className="font-serif font-bold text-cream text-sm leading-snug group-hover:text-gold transition-colors duration-150">
               {product.name}
             </h4>
-            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-cream/30 border border-cream/10 rounded px-1.5 py-0.5 leading-none">
+            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-cream/40 border border-cream/10 rounded px-1.5 py-0.5 leading-none">
               Affiliate
             </span>
           </div>

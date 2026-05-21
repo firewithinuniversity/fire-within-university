@@ -33,12 +33,12 @@ export default function SiteError({
         &ldquo;And we know that in all things God works for the good of those who love him.&rdquo; — Romans 8:28
       </p>
 
-      <p className="text-cream/30 text-sm max-w-sm mx-auto mb-8">
+      <p className="text-cream/40 text-sm max-w-sm mx-auto mb-8">
         Try again or head back home.
       </p>
 
       {error.digest && (
-        <p className="text-cream/20 text-xs font-mono mb-6">
+        <p className="text-cream/40 text-xs font-mono mb-6">
           Error ID: {error.digest}
         </p>
       )}

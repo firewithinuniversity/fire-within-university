@@ -70,6 +70,7 @@ export default async function HomePage() {
         <Image
           src="/hero-door.png"
           alt=""
+          role="presentation"
           fill
           className="md:hidden object-cover"
           priority
@@ -188,7 +189,7 @@ export default async function HomePage() {
                     {course.description && (
                       <p className="text-cream/45 text-[13px] line-clamp-2 mb-3 leading-relaxed">{course.description}</p>
                     )}
-                    <span className="text-[11px] text-cream/30 uppercase tracking-wider font-medium">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+                    <span className="text-[11px] text-cream/40 uppercase tracking-wider font-medium">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
                   </div>
                 </Link>
               </SectionReveal>
@@ -305,7 +306,7 @@ export default async function HomePage() {
               Give Today
               <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
             </Link>
-            <p className="text-[11px] text-cream/25 tracking-wide">We are not a 501(c)(3). Donations are not tax-deductible.</p>
+            <p className="text-[11px] text-cream/40 tracking-wide">We are not a 501(c)(3). Donations are not tax-deductible.</p>
           </div>
         </section>
       </SectionReveal>

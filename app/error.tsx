@@ -34,12 +34,12 @@ export default function GlobalError({
         &ldquo;The Lord is my strength and my shield; my heart trusts in him.&rdquo; — Psalm 28:7
       </p>
 
-      <p className="text-cream/30 text-sm max-w-sm mx-auto mb-8">
+      <p className="text-cream/40 text-sm max-w-sm mx-auto mb-8">
         Try again or return home and we&apos;ll light the way.
       </p>
 
       {error.digest && (
-        <p className="text-cream/20 text-xs font-mono mb-6">
+        <p className="text-cream/40 text-xs font-mono mb-6">
           Error ID: {error.digest}
         </p>
       )}

@@ -146,7 +146,7 @@ export default function ContactForm() {
           value={form.subject}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/35"
         >
           <option value="general">General question</option>
           <option value="prayer">Prayer request</option>
@@ -171,7 +171,7 @@ export default function ContactForm() {
           required
           maxLength={100}
           autoComplete="name"
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/35"
         />
       </div>
 
@@ -192,7 +192,7 @@ export default function ContactForm() {
           required
           maxLength={254}
           autoComplete="email"
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/35"
         />
       </div>
 
@@ -213,14 +213,14 @@ export default function ContactForm() {
           minLength={10}
           maxLength={2000}
           rows={5}
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 resize-none transition-colors duration-150 placeholder:text-cream/25"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 resize-none transition-colors duration-150 placeholder:text-cream/35"
           placeholder={
             form.subject === "prayer"
               ? "Share your prayer request. We will pray for you personally."
               : "How can we help?"
           }
         />
-        <p className="text-xs text-cream/30 mt-1 text-right">
+        <p className="text-xs text-cream/40 mt-1 text-right">
           {form.message.length}/2000
         </p>
       </div>
@@ -233,7 +233,7 @@ export default function ContactForm() {
       )}
 
       {/* Consent notice */}
-      <p className="text-xs text-cream/30 leading-relaxed">
+      <p className="text-xs text-cream/40 leading-relaxed">
         By submitting this form, you agree that we may store your name, email, and
         message to respond to your inquiry. See our{" "}
         <a href="/privacy-policy" className="text-gold underline hover:text-gold/80 transition-colors">
@@ -255,7 +255,7 @@ export default function ContactForm() {
             ? "Submit Prayer Request"
             : "Send Message"}
         </button>
-        <p className="text-xs text-cream/30 sm:text-left">
+        <p className="text-xs text-cream/40 sm:text-left">
           We typically respond within 1-2 business days.
         </p>
       </div>

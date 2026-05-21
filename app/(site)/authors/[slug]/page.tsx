@@ -77,7 +77,7 @@ export default async function AuthorPage({
           {author.bio && (
             <p className="text-cream/60 leading-relaxed max-w-2xl">{author.bio}</p>
           )}
-          <p className="text-xs text-cream/30 mt-3">
+          <p className="text-xs text-cream/40 mt-3">
             {posts.length} {posts.length === 1 ? "post" : "posts"} published
           </p>
         </div>
