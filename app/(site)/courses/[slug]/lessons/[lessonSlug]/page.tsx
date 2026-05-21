@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLessonBySlug, getAllCourseSlugs, getCourseBySlug } from "@/lib/sanity/queries";
-import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
+import PortableTextRenderer from "@/components/PortableTextRenderer";
 import { canonicalUrl } from "@/lib/metadata";
 
 function sanitizeHref(url: string): string {
@@ -106,8 +106,8 @@ export default async function LessonPage({ params }: Props) {
 
         {/* Body */}
         {currentLesson.body && (
-          <div className="prose prose-invert prose-cream max-w-none mt-10 [&_p]:text-cream/80 [&_h2]:text-cream [&_h3]:text-cream [&_a]:text-gold [&_a:hover]:text-gold-light [&_strong]:text-cream [&_blockquote]:border-gold/30 [&_blockquote]:text-cream/70">
-            <PortableText value={currentLesson.body as PortableTextBlock[]} />
+          <div className="mt-10">
+            <PortableTextRenderer value={currentLesson.body as unknown[]} />
           </div>
         )}
 

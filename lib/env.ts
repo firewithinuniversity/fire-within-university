@@ -40,15 +40,7 @@ export function getSanityWriteToken(): string {
   return requireServerEnv("SANITY_API_WRITE_TOKEN");
 }
 
-export function getSanityPreviewSecret(): string {
-  return requireServerEnv("SANITY_PREVIEW_SECRET");
-}
-
 // --- Stripe ---
-export const STRIPE_PUBLISHABLE_KEY = requirePublicEnv(
-  "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
-);
-
 export function getStripeSecretKey(): string {
   return requireServerEnv("STRIPE_SECRET_KEY");
 }

@@ -42,32 +42,15 @@ const config: Config = {
         "card-hover": "0 20px 40px -12px rgba(61,31,10,0.4)",
         glow: "0 0 24px 4px rgba(232,160,32,0.18)",
         "glow-lg": "0 0 48px 8px rgba(232,160,32,0.22)",
-        soft: "0 2px 8px 0 rgba(61,31,10,0.05)",
-        inner: "inset 0 2px 4px 0 rgba(61,31,10,0.04)",
       },
       keyframes: {
-        fadeInUp: {
-          "0%": { opacity: "0", transform: "translateY(16px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
-        },
         "pulse-glow": {
           "0%, 100%": { opacity: "0.4" },
           "50%": { opacity: "0.8" },
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-6px)" },
-        },
       },
       animation: {
-        "fade-in-up": "fadeInUp 0.5s ease forwards",
-        shimmer: "shimmer 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
-        float: "float 6s ease-in-out infinite",
       },
     },
   },

@@ -11,6 +11,9 @@ type Tab = "signin" | "register";
 const FOCUSABLE_SELECTORS =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+const INPUT_CLASS =
+  "w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35";
+
 function ModalContent({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("signin");
@@ -273,7 +276,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
@@ -286,7 +289,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35"
+                  className={INPUT_CLASS}
                 />
               </div>
               <button
@@ -308,7 +311,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
@@ -321,7 +324,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
@@ -334,7 +337,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35"
+                  className={INPUT_CLASS}
                 />
                 {password.length > 0 && (
                   <ul className="mt-2 space-y-1">
@@ -365,7 +368,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35"
+                  className={INPUT_CLASS}
                 />
               </div>
               <label className="flex items-start gap-2.5 cursor-pointer">
