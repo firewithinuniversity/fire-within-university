@@ -39,7 +39,7 @@ export default async function AboutPage() {
           drives people into Scripture and deeper relationship with Christ.
         </p>
 
-        <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto">
+        <div className="bg-brown-card/60 border border-white/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto">
           <p className="text-cream/60 text-sm italic leading-relaxed">
             &ldquo;For the word of God is alive and active. Sharper than any double-edged sword, it penetrates even to dividing soul and spirit.&rdquo;
           </p>
@@ -99,7 +99,7 @@ export default async function AboutPage() {
         ].map(({ icon, title, description }) => (
           <div
             key={title}
-            className="bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl p-7 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1 transition-all duration-300 text-center space-y-3"
+            className="bg-brown-card/70 border border-white/[0.06] rounded-2xl p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 text-center space-y-3"
           >
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold/[0.08] text-gold mx-auto">
               {icon}
@@ -110,7 +110,7 @@ export default async function AboutPage() {
         ))}
       </section>
 
-      <section className="mb-20 py-12 px-6 md:px-10 bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl text-center">
+      <section className="mb-20 py-12 px-6 md:px-10 bg-brown-card/60 border border-white/[0.06] rounded-2xl text-center">
         <h2 className="font-serif text-2xl md:text-3xl font-bold text-cream mb-3">
           Join the Mission
         </h2>
@@ -155,7 +155,7 @@ export default async function AboutPage() {
               return (
                 <div
                   key={author._id}
-                  className="flex gap-5 items-start p-6 bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-0.5 transition-all duration-300"
+                  className="flex gap-5 items-start p-6 bg-brown-card/70 border border-white/[0.06] rounded-2xl hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
                 >
                   {photoUrl ? (
                     <Image
@@ -163,10 +163,10 @@ export default async function AboutPage() {
                       alt={author.name}
                       width={80}
                       height={80}
-                      className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]"
+                      className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
                     />
                   ) : (
-                    <div className="rounded-full w-20 h-20 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]">
+                    <div className="rounded-full w-20 h-20 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep">
                       <span className="text-3xl font-serif font-bold">
                         {author.name[0]}
                       </span>

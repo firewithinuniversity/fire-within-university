@@ -16,7 +16,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-[#1a0f05] flex flex-col items-center justify-center px-4 text-center">
+    <div className="min-h-screen bg-brown-deep flex flex-col items-center justify-center px-4 text-center">
       <div className="relative inline-block mb-6" aria-hidden="true">
         <div className="absolute inset-0 blur-3xl bg-gold/30 rounded-full scale-150" />
         <span className="relative text-8xl">🔥</span>

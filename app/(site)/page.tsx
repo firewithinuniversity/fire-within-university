@@ -54,7 +54,7 @@ export default async function HomePage() {
   const scripture = SCRIPTURES[todayIndex];
 
   return (
-    <div className="bg-[#1a0f05]">
+    <div className="bg-brown-deep">
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="relative min-h-[100vh] flex items-center overflow-hidden" aria-label="Hero">
         <video
@@ -77,9 +77,9 @@ export default async function HomePage() {
           quality={85}
         />
         {/* Cinematic multi-layer gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a0f05]/95 via-[#1a0f05]/70 to-[#1a0f05]/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05] via-transparent to-[#1a0f05]/40" />
-        <div className="absolute inset-0 bg-[#1a0f05]/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brown-deep/95 via-brown-deep/70 to-brown-deep/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brown-deep via-transparent to-brown-deep/40" />
+        <div className="absolute inset-0 bg-brown-deep/10" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full flex items-center justify-center">
           <div className="max-w-2xl space-y-8 text-center">
@@ -122,7 +122,7 @@ export default async function HomePage() {
       {/* ── Scripture of the Day ──────────────────────────────────── */}
       <SectionReveal distance={32}>
         <section className="max-w-3xl mx-auto px-4 sm:px-6 mt-12 relative z-10 mb-24">
-          <div className="bg-[#4A2A12]/80 backdrop-blur-sm border border-white/[0.08] rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
+          <div className="bg-brown-card/80 backdrop-blur-sm border border-white/[0.08] rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
             <p className="text-gold/80 text-[10px] font-bold uppercase tracking-[0.3em] mb-6">Scripture of the Day</p>
             <blockquote className="font-serif text-xl md:text-[1.65rem] text-cream/90 leading-[1.6] italic max-w-xl mx-auto">
@@ -161,9 +161,9 @@ export default async function HomePage() {
               <SectionReveal key={course._id} delay={i * 100} distance={20}>
                 <Link
                   href={`/courses/${course.slug.current}`}
-                  className="group block bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-500 hover:border-gold/15 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1.5"
+                  className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
                 >
-                  <div className="relative aspect-[16/10] bg-[#3D1F0A] overflow-hidden">
+                  <div className="relative aspect-[16/10] bg-brown overflow-hidden">
                     {course.coverImage ? (
                       <Image
                         src={imageUrlFor(course.coverImage).width(400).height(250).url()}
@@ -179,7 +179,7 @@ export default async function HomePage() {
                         </svg>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#3D1F0A]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brown/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                   <div className="p-5">
                     <h3 className="font-serif text-[17px] font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-1.5 leading-snug">
@@ -199,7 +199,7 @@ export default async function HomePage() {
 
       {/* ── Content Pathways ─────────────────────────────────────── */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#4A2A12]/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brown-card/10 to-transparent" />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
           <SectionReveal>
             <div className="text-center mb-16">
@@ -214,9 +214,9 @@ export default async function HomePage() {
               <SectionReveal key={p.href} delay={i * 80} distance={20}>
                 <Link
                   href={p.href}
-                  className="group flex flex-col h-full bg-[#4A2A12]/50 border border-white/[0.06] rounded-2xl p-7 transition-all duration-500 hover:bg-[#4A2A12]/80 hover:border-gold/15 hover:-translate-y-1"
+                  className="group flex flex-col h-full bg-brown-card/50 border border-white/[0.06] rounded-2xl p-6 transition-all duration-300 hover:bg-brown-card/80 hover:border-gold/15 hover:-translate-y-1"
                 >
-                  <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-colors duration-500 group-hover:bg-gold/[0.12]">
+                  <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-colors duration-300 group-hover:bg-gold/[0.12]">
                     <PathwayIcon type={p.icon} />
                   </div>
                   <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-2 leading-snug">
@@ -236,8 +236,8 @@ export default async function HomePage() {
 
       {/* ── Why We Exist ─────────────────────────────────────────── */}
       <SectionReveal distance={32}>
-        <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-28">
-          <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl p-8 md:p-14 text-center space-y-8 relative overflow-hidden">
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+          <div className="bg-brown-card/60 border border-white/[0.06] rounded-2xl p-8 md:p-14 text-center space-y-8 relative overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
             <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em]">Why We Exist</p>
@@ -257,8 +257,8 @@ export default async function HomePage() {
       </SectionReveal>
 
       {/* ── The Prayer ────────────────────────────────────────────── */}
-      <section className="relative py-32 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f05] via-[#2a1508] to-[#1a0f05]" />
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-brown-deep via-[#2a1508] to-brown-deep" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(232,160,32,0.4) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
         <SectionReveal distance={40} duration={1000}>
           <div className="relative max-w-2xl mx-auto text-center space-y-8">
@@ -283,7 +283,7 @@ export default async function HomePage() {
       {/* ── Give CTA ──────────────────────────────────────────────── */}
       <SectionReveal distance={32}>
         <section className="max-w-3xl mx-auto px-4 sm:px-6 py-28">
-          <div className="bg-gradient-to-br from-[#4A2A12]/80 to-[#3D1F0A]/60 border border-white/[0.06] rounded-2xl p-8 md:p-14 text-center space-y-8 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-brown-card/80 to-brown/60 border border-white/[0.06] rounded-2xl p-8 md:p-14 text-center space-y-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-gold/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
             <svg width="18" height="28" viewBox="0 0 18 28" fill="currentColor" className="text-gold/40 mx-auto" aria-hidden="true">
               <rect x="7" y="0" width="4" height="28" rx="2" />
@@ -313,7 +313,7 @@ export default async function HomePage() {
       {/* ── Email Signup ──────────────────────────────────────────── */}
       <SectionReveal>
         <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-28">
-          <div className="bg-[#4A2A12]/50 border border-white/[0.06] rounded-2xl p-8 md:p-12 text-center space-y-5">
+          <div className="bg-brown-card/50 border border-white/[0.06] rounded-2xl p-8 md:p-12 text-center space-y-5">
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-cream tracking-[-0.01em]">Stay Connected</h2>
             <p className="text-cream/50 text-sm max-w-md mx-auto leading-relaxed">
               Get new sermons, articles, and course updates delivered to your inbox.

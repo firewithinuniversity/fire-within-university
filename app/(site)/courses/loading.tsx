@@ -1,6 +1,6 @@
 export default function CoursesLoading() {
   return (
-    <div className="bg-[#1a0f05] min-h-screen animate-pulse">
+    <div className="bg-brown-deep min-h-screen animate-pulse">
       {/* Header section */}
       <section className="pt-32 pb-16 text-center px-4 sm:px-6">
         <div className="h-3 w-40 bg-cream/10 rounded-full mx-auto mb-4" />
@@ -18,7 +18,7 @@ export default function CoursesLoading() {
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
-              className="bg-[#4A2A12]/40 border border-white/[0.04] rounded-2xl overflow-hidden"
+              className="bg-brown-card/40 border border-white/[0.04] rounded-2xl overflow-hidden"
             >
               {/* Cover image */}
               <div className="aspect-[16/9] bg-cream/10" />

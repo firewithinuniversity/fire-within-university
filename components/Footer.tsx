@@ -3,7 +3,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#1a0f05] text-cream/80 mt-0 border-t border-cream/10">
+    <footer className="bg-brown-deep text-cream/80 mt-0 border-t border-cream/10">
       <div className="max-w-6xl mx-auto px-4 pt-14 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Brand column */}
@@ -21,7 +21,7 @@ export default function Footer() {
             <h3 className="text-xs font-bold text-gold uppercase tracking-widest mb-4 pb-2 border-b border-gold/30">
               Explore
             </h3>
-            <ul className="space-y-1 list-none">
+            <ul className="space-y-0 list-none">
               {[
                 { href: "/blog", label: "Sermons & Articles" },
                 { href: "/courses", label: "Courses" },
@@ -33,7 +33,7 @@ export default function Footer() {
                 { href: "/contact", label: "Contact & Prayer" },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-cream/80 hover:text-gold transition-colors duration-150 inline-block py-1.5 min-h-[44px] flex items-center">
+                  <Link href={href} className="text-sm text-cream/80 hover:text-gold transition-colors duration-200 py-1 inline-flex items-center min-h-[44px]">
                     {label}
                   </Link>
                 </li>
@@ -46,14 +46,14 @@ export default function Footer() {
             <h3 className="text-xs font-bold text-gold uppercase tracking-widest mb-4 pb-2 border-b border-gold/30">
               Legal
             </h3>
-            <ul className="space-y-1 list-none">
+            <ul className="space-y-0 list-none">
               {[
                 { href: "/privacy-policy", label: "Privacy Policy" },
                 { href: "/terms", label: "Terms of Service" },
                 { href: "/contact", label: "Data Deletion Request" },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-cream/80 hover:text-gold transition-colors duration-150 inline-block py-1.5 min-h-[44px] flex items-center">
+                  <Link href={href} className="text-sm text-cream/80 hover:text-gold transition-colors duration-200 py-1 inline-flex items-center min-h-[44px]">
                     {label}
                   </Link>
                 </li>

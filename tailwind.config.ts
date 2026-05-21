@@ -16,6 +16,8 @@ const config: Config = {
         brown: {
           DEFAULT: "#3D1F0A",
           light: "#6B3A1F",
+          deep: "#1a0f05",
+          card: "#4A2A12",
           50: "#FDF6EC",
           100: "#F5E6CC",
           200: "#E8D1AB",
@@ -37,7 +39,7 @@ const config: Config = {
       },
       boxShadow: {
         card: "0 1px 3px 0 rgba(61,31,10,0.07), 0 1px 2px -1px rgba(61,31,10,0.05)",
-        "card-hover": "0 10px 28px -4px rgba(61,31,10,0.14), 0 4px 10px -2px rgba(61,31,10,0.07)",
+        "card-hover": "0 20px 40px -12px rgba(61,31,10,0.4)",
         glow: "0 0 24px 4px rgba(232,160,32,0.18)",
         "glow-lg": "0 0 48px 8px rgba(232,160,32,0.22)",
         soft: "0 2px 8px 0 rgba(61,31,10,0.05)",

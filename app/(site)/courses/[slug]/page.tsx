@@ -39,7 +39,7 @@ export default async function CourseDetailPage({ params }: Props) {
   const courseUrl = canonicalUrl(`/courses/${slug}`);
 
   return (
-    <div className="bg-[#1a0f05] min-h-screen">
+    <div className="bg-brown-deep min-h-screen">
       {/* Structured data */}
       <script
         type="application/ld+json"
@@ -80,7 +80,7 @@ export default async function CourseDetailPage({ params }: Props) {
                 sizes="(max-width: 1024px) 100vw, 896px"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f05] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brown-deep via-transparent to-transparent" />
             </div>
           )}
 
@@ -109,7 +109,7 @@ export default async function CourseDetailPage({ params }: Props) {
       <div className="max-w-4xl mx-auto px-4 pb-24">
         {/* What You'll Learn */}
         {course.whatYoullLearn && course.whatYoullLearn.length > 0 && (
-          <section className="bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-8 mb-10">
+          <section className="bg-brown-card border border-white/[0.08] rounded-2xl p-8 mb-10">
             <h2 className="font-serif text-2xl font-bold text-cream mb-6">
               What You&apos;ll Learn
             </h2>
@@ -137,9 +137,9 @@ export default async function CourseDetailPage({ params }: Props) {
                 <li key={lesson._id}>
                   <Link
                     href={`/courses/${slug}/lessons/${lesson.slug.current}`}
-                    className="group flex items-center gap-4 bg-[#4A2A12] border border-white/[0.08] rounded-xl p-5 transition-all duration-200 hover:border-gold/30 hover:bg-[#553318]"
+                    className="group flex items-center gap-4 bg-brown-card border border-white/[0.08] rounded-xl p-5 transition-all duration-200 hover:border-gold/30 hover:bg-[#553318]"
                   >
-                    <span className="flex-shrink-0 w-10 h-10 rounded-full bg-[#1a0f05] border border-cream/10 flex items-center justify-center text-gold font-bold text-sm">
+                    <span className="flex-shrink-0 w-10 h-10 rounded-full bg-brown-deep border border-cream/10 flex items-center justify-center text-gold font-bold text-sm">
                       {lesson.lessonNumber ?? i + 1}
                     </span>
                     <div className="flex-grow min-w-0">
@@ -159,7 +159,7 @@ export default async function CourseDetailPage({ params }: Props) {
               ))}
             </ol>
           ) : (
-            <div className="bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-8 text-center">
+            <div className="bg-brown-card border border-white/[0.08] rounded-2xl p-8 text-center">
               <p className="text-cream/50">Lessons coming soon.</p>
             </div>
           )}

@@ -97,7 +97,7 @@ export default function EthosPage() {
       >
         {/* Soft gold glow backdrop */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-gold/[0.08] via-[#4A2A12]/40 to-transparent rounded-3xl -mx-6 md:-mx-10"
+          className="absolute inset-0 bg-gradient-to-b from-gold/[0.08] via-brown-card/40 to-transparent rounded-3xl -mx-6 md:-mx-10"
           aria-hidden="true"
         />
 

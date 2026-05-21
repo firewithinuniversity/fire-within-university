@@ -278,7 +278,7 @@ export default function TermsPage() {
           <p>
             Questions about these terms? We&apos;re here to help.
           </p>
-          <div className="mt-3 bg-[#4A2A12]/70 border border-white/[0.06] rounded-xl px-5 py-4 text-sm">
+          <div className="mt-3 bg-brown-card/70 border border-white/[0.06] rounded-xl px-5 py-4 text-sm">
             <p className="font-semibold text-cream">Fire Within University</p>
             <p>
               Email:{" "}

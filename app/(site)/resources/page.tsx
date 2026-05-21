@@ -20,16 +20,22 @@ export default async function ResourcesPage() {
   const products = await getAllAffiliateProducts();
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14">
+    <div className="max-w-6xl mx-auto px-4 pt-20 pb-12">
       {/* Header */}
-      <div className="mb-10 space-y-3">
-        <p className="text-gold font-bold text-xs uppercase tracking-widest">
+      <div className="text-center mb-10 space-y-4">
+        <div className="flex justify-center" aria-hidden="true">
+          <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
+            <rect x="6" y="0" width="4" height="24" rx="2" />
+            <rect x="0" y="7" width="16" height="4" rx="2" />
+          </svg>
+        </div>
+        <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em]">
           Curated Tools
         </p>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream leading-tight">
           Recommended Resources
         </h1>
-        <p className="text-cream/55 text-lg max-w-xl">
+        <p className="text-cream/50 max-w-xl mx-auto text-lg">
           Books, Bibles, and tools our team uses and trusts. Every resource is
           chosen to help you go deeper with God.
         </p>

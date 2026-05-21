@@ -68,7 +68,7 @@ export default function PostLoading() {
       </div>
 
       {/* Email signup block */}
-      <div className="bg-[#4A2A12]/40 border border-white/[0.04] rounded-2xl p-8 mb-8 space-y-3">
+      <div className="bg-brown-card/40 border border-white/[0.04] rounded-2xl p-8 mb-8 space-y-3">
         <div className="h-6 w-48 bg-cream/10 rounded mx-auto" />
         <div className="h-4 w-64 bg-cream/[0.06] rounded mx-auto" />
         <div className="h-11 w-full bg-cream/10 rounded-full mt-4" />

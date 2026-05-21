@@ -12,18 +12,18 @@ export default function AuthorCard({ author }: Props) {
     : null;
 
   return (
-    <div className="flex gap-5 items-start p-6 bg-[#4A2A12]/60 rounded-2xl border border-white/[0.06]">
+    <div className="flex gap-5 items-start p-6 bg-brown-card/60 rounded-2xl border border-white/[0.06]">
       {photoUrl ? (
         <Image
           src={photoUrl}
           alt={author.name}
           width={80}
           height={80}
-          className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]"
+          className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
         />
       ) : (
         <div
-          className="rounded-full w-16 h-16 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-[#1a0f05]"
+          className="rounded-full w-16 h-16 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
           aria-hidden="true"
         >
           <span className="text-2xl font-serif font-bold">

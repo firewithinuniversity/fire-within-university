@@ -41,7 +41,7 @@ export default function DonatePage() {
         </p>
 
         {/* Scripture — links to BibleGateway */}
-        <div className="bg-[#4A2A12]/60 rounded-2xl px-6 py-5 max-w-lg mx-auto border border-gold/15">
+        <div className="bg-brown-card/60 rounded-2xl px-6 py-5 max-w-lg mx-auto border border-gold/15">
           <p className="text-cream/50 text-sm italic leading-relaxed">
             &ldquo;Each of you should give what you have decided in your heart to
             give, not reluctantly or under compulsion, for God loves a cheerful
@@ -78,7 +78,7 @@ export default function DonatePage() {
       </div>
 
       {/* Disclaimer — legally required, clearly visible */}
-      <div className="p-5 bg-[#4A2A12]/40 rounded-2xl border border-white/[0.06]">
+      <div className="p-5 bg-brown-card/40 rounded-2xl border border-white/[0.06]">
         <p className="text-xs text-cream/40 leading-relaxed text-center">
           <strong className="text-cream/55">Important:</strong> Fire Within
           University is not a registered 501(c)(3) nonprofit organization.

@@ -13,7 +13,7 @@ export default function BlogLoading() {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="bg-[#4A2A12]/40 border border-white/[0.04] rounded-2xl overflow-hidden"
+            className="bg-brown-card/40 border border-white/[0.04] rounded-2xl overflow-hidden"
           >
             {/* Cover image area */}
             <div className="aspect-[16/9] bg-cream/10" />

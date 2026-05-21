@@ -48,10 +48,10 @@ export default async function CoursesPage() {
   const courses = sanityCourses.length > 0 ? sanityCourses : PLACEHOLDER_COURSES;
 
   return (
-    <div className="bg-[#1a0f05] min-h-screen">
+    <div className="bg-brown-deep min-h-screen">
       {/* Header */}
       <section className="pt-32 pb-16 text-center px-4 sm:px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#4A2A12]/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brown-card/20 to-transparent" />
         <div className="relative">
           <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-4">Learn at Your Own Pace</p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-cream mb-6 tracking-[-0.02em] leading-[0.95]">
@@ -66,14 +66,14 @@ export default async function CoursesPage() {
 
       {/* Course grid */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${courses.length >= 3 ? "lg:grid-cols-3" : "max-w-4xl mx-auto"}`}>
           {courses.map((course, i) => (
             <SectionReveal key={course._id} delay={i * 100} distance={20}>
               <Link
                 href={`/courses/${course.slug.current}`}
-                className="group block bg-[#4A2A12]/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-500 hover:border-gold/15 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1.5"
+                className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
               >
-                <div className="relative aspect-[16/9] bg-[#3D1F0A] overflow-hidden">
+                <div className="relative aspect-[16/9] bg-brown overflow-hidden">
                   {course.coverImage ? (
                     <Image
                       src={imageUrlFor(course.coverImage).width(600).height(340).url()}
@@ -84,7 +84,7 @@ export default async function CoursesPage() {
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <svg className="w-14 h-14 text-gold/15 transition-colors duration-500 group-hover:text-gold/25" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                      <svg className="w-14 h-14 text-gold/15 transition-colors duration-300 group-hover:text-gold/25" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                       </svg>
                     </div>
@@ -94,7 +94,7 @@ export default async function CoursesPage() {
                       Featured
                     </span>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#3D1F0A]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brown/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 <div className="p-6">

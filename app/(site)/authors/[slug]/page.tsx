@@ -50,7 +50,7 @@ export default async function AuthorPage({
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
       {/* Author card */}
-      <div className="flex flex-col sm:flex-row gap-6 items-start mb-14 bg-[#4A2A12]/70 rounded-2xl p-8 border border-white/[0.06]">
+      <div className="flex flex-col sm:flex-row gap-6 items-start mb-14 bg-brown-card/70 rounded-2xl p-8 border border-white/[0.06]">
         {photoUrl ? (
           <Image
             src={photoUrl}

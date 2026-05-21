@@ -30,7 +30,7 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 text-cream transition-all duration-500 ${
         scrolled
-          ? "bg-[#1a0f05]/92 backdrop-blur-xl border-b border-cream/[0.06] shadow-[0_4px_24px_rgba(26,15,5,0.6)]"
+          ? "bg-brown-deep/92 backdrop-blur-xl border-b border-cream/[0.06] shadow-[0_4px_24px_rgba(26,15,5,0.6)]"
           : "bg-transparent"
       }`}
     >
@@ -94,7 +94,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div
         id="mobile-menu"
-        className={`md:hidden bg-[#1a0f05]/95 backdrop-blur-xl border-t border-cream/[0.06] overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? "max-h-[24rem] opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden bg-brown-deep/95 backdrop-blur-xl border-t border-cream/[0.06] overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? "max-h-[24rem] opacity-100" : "max-h-0 opacity-0"}`}
       >
         <ul className="flex flex-col px-6 py-4 gap-1 list-none">
           {navLinks.map(({ href, label }) => (

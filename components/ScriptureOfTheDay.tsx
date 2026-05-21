@@ -6,7 +6,7 @@ export default function ScriptureOfTheDay() {
   return (
     <section
       aria-label="Scripture of the Day"
-      className="bg-gradient-to-r from-[#4A2A12]/30 via-gold/[0.06] to-[#4A2A12]/30 border-y border-gold/[0.15] py-10 px-4"
+      className="bg-gradient-to-r from-brown-card/30 via-gold/[0.06] to-brown-card/30 border-y border-gold/[0.15] py-10 px-4"
     >
       <div className="max-w-3xl mx-auto">
         <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-gold mb-5">

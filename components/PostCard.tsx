@@ -17,7 +17,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
     : null;
 
   return (
-    <article className="bg-[#4A2A12]/70 rounded-2xl overflow-hidden border border-white/[0.06] hover:border-gold/15 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1 transition-all duration-500 flex flex-col group">
+    <article className="bg-brown-card/70 rounded-2xl overflow-hidden border border-white/[0.06] hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col group">
       {imageUrl ? (
         <Link href={`/blog/${slug.current}`} className="block overflow-hidden aspect-video">
           <Image
@@ -31,7 +31,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
           />
         </Link>
       ) : (
-        <div className="aspect-video bg-gradient-to-br from-gold/[0.08] to-[#3D1F0A] flex items-center justify-center">
+        <div className="aspect-video bg-gradient-to-br from-gold/[0.08] to-brown flex items-center justify-center">
           <svg width="32" height="48" viewBox="0 0 32 48" className="text-gold/20" fill="currentColor" aria-hidden="true">
             <rect x="13" y="0" width="6" height="48" rx="3" />
             <rect x="0" y="14" width="32" height="6" rx="3" />

@@ -16,7 +16,7 @@ export default function AffiliateCard({ product }: Props) {
       href={product.affiliateUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex gap-4 p-4 bg-[#4A2A12]/70 rounded-2xl border border-white/[0.06] hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-0.5 transition-all duration-300 group"
+      className="flex gap-4 p-6 bg-brown-card/70 rounded-2xl border border-white/[0.06] hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 group"
     >
       {imageUrl && (
         <Image

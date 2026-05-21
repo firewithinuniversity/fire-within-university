@@ -274,7 +274,7 @@ export default async function PostPage({
       </div>
 
       {/* ── Email signup ─────────────────────────────────────────────── */}
-      <section className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl p-8 mb-8">
+      <section className="bg-brown-card/60 border border-white/[0.06] rounded-2xl p-8 mb-8">
         <h2 className="font-serif text-xl font-bold text-cream mb-1 text-center">
           Hungry for More?
         </h2>

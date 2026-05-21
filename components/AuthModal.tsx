@@ -273,7 +273,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
@@ -286,7 +286,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <button
@@ -308,7 +308,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
@@ -321,7 +321,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <div>
@@ -334,7 +334,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
                 {password.length > 0 && (
                   <ul className="mt-2 space-y-1">
@@ -365,7 +365,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-[#1a0f05] text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/25"
                 />
               </div>
               <label className="flex items-start gap-2.5 cursor-pointer">
@@ -373,7 +373,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   type="checkbox"
                   checked={ageConfirmed}
                   onChange={(e) => setAgeConfirmed(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-cream/20 bg-[#1a0f05] text-gold focus:ring-gold/40 focus:ring-offset-0 accent-[#E8A020]"
+                  className="mt-0.5 w-4 h-4 rounded border-cream/20 bg-brown-deep text-gold focus:ring-gold/40 focus:ring-offset-0 accent-[#E8A020]"
                 />
                 <span className="text-xs text-cream/50 leading-relaxed">
                   I confirm that I am at least 13 years old and agree to the{" "}

@@ -53,7 +53,7 @@ export default async function LessonPage({ params }: Props) {
     currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null;
 
   return (
-    <div className="bg-[#1a0f05] min-h-screen">
+    <div className="bg-brown-deep min-h-screen">
       <div className="max-w-4xl mx-auto px-4 pt-10 pb-24">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-cream/50 mb-8 flex-wrap">
@@ -102,7 +102,7 @@ export default async function LessonPage({ params }: Props) {
 
         {/* Downloads */}
         {currentLesson.downloads && currentLesson.downloads.length > 0 && (
-          <section className="mt-12 bg-[#4A2A12] border border-white/[0.08] rounded-2xl p-6">
+          <section className="mt-12 bg-brown-card border border-white/[0.08] rounded-2xl p-6">
             <h2 className="font-serif text-xl font-bold text-cream mb-4">
               Downloads
             </h2>

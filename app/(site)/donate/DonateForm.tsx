@@ -80,7 +80,7 @@ export default function DonateForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#4A2A12]/70 rounded-2xl border border-white/[0.06] overflow-hidden"
+      className="bg-brown-card/70 rounded-2xl border border-white/[0.06] overflow-hidden"
     >
       {/* ── Frequency tabs ─────────────────────────────────────────── */}
       <div className="flex border-b border-cream/[0.06]">
@@ -157,7 +157,7 @@ export default function DonateForm() {
                 setIsCustom(true);
               }}
               onFocus={() => setIsCustom(true)}
-              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-[#1a0f05] text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/25 ${
+              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-brown-deep text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/25 ${
                 isCustom
                   ? "border-gold"
                   : "border-cream/[0.1] focus:border-gold"
@@ -171,7 +171,7 @@ export default function DonateForm() {
         </div>
 
         {/* ── Summary ───────────────────────────────────────────── */}
-        <div className="bg-[#1a0f05]/60 rounded-2xl p-5 text-center border border-gold/[0.15]">
+        <div className="bg-brown-deep/60 rounded-2xl p-5 text-center border border-gold/[0.15]">
           <p className="text-sm text-cream/50">
             {frequency === "once" ? "One-time gift of" : "Monthly gift of"}
           </p>

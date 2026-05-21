@@ -93,7 +93,7 @@ export default async function SeriesPage() {
               <Link
                 key={series._id}
                 href={`/series/${series.slug.current}`}
-                className="group bg-[#4A2A12]/70 rounded-2xl overflow-hidden hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] hover:-translate-y-1 transition-all duration-300 border border-white/[0.06] flex flex-col"
+                className="group bg-brown-card/70 rounded-2xl overflow-hidden hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 border border-white/[0.06] flex flex-col"
               >
                 {/* Cover image */}
                 {imageUrl ? (
@@ -103,11 +103,11 @@ export default async function SeriesPage() {
                       alt={series.title}
                       width={600}
                       height={340}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-300"
                     />
                   </div>
                 ) : (
-                  <div className="aspect-video bg-gradient-to-br from-gold/[0.08] to-[#4A2A12] flex items-center justify-center">
+                  <div className="aspect-video bg-gradient-to-br from-gold/[0.08] to-brown-card flex items-center justify-center">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="text-gold/30" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.966 8.966 0 00-6 2.292m0-14.25v14.25" />
                     </svg>

@@ -16,7 +16,7 @@ export default function SeriesLoading() {
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="bg-[#4A2A12]/40 border border-white/[0.04] rounded-2xl overflow-hidden flex flex-col"
+            className="bg-brown-card/40 border border-white/[0.04] rounded-2xl overflow-hidden flex flex-col"
           >
             {/* Cover image */}
             <div className="aspect-video bg-cream/10" />

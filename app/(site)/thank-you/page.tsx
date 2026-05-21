@@ -42,7 +42,7 @@ export default function ThankYouPage() {
       </p>
 
       {/* Scripture */}
-      <div className="bg-[#4A2A12]/60 border border-white/[0.06] rounded-2xl p-7 my-6">
+      <div className="bg-brown-card/60 border border-white/[0.06] rounded-2xl p-7 my-6">
         <p className="font-serif text-lg italic text-cream/70 leading-relaxed">
           &ldquo;And do not forget to do good and to share with others, for with
           such sacrifices God is pleased.&rdquo;

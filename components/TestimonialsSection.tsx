@@ -59,7 +59,7 @@ function Avatar({ testimonial }: { testimonial: Testimonial }) {
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <article className="bg-[#4A2A12]/70 rounded-2xl p-7 border border-white/[0.06] flex flex-col gap-5 hover:shadow-[0_20px_40px_-12px_rgba(61,31,10,0.4)] transition-shadow duration-300">
+    <article className="bg-brown-card/70 rounded-2xl p-6 border border-white/[0.06] flex flex-col gap-5 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
       <QuoteMark />
 
       <blockquote className="flex-1">
