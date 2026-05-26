@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getSeriesNavigation } from "@/lib/sanity/queries";
+import { getAllPostSlugs, getPostBySlug, getSeriesNavigation } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { readingTimeLabel } from "@/lib/readingTime";
 import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
@@ -12,7 +13,8 @@ import AuthorCard from "@/components/AuthorCard";
 import AffiliateCard from "@/components/AffiliateCard";
 import EmailSignup from "@/components/EmailSignup";
 import ShareButtons from "@/components/ShareButtons";
-import RelatedPosts from "@/components/RelatedPosts";
+import RelatedPostsAsync from "@/components/RelatedPostsAsync";
+import RelatedPostsSkeleton from "@/components/skeletons/RelatedPostsSkeleton";
 
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
@@ -66,7 +68,6 @@ export default async function PostPage({
 
   if (!post) notFound();
 
-  const relatedPosts = await getRelatedPosts(slug, post.category?._id);
   const seriesNav = post.series?._id
     ? await getSeriesNavigation(post.series._id, post._id)
     : null;
@@ -286,8 +287,10 @@ export default async function PostPage({
         <EmailSignup variant="inline" />
       </section>
 
-      {/* ── Related posts ─────────────────────────────────────────────── */}
-      <RelatedPosts posts={relatedPosts} />
+      {/* ── Related posts (streamed via Suspense) ────────────────────── */}
+      <Suspense fallback={<RelatedPostsSkeleton />}>
+        <RelatedPostsAsync slug={slug} categoryId={post.category?._id} />
+      </Suspense>
 
       {/* ── Back to blog ─────────────────────────────────────────────── */}
       <div className="text-center mt-10">

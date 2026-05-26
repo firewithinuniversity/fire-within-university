@@ -2,12 +2,12 @@ export default function SeriesLoading() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-14 animate-pulse">
       {/* Header */}
-      <div className="mb-12 space-y-3">
-        <div className="h-3 w-36 bg-cream/10 rounded-full" />
-        <div className="h-10 w-64 bg-cream/10 rounded-lg" />
-        <div className="space-y-1.5 max-w-xl">
+      <div className="text-center mb-12 space-y-3">
+        <div className="h-3 w-36 bg-cream/10 rounded-full mx-auto" />
+        <div className="h-10 w-64 bg-cream/10 rounded-lg mx-auto" />
+        <div className="space-y-1.5 max-w-xl mx-auto">
           <div className="h-5 w-full bg-cream/[0.06] rounded" />
-          <div className="h-5 w-4/5 bg-cream/[0.06] rounded" />
+          <div className="h-5 w-4/5 bg-cream/[0.06] rounded mx-auto" />
         </div>
       </div>
 
@@ -16,7 +16,7 @@ export default function SeriesLoading() {
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="bg-brown-card/40 border border-white/[0.04] rounded-2xl overflow-hidden flex flex-col"
+            className="bg-brown-card/40 border border-white/[0.04] rounded-2xl overflow-hidden flex flex-col animate-pulse"
           >
             {/* Cover image */}
             <div className="aspect-video bg-cream/10" />
