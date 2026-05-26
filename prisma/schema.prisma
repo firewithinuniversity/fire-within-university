@@ -22,6 +22,7 @@ model User {
   accounts        Account[]
   sessions        Session[]
   lessonProgress  LessonProgress[]
+  bookmarks       Bookmark[]
 
   @@index([role])
 }
@@ -113,4 +114,18 @@ model AuditLog {
   @@index([event])
   @@index([email])
   @@index([createdAt])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  slug      String
+  type      String   // "course" or "lesson"
+  courseSlug String?  // parent course slug when type is "lesson"
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, slug, type])
+  @@index([userId])
 }

@@ -5,6 +5,7 @@ import { getLessonBySlug, getAllCourseSlugs, getCourseBySlug } from "@/lib/sanit
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import PortableTextRenderer from "@/components/PortableTextRenderer";
 import LessonCompleteButton from "@/components/LessonCompleteButton";
+import BookmarkButton from "@/components/BookmarkButton";
 import { canonicalUrl } from "@/lib/metadata";
 
 function sanitizeHref(url: string): string {
@@ -86,9 +87,12 @@ export default async function LessonPage({ params }: Props) {
         </nav>
 
         {/* Lesson header */}
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-cream mb-2">
-          {currentLesson.title}
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-cream mb-2">
+            {currentLesson.title}
+          </h1>
+          <BookmarkButton slug={lessonSlug} type="lesson" courseSlug={slug} className="mt-2 flex-shrink-0" />
+        </div>
 
         <div className="flex items-center gap-4 text-sm text-cream/50 mb-8">
           {currentLesson.scripture && (

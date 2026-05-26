@@ -17,7 +17,7 @@ export default async function ProfilePage() {
   if (!session?.user?.id) redirect("/");
 
   // Fetch user data and progress in parallel
-  const [user, progress, courses] = await Promise.all([
+  const [user, progress, courses, bookmarks] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
       select: { name: true, email: true, emailVerified: true, createdAt: true, image: true },
@@ -28,6 +28,11 @@ export default async function ProfilePage() {
       orderBy: { completedAt: "desc" },
     }),
     getAllCourses(),
+    prisma.bookmark.findMany({
+      where: { userId: session.user.id },
+      select: { slug: true, type: true, courseSlug: true, createdAt: true },
+      orderBy: { createdAt: "desc" },
+    }),
   ]);
 
   if (!user) redirect("/");
@@ -62,6 +67,21 @@ export default async function ProfilePage() {
     };
   });
 
+  // Build saved items with display titles
+  const savedItems = bookmarks.map((b) => {
+    const course = courses.find((c) => c.slug.current === (b.type === "course" ? b.slug : b.courseSlug));
+    return {
+      slug: b.slug,
+      type: b.type as "course" | "lesson",
+      courseSlug: b.courseSlug,
+      title: b.type === "course"
+        ? (course?.title ?? b.slug)
+        : b.slug.replace(/-/g, " "),
+      courseTitle: course?.title ?? b.courseSlug ?? "",
+      savedAt: b.createdAt.toISOString(),
+    };
+  });
+
   return (
     <div className="bg-brown-deep min-h-screen">
       <div className="max-w-4xl mx-auto px-4 pt-24 pb-24">
@@ -87,6 +107,7 @@ export default async function ProfilePage() {
           courseProgress={courseProgress}
           recentCompletions={recentCompletions}
           totalCompleted={progress.length}
+          savedItems={savedItems}
         />
       </div>
     </div>

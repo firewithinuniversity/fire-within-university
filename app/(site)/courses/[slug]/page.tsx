@@ -5,6 +5,7 @@ import { getCourseBySlug, getAllCourseSlugs } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { courseJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
 import CourseProgressBar from "@/components/CourseProgressBar";
+import BookmarkButton from "@/components/BookmarkButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -94,9 +95,12 @@ export default async function CourseDetailPage({ params }: Props) {
             </div>
           )}
 
-          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-4">
-            {course.title}
-          </h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-4">
+              {course.title}
+            </h1>
+            <BookmarkButton slug={slug} type="course" className="mt-2 flex-shrink-0" />
+          </div>
 
           {course.instructor && (
             <p className="text-cream/60 text-sm mb-2">
