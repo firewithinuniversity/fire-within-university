@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getCourseBySlug, getAllCourseSlugs } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { courseJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
+import CourseProgressBar from "@/components/CourseProgressBar";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -111,6 +112,14 @@ export default async function CourseDetailPage({ params }: Props) {
 
           <div className="flex items-center gap-4 text-sm text-cream/50">
             <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+          </div>
+
+          {/* Progress bar — only visible to signed-in users */}
+          <div className="mt-6 max-w-sm">
+            <CourseProgressBar
+              courseSlug={slug}
+              totalLessons={course.lessons?.length ?? 0}
+            />
           </div>
         </div>
       </section>

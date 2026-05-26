@@ -357,30 +357,6 @@ export async function getPostsByAuthor(authorId: string): Promise<PostSummary[]>
   );
 }
 
-export type Testimonial = {
-  _id: string;
-  name: string;
-  location?: string;
-  quote: string;
-  photo?: SanityImage;
-};
-
-export const getFeaturedTestimonials = unstable_cache(
-  async (): Promise<Testimonial[]> => {
-    return safeFetch(
-      () =>
-        client.fetch(
-          `*[_type == "testimonial" && featured == true] | order(order asc) {
-            _id, name, location, quote, photo
-          }`
-        ),
-      []
-    );
-  },
-  ["featured-testimonials"],
-  { revalidate: ONE_HOUR }
-);
-
 export type CourseSummary = {
   _id: string;
   title: string;

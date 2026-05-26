@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getLessonBySlug, getAllCourseSlugs, getCourseBySlug } from "@/lib/sanity/queries";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import PortableTextRenderer from "@/components/PortableTextRenderer";
+import LessonCompleteButton from "@/components/LessonCompleteButton";
 import { canonicalUrl } from "@/lib/metadata";
 
 function sanitizeHref(url: string): string {
@@ -110,6 +111,11 @@ export default async function LessonPage({ params }: Props) {
             <PortableTextRenderer value={currentLesson.body as unknown[]} />
           </div>
         )}
+
+        {/* Mark complete */}
+        <div className="mt-10">
+          <LessonCompleteButton lessonSlug={lessonSlug} courseSlug={slug} />
+        </div>
 
         {/* Downloads */}
         {currentLesson.downloads && currentLesson.downloads.length > 0 && (

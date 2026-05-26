@@ -1,22 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 export default function LessonCompleteButton({
   lessonSlug,
   courseSlug,
-  initialCompleted = false,
 }: {
   lessonSlug: string;
   courseSlug: string;
-  initialCompleted?: boolean;
 }) {
   const { data: session } = useSession();
-  const [completed, setCompleted] = useState(initialCompleted);
+  const [completed, setCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
-  if (!session) return null;
+  useEffect(() => {
+    if (!session) return;
+    fetch(`/api/progress?courseSlug=${encodeURIComponent(courseSlug)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const slugs: string[] = (data.progress ?? []).map(
+          (p: { lessonSlug: string }) => p.lessonSlug
+        );
+        setCompleted(slugs.includes(lessonSlug));
+      })
+      .catch(() => {})
+      .finally(() => setHydrated(true));
+  }, [session, courseSlug, lessonSlug]);
+
+  if (!session || !hydrated) return null;
 
   async function toggle() {
     setLoading(true);
