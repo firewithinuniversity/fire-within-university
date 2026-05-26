@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
 import { toast } from "sonner";
+import { trackSignIn, trackSignUp } from "@/lib/analytics";
 
 type Tab = "signin" | "register" | "forgot";
 
@@ -124,6 +125,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       toast.error("Invalid email or password.");
     } else {
       toast.success("Welcome back!");
+      trackSignIn("credentials");
       onClose();
       router.refresh();
     }
@@ -174,11 +176,13 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       setError("Account created but sign-in failed. Please sign in manually.");
     } else {
       setRegisterSuccess(true);
+      trackSignUp("credentials");
       router.refresh();
     }
   }
 
   async function handleGoogle() {
+    trackSignIn("google");
     signIn("google", { callbackUrl: window.location.href });
   }
 

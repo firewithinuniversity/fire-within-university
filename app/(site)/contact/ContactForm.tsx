@@ -19,6 +19,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { trackContactSubmit } from "@/lib/analytics";
 
 type FormData = {
   name: string;
@@ -67,6 +68,7 @@ export default function ContactForm() {
         setStatus("success");
         setResponseMessage(data.message);
         setForm(initialForm);
+        trackContactSubmit();
         toast.success(
           form.subject === "prayer"
             ? "Your prayer request has been received. We're praying for you."

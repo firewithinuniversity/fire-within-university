@@ -23,6 +23,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { trackDonationStart } from "@/lib/analytics";
 
 type Frequency = "once" | "monthly";
 
@@ -68,6 +69,7 @@ export default function DonateForm() {
       const data = await res.json();
 
       if (res.ok && data.url) {
+        trackDonationStart(finalAmountDollars, frequency);
         // Redirect to Stripe's hosted checkout page
         window.location.href = data.url;
       } else {

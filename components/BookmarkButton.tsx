@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { trackBookmarkAdd, trackBookmarkRemove } from "@/lib/analytics";
 
 type Props = {
   slug: string;
@@ -47,6 +48,7 @@ export default function BookmarkButton({ slug, type, courseSlug, className = "" 
         );
         if (!res.ok) throw new Error();
         toast.success("Removed from saved");
+        trackBookmarkRemove(type, slug);
       } else {
         const res = await fetch("/api/bookmarks", {
           method: "POST",
@@ -55,6 +57,7 @@ export default function BookmarkButton({ slug, type, courseSlug, className = "" 
         });
         if (!res.ok) throw new Error();
         toast.success("Saved!");
+        trackBookmarkAdd(type, slug);
       }
     } catch {
       setBookmarked(wasBookmarked);

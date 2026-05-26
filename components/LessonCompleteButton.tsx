@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { trackLessonComplete, trackLessonUncomplete } from "@/lib/analytics";
 
 export default function LessonCompleteButton({
   lessonSlug,
@@ -44,6 +45,7 @@ export default function LessonCompleteButton({
         });
         if (!res.ok) throw new Error();
         toast.success("Lesson unmarked");
+        trackLessonUncomplete(courseSlug, lessonSlug);
       } else {
         const res = await fetch("/api/progress", {
           method: "POST",
@@ -52,6 +54,7 @@ export default function LessonCompleteButton({
         });
         if (!res.ok) throw new Error();
         toast.success("Lesson completed!");
+        trackLessonComplete(courseSlug, lessonSlug);
       }
     } catch {
       setCompleted(wasCompleted);

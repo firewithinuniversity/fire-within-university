@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import { trackSearch } from "@/lib/analytics";
 
 type SearchResult = {
   type: "post" | "course" | "lesson";
@@ -75,8 +76,10 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(term)}`);
       const data = await res.json();
-      setResults(data.results ?? []);
+      const items = data.results ?? [];
+      setResults(items);
       setSelectedIndex(0);
+      if (items.length > 0) trackSearch(term, items.length);
     } catch {
       setResults([]);
     } finally {
