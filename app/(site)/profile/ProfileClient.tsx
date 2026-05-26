@@ -1,0 +1,332 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+type CourseProgress = {
+  title: string;
+  slug: string;
+  totalLessons: number;
+  completedLessons: number;
+  description?: string;
+};
+
+type RecentCompletion = {
+  lessonSlug: string;
+  courseSlug: string;
+  courseTitle: string;
+  completedAt: string;
+};
+
+type Props = {
+  initialName: string;
+  email: string;
+  memberSince: string;
+  image: string | null;
+  courseProgress: CourseProgress[];
+  recentCompletions: RecentCompletion[];
+  totalCompleted: number;
+};
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatRelative(iso: string) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  return formatDate(iso);
+}
+
+export default function ProfileClient({
+  initialName,
+  email,
+  memberSince,
+  image,
+  courseProgress,
+  recentCompletions,
+  totalCompleted,
+}: Props) {
+  const router = useRouter();
+  const [name, setName] = useState(initialName);
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(initialName);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+
+  async function handleSaveName() {
+    const trimmed = nameInput.trim();
+    if (!trimmed || trimmed === name) {
+      setEditingName(false);
+      setNameInput(name);
+      return;
+    }
+
+    setSaving(true);
+    setSaveError("");
+
+    try {
+      const res = await fetch("/api/auth/update-profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmed }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setSaveError(data.message || "Failed to update.");
+        return;
+      }
+
+      setName(trimmed);
+      setEditingName(false);
+      router.refresh();
+    } catch {
+      setSaveError("Something went wrong.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const initials = (name || email)
+    .split(/[\s@]/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((s) => s[0].toUpperCase())
+    .join("");
+
+  const coursesStarted = courseProgress.length;
+  const coursesCompleted = courseProgress.filter(
+    (c) => c.completedLessons >= c.totalLessons && c.totalLessons > 0
+  ).length;
+
+  return (
+    <div className="space-y-10">
+      {/* Profile card */}
+      <section className="bg-brown-card border border-white/[0.08] rounded-2xl p-6 sm:p-8">
+        <div className="flex items-start gap-5">
+          {/* Avatar */}
+          {image ? (
+            <img
+              src={image}
+              alt=""
+              className="w-16 h-16 rounded-full object-cover ring-2 ring-gold/30 flex-shrink-0"
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange/80 to-gold/70 flex items-center justify-center flex-shrink-0 ring-2 ring-gold/30">
+              <span className="text-cream text-lg font-bold">{initials}</span>
+            </div>
+          )}
+
+          <div className="flex-grow min-w-0">
+            {/* Name */}
+            {editingName ? (
+              <div className="flex items-center gap-2 mb-1">
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  maxLength={100}
+                  className="px-3 py-1.5 rounded-lg border border-cream/[0.1] bg-brown-deep text-cream text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-gold/40 w-full max-w-xs"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSaveName();
+                    if (e.key === "Escape") {
+                      setEditingName(false);
+                      setNameInput(name);
+                    }
+                  }}
+                  autoFocus
+                />
+                <button
+                  onClick={handleSaveName}
+                  disabled={saving}
+                  className="text-green-400 hover:text-green-300 transition-colors disabled:opacity-50"
+                  aria-label="Save name"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => {
+                    setEditingName(false);
+                    setNameInput(name);
+                    setSaveError("");
+                  }}
+                  className="text-cream/40 hover:text-cream/70 transition-colors"
+                  aria-label="Cancel editing"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-lg font-semibold text-cream truncate">
+                  {name || "No name set"}
+                </h2>
+                <button
+                  onClick={() => setEditingName(true)}
+                  className="text-cream/30 hover:text-gold transition-colors flex-shrink-0"
+                  aria-label="Edit name"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+                  </svg>
+                </button>
+              </div>
+            )}
+
+            {saveError && (
+              <p className="text-red-400 text-xs mb-1">{saveError}</p>
+            )}
+
+            <p className="text-cream/50 text-sm">{email}</p>
+            <p className="text-cream/30 text-xs mt-1">
+              Member since {formatDate(memberSince)}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="grid grid-cols-3 gap-4">
+        {[
+          { label: "Lessons Completed", value: totalCompleted },
+          { label: "Courses Started", value: coursesStarted },
+          { label: "Courses Completed", value: coursesCompleted },
+        ].map((stat) => (
+          <div
+            key={stat.label}
+            className="bg-brown-card border border-white/[0.08] rounded-xl p-5 text-center"
+          >
+            <p className="text-2xl sm:text-3xl font-bold text-gold">{stat.value}</p>
+            <p className="text-cream/40 text-xs sm:text-sm mt-1">{stat.label}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Course Progress */}
+      <section>
+        <h2 className="font-serif text-xl font-bold text-cream mb-5">
+          My Courses
+        </h2>
+
+        {courseProgress.length === 0 ? (
+          <div className="bg-brown-card border border-white/[0.08] rounded-2xl p-8 text-center">
+            <p className="text-cream/50 mb-4">
+              You haven&apos;t started any courses yet.
+            </p>
+            <Link
+              href="/courses"
+              className="inline-block bg-orange hover:bg-orange-hover text-cream font-semibold py-2.5 px-6 rounded-xl transition-colors text-sm"
+            >
+              Browse Courses
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {courseProgress.map((c) => {
+              const pct =
+                c.totalLessons > 0
+                  ? Math.round((c.completedLessons / c.totalLessons) * 100)
+                  : 0;
+              const isComplete = pct >= 100;
+
+              return (
+                <Link
+                  key={c.slug}
+                  href={`/courses/${c.slug}`}
+                  className="group block bg-brown-card border border-white/[0.08] rounded-xl p-5 transition-all hover:border-gold/30 hover:bg-[#553318]"
+                >
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="min-w-0">
+                      <h3 className="text-cream font-semibold group-hover:text-gold transition-colors truncate">
+                        {c.title}
+                      </h3>
+                      {c.description && (
+                        <p className="text-cream/40 text-sm mt-1 line-clamp-1">
+                          {c.description}
+                        </p>
+                      )}
+                    </div>
+                    {isComplete ? (
+                      <span className="flex items-center gap-1 text-green-400 text-xs font-semibold flex-shrink-0 bg-green-900/30 px-2.5 py-1 rounded-full border border-green-700/30">
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                        Complete
+                      </span>
+                    ) : (
+                      <span className="text-cream/40 text-sm flex-shrink-0">
+                        {c.completedLessons}/{c.totalLessons}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="h-2 rounded-full bg-cream/[0.08] overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        isComplete
+                          ? "bg-green-500"
+                          : "bg-gradient-to-r from-orange to-gold"
+                      }`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <p className="text-cream/30 text-xs mt-1.5">{pct}% complete</p>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Recent Activity */}
+      {recentCompletions.length > 0 && (
+        <section>
+          <h2 className="font-serif text-xl font-bold text-cream mb-5">
+            Recent Activity
+          </h2>
+          <div className="bg-brown-card border border-white/[0.08] rounded-2xl divide-y divide-white/[0.06]">
+            {recentCompletions.map((rc, i) => (
+              <Link
+                key={`${rc.lessonSlug}-${i}`}
+                href={`/courses/${rc.courseSlug}/lessons/${rc.lessonSlug}`}
+                className="flex items-center gap-3 px-5 py-3.5 hover:bg-cream/[0.03] transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+              >
+                <svg className="w-4 h-4 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <div className="flex-grow min-w-0">
+                  <p className="text-cream/80 text-sm truncate">
+                    Completed{" "}
+                    <span className="text-cream font-medium">
+                      {rc.lessonSlug.replace(/-/g, " ")}
+                    </span>
+                  </p>
+                  <p className="text-cream/30 text-xs">{rc.courseTitle}</p>
+                </div>
+                <span className="text-cream/25 text-xs flex-shrink-0">
+                  {formatRelative(rc.completedAt)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
