@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthDropdown from "./AuthDropdown";
+import SearchModal from "./SearchModal";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -15,6 +16,7 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -25,6 +27,19 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Cmd+K / Ctrl+K keyboard shortcut
+  const handleSearchShortcut = useCallback((e: KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      setSearchOpen((prev) => !prev);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleSearchShortcut);
+    return () => document.removeEventListener("keydown", handleSearchShortcut);
+  }, [handleSearchShortcut]);
 
   return (
     <header
@@ -68,6 +83,17 @@ export default function Navbar() {
 
         {/* Right actions — desktop */}
         <div className="hidden md:flex items-center gap-4 shrink-0">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-2 text-cream/50 hover:text-cream border border-cream/[0.1] hover:border-cream/[0.2] rounded-full px-3 py-1.5 transition-all text-[12px]"
+            aria-label="Search (Ctrl+K)"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <span className="hidden lg:inline">Search</span>
+            <kbd className="hidden lg:inline text-[10px] text-cream/25 bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono ml-1">⌘K</kbd>
+          </button>
           <Link
             href="/donate"
             className="bg-orange hover:bg-orange-hover text-cream text-[13px] font-semibold px-5 py-2 rounded-full transition-all duration-300 shadow-[0_2px_12px_rgba(196,94,26,0.25)] hover:shadow-[0_4px_20px_rgba(196,94,26,0.4)] hover:-translate-y-0.5"
@@ -77,9 +103,20 @@ export default function Navbar() {
           <AuthDropdown />
         </div>
 
+        {/* Search — mobile */}
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="md:hidden ml-auto p-2 text-cream/50 hover:text-cream rounded-lg hover:bg-cream/10 transition-colors"
+          aria-label="Search"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+        </button>
+
         {/* Hamburger — mobile */}
         <button
-          className="md:hidden ml-auto p-3 text-cream rounded-lg hover:bg-cream/10 transition-colors min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1.5"
+          className="md:hidden p-3 text-cream rounded-lg hover:bg-cream/10 transition-colors min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1.5"
           onClick={() => setMobileOpen((prev) => !prev)}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
@@ -123,6 +160,7 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }
