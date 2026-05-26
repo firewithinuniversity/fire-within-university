@@ -27,9 +27,13 @@ export default function ShareButtons({ title, url }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-xs font-semibold text-cream/60 uppercase tracking-widest">
+    <div className="flex items-center gap-3 flex-wrap" role="group" aria-label="Share this post">
+      <span className="text-xs font-semibold text-cream/60 uppercase tracking-widest" aria-hidden="true">
         Share
+      </span>
+      {/* Screen reader announcement for copy action */}
+      <span role="status" aria-live="polite" className="sr-only">
+        {copied ? "Link copied to clipboard" : ""}
       </span>
 
       <a

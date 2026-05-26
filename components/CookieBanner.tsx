@@ -34,9 +34,8 @@ export default function CookieBanner() {
 
   return (
     <div
-      role="dialog"
-      aria-label="Cookie consent"
-      aria-modal="false"
+      role="region"
+      aria-label="Cookie consent notice"
       className="fixed bottom-0 left-0 right-0 z-50 bg-brown/95 backdrop-blur-md text-cream shadow-xl border-t border-gold/20 px-4 py-4 md:py-3"
     >
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center gap-4 justify-between">
@@ -52,15 +51,17 @@ export default function CookieBanner() {
           for details.
         </p>
 
-        <div className="flex gap-3 flex-shrink-0">
+        <div className="flex gap-3 flex-shrink-0" role="group" aria-label="Cookie consent actions">
           <button
             onClick={handleDecline}
+            aria-label="Decline cookies"
             className="text-sm text-cream/60 hover:text-cream underline transition-colors min-h-[44px] min-w-[44px] px-3 py-2"
           >
             Decline
           </button>
           <button
             onClick={handleAccept}
+            aria-label="Accept cookies"
             className="bg-orange hover:bg-orange-hover text-cream text-sm font-semibold px-5 py-2.5 rounded-full transition-colors min-h-[44px]"
           >
             Accept

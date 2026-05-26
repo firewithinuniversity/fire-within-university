@@ -68,6 +68,9 @@ export default function LessonCompleteButton({
     <button
       onClick={toggle}
       disabled={loading}
+      aria-pressed={completed}
+      aria-busy={loading}
+      aria-label={completed ? "Mark lesson as incomplete" : "Mark lesson as complete"}
       className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 disabled:opacity-50 ${
         completed
           ? "bg-green-900/40 text-green-300 hover:bg-green-900/60 border border-green-700/30"
@@ -76,7 +79,7 @@ export default function LessonCompleteButton({
     >
       {completed ? (
         <>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
           Completed

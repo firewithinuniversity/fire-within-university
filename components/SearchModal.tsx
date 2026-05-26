@@ -45,23 +45,57 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const triggerRef = useRef<Element | null>(null);
+
+  // Capture the element that opened the modal so we can restore focus on close
+  useEffect(() => {
+    triggerRef.current = document.activeElement;
+  }, []);
 
   // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Escape to close
+  // Focus trap + Escape to close
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      // Trap focus inside the dialog
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'input, button, a, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
+
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = "";
+      // Restore focus to the trigger element
+      if (triggerRef.current instanceof HTMLElement) {
+        triggerRef.current.focus();
+      }
     };
   }, [onClose]);
 
@@ -111,6 +145,22 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
     }
   }
 
+  const listboxId = "search-results-listbox";
+  const activeOptionId =
+    results.length > 0
+      ? `search-option-${results[selectedIndex]?.type}-${results[selectedIndex]?.slug}`
+      : undefined;
+
+  // Build status text for screen readers
+  let statusText = "";
+  if (loading) {
+    statusText = "Searching...";
+  } else if (query.length >= 2 && results.length === 0) {
+    statusText = `No results found for "${query}".`;
+  } else if (results.length > 0) {
+    statusText = `${results.length} result${results.length === 1 ? "" : "s"} found. Use arrow keys to navigate.`;
+  }
+
   return (
     <div
       style={{ position: "fixed", inset: 0, zIndex: 9999 }}
@@ -118,12 +168,17 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
+      aria-hidden="true"
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search sermons, courses, and lessons"
         className="bg-[#2a1a0e] rounded-2xl shadow-2xl w-full max-w-lg border border-white/[0.08] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Search input */}
+        {/* Search input — combobox pattern */}
         <div className="flex items-center gap-3 px-5 py-4 border-b border-cream/[0.06]">
           <svg
             className="w-5 h-5 text-cream/40 flex-shrink-0"
@@ -131,6 +186,7 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -146,11 +202,27 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
             onChange={(e) => handleInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             className="flex-grow bg-transparent text-cream placeholder:text-cream/30 text-sm focus:outline-none"
+            role="combobox"
             aria-label="Search"
+            aria-expanded={results.length > 0}
+            aria-controls={listboxId}
+            aria-activedescendant={activeOptionId}
+            aria-autocomplete="list"
+            aria-describedby="search-hint"
           />
           <kbd className="hidden sm:inline-block text-[10px] text-cream/25 bg-cream/[0.06] border border-cream/[0.1] rounded px-1.5 py-0.5 font-mono">
             ESC
           </kbd>
+        </div>
+
+        {/* Screen reader status announcements */}
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+        >
+          {statusText}
         </div>
 
         {/* Results */}
@@ -168,12 +240,18 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
           )}
 
           {!loading && results.length > 0 && (
-            <ul className="py-2" role="listbox">
+            <ul id={listboxId} className="py-2" role="listbox">
               {results.map((result, i) => (
-                <li key={`${result.type}-${result.slug}`} role="option" aria-selected={i === selectedIndex}>
+                <li
+                  key={`${result.type}-${result.slug}`}
+                  id={`search-option-${result.type}-${result.slug}`}
+                  role="option"
+                  aria-selected={i === selectedIndex}
+                >
                   <button
                     onClick={() => navigate(result)}
                     onMouseEnter={() => setSelectedIndex(i)}
+                    tabIndex={-1}
                     className={`w-full text-left px-5 py-3 flex items-center gap-3 transition-colors ${
                       i === selectedIndex
                         ? "bg-cream/[0.06]"
@@ -203,6 +281,7 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
                       viewBox="0 0 24 24"
                       strokeWidth={2}
                       stroke="currentColor"
+                      aria-hidden="true"
                     >
                       <path
                         strokeLinecap="round"
@@ -217,14 +296,14 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
           )}
 
           {!loading && query.length < 2 && (
-            <div className="px-5 py-8 text-center text-cream/30 text-xs">
+            <div id="search-hint" className="px-5 py-8 text-center text-cream/30 text-xs">
               Type at least 2 characters to search
             </div>
           )}
         </div>
 
         {/* Footer hint */}
-        <div className="border-t border-cream/[0.06] px-5 py-2.5 flex items-center justify-between text-[10px] text-cream/25">
+        <div className="border-t border-cream/[0.06] px-5 py-2.5 flex items-center justify-between text-[10px] text-cream/25" aria-hidden="true">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <kbd className="bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono">↑</kbd>

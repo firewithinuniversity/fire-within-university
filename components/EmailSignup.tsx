@@ -67,6 +67,8 @@ export default function EmailSignup({ variant = "hero" }: Props) {
               : "border-cream/[0.1] bg-brown-card/60 text-cream focus:border-gold focus:ring-gold/30 placeholder:text-cream/40"
           }`}
           aria-label="Email address"
+          aria-invalid={status === "error" ? "true" : undefined}
+          aria-describedby="email-signup-hint"
         />
         <button
           type="submit"
@@ -87,7 +89,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
         <p className="text-red-600 text-xs mt-2 text-center" role="alert" aria-live="polite">{message}</p>
       )}
 
-      <p className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/60" : "text-cream/50"}`}>
+      <p id="email-signup-hint" className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/60" : "text-cream/50"}`}>
         No spam, ever. Unsubscribe anytime.
       </p>
     </form>

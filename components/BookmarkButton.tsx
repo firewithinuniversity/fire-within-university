@@ -73,7 +73,8 @@ export default function BookmarkButton({ slug, type, courseSlug, className = "" 
       disabled={loading}
       className={`group inline-flex items-center gap-1.5 transition-all disabled:opacity-50 ${className}`}
       aria-label={bookmarked ? "Remove bookmark" : "Save bookmark"}
-      title={bookmarked ? "Remove from saved" : "Save for later"}
+      aria-pressed={bookmarked}
+      aria-busy={loading}
     >
       {bookmarked ? (
         <svg
@@ -81,6 +82,7 @@ export default function BookmarkButton({ slug, type, courseSlug, className = "" 
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -95,6 +97,7 @@ export default function BookmarkButton({ slug, type, courseSlug, className = "" 
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"

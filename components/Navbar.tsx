@@ -88,11 +88,11 @@ export default function Navbar() {
             className="flex items-center gap-2 text-cream/50 hover:text-cream border border-cream/[0.1] hover:border-cream/[0.2] rounded-full px-3 py-1.5 transition-all text-[12px]"
             aria-label="Search (Ctrl+K)"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
             <span className="hidden lg:inline">Search</span>
-            <kbd className="hidden lg:inline text-[10px] text-cream/25 bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono ml-1">⌘K</kbd>
+            <kbd className="hidden lg:inline text-[10px] text-cream/25 bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono ml-1" aria-hidden="true">⌘K</kbd>
           </button>
           <Link
             href="/donate"
@@ -109,7 +109,7 @@ export default function Navbar() {
           className="md:hidden ml-auto p-2 text-cream/50 hover:text-cream rounded-lg hover:bg-cream/10 transition-colors"
           aria-label="Search"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
         </button>
@@ -122,15 +122,16 @@ export default function Navbar() {
           aria-controls="mobile-menu"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
-          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "translate-y-2 rotate-45" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "opacity-0 scale-x-0" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`} />
+          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "translate-y-2 rotate-45" : ""}`} aria-hidden="true" />
+          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "opacity-0 scale-x-0" : ""}`} aria-hidden="true" />
+          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`} aria-hidden="true" />
         </button>
       </nav>
 
       {/* Mobile menu */}
       <div
         id="mobile-menu"
+        aria-hidden={!mobileOpen}
         className={`md:hidden bg-brown-deep/95 backdrop-blur-xl border-t border-cream/[0.06] overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? "max-h-[24rem] opacity-100" : "max-h-0 opacity-0"}`}
       >
         <ul className="flex flex-col px-6 py-4 gap-1 list-none">
