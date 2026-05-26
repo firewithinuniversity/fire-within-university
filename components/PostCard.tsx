@@ -64,6 +64,8 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
               width={36}
               height={36}
               className="rounded-full w-9 h-9 object-cover ring-2 ring-cream/10"
+              loading="lazy"
+              sizes="36px"
             />
           )}
           <div className="text-xs text-cream/60 leading-snug">

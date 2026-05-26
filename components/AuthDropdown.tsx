@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 
 const AuthModal = dynamic(() => import("./AuthModal"), { ssr: false });
@@ -59,10 +60,13 @@ export default function AuthDropdown() {
         aria-haspopup="true"
       >
         {session.user.image ? (
-          <img
+          <Image
             src={session.user.image}
             alt={`${session.user.name || "User"} avatar`}
-            className="w-8 h-8 rounded-full border-2 border-cream/30 group-hover:border-gold transition-colors"
+            width={32}
+            height={32}
+            className="w-8 h-8 rounded-full border-2 border-cream/30 group-hover:border-gold transition-colors object-cover"
+            sizes="32px"
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-orange flex items-center justify-center text-cream text-xs font-bold border-2 border-cream/30 group-hover:border-gold transition-colors">

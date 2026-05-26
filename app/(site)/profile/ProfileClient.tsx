@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -189,10 +190,14 @@ export default function ProfileClient({
         <div className="flex items-start gap-5">
           {/* Avatar */}
           {image ? (
-            <img
+            <Image
               src={image}
               alt=""
+              width={64}
+              height={64}
               className="w-16 h-16 rounded-full object-cover ring-2 ring-gold/30 flex-shrink-0"
+              sizes="64px"
+              priority
             />
           ) : (
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange/80 to-gold/70 flex items-center justify-center flex-shrink-0 ring-2 ring-gold/30">

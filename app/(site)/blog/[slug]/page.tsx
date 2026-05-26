@@ -162,6 +162,7 @@ export default async function PostPage({
               width={48}
               height={48}
               className="rounded-full w-10 h-10 object-cover"
+              sizes="40px"
             />
           )}
           <div className="text-sm text-cream/50">
@@ -186,6 +187,7 @@ export default async function PostPage({
             height={500}
             className="w-full h-auto"
             priority
+            sizes="(max-width: 1024px) 100vw, 896px"
           />
         </div>
       )}

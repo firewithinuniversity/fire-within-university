@@ -20,6 +20,8 @@ export default function AuthorCard({ author }: Props) {
           width={80}
           height={80}
           className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
+          loading="lazy"
+          sizes="64px"
         />
       ) : (
         <div
