@@ -20,7 +20,7 @@ export default async function ProfilePage() {
   const [user, progress, courses] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { name: true, email: true, createdAt: true, image: true },
+      select: { name: true, email: true, emailVerified: true, createdAt: true, image: true },
     }),
     prisma.lessonProgress.findMany({
       where: { userId: session.user.id },
@@ -64,7 +64,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="bg-brown-deep min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 pt-10 pb-24">
+      <div className="max-w-4xl mx-auto px-4 pt-24 pb-24">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-cream/50 mb-8">
           <Link href="/" className="hover:text-gold transition-colors">
@@ -81,6 +81,7 @@ export default async function ProfilePage() {
         <ProfileClient
           initialName={user.name ?? ""}
           email={user.email ?? ""}
+          emailVerified={!!user.emailVerified}
           memberSince={user.createdAt.toISOString()}
           image={user.image}
           courseProgress={courseProgress}

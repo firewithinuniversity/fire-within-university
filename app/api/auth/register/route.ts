@@ -5,6 +5,7 @@ import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
 import { adminEmails } from "@/lib/auth";
 import { isPasswordValid, getPasswordErrors } from "@/lib/passwordValidation";
 import { logAuditEvent } from "@/lib/auditLog";
+import { sendVerificationEmail } from "@/lib/emailVerification";
 
 const MAX_BODY_SIZE = 2 * 1024; // 2 KB
 
@@ -78,7 +79,12 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ message: "Account created successfully." }, { status: 201 });
+    // Send verification email (fire-and-forget — don't block registration)
+    sendVerificationEmail(normalizedEmail).catch((err) => {
+      console.error("[Register] Failed to send verification email:", err);
+    });
+
+    return NextResponse.json({ message: "Account created successfully. Please check your email to verify your address." }, { status: 201 });
   } catch (err) {
     console.error("[Register] Database error:", err);
     return NextResponse.json({ message: "Something went wrong. Please try again." }, { status: 500 });

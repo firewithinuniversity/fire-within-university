@@ -25,6 +25,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -167,7 +168,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     if (signInRes?.error) {
       setError("Account created but sign-in failed. Please sign in manually.");
     } else {
-      onClose();
+      setRegisterSuccess(true);
       router.refresh();
     }
   }
@@ -405,6 +406,25 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                 </div>
               </form>
             )
+          ) : registerSuccess ? (
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 mx-auto rounded-full bg-green-900/30 border border-green-700/20 flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <h3 className="text-cream font-semibold">Account Created!</h3>
+              <p className="text-cream/60 text-sm leading-relaxed">
+                We&apos;ve sent a verification link to your email. Please check your inbox to verify your address.
+              </p>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full bg-orange hover:bg-orange-hover text-cream font-semibold py-3 rounded-xl transition-colors text-sm"
+              >
+                Continue
+              </button>
+            </div>
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>

@@ -22,6 +22,7 @@ type RecentCompletion = {
 type Props = {
   initialName: string;
   email: string;
+  emailVerified: boolean;
   memberSince: string;
   image: string | null;
   courseProgress: CourseProgress[];
@@ -51,6 +52,7 @@ function formatRelative(iso: string) {
 export default function ProfileClient({
   initialName,
   email,
+  emailVerified,
   memberSince,
   image,
   courseProgress,
@@ -63,6 +65,24 @@ export default function ProfileClient({
   const [nameInput, setNameInput] = useState(initialName);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resendMsg, setResendMsg] = useState("");
+
+  async function handleResendVerification() {
+    setResending(true);
+    setResendMsg("");
+    try {
+      const res = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+      });
+      const data = await res.json();
+      setResendMsg(data.message);
+    } catch {
+      setResendMsg("Something went wrong. Please try again.");
+    } finally {
+      setResending(false);
+    }
+  }
 
   async function handleSaveName() {
     const trimmed = nameInput.trim();
@@ -112,6 +132,37 @@ export default function ProfileClient({
 
   return (
     <div className="space-y-10">
+      {/* Email verification banner */}
+      {!emailVerified && (
+        <section className="bg-amber-900/30 border border-amber-600/30 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center gap-3 flex-grow min-w-0">
+            <div className="w-10 h-10 rounded-full bg-amber-800/40 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-amber-200 text-sm font-medium">
+                Verify your email
+              </p>
+              <p className="text-amber-300/60 text-xs mt-0.5">
+                Check your inbox for a verification link, or request a new one.
+              </p>
+              {resendMsg && (
+                <p className="text-amber-200/80 text-xs mt-1">{resendMsg}</p>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={handleResendVerification}
+            disabled={resending}
+            className="bg-amber-700/50 hover:bg-amber-700/70 text-amber-100 text-sm font-medium py-2 px-4 rounded-xl transition-colors disabled:opacity-50 flex-shrink-0"
+          >
+            {resending ? "Sending..." : "Resend Email"}
+          </button>
+        </section>
+      )}
+
       {/* Profile card */}
       <section className="bg-brown-card border border-white/[0.08] rounded-2xl p-6 sm:p-8">
         <div className="flex items-start gap-5">
@@ -192,7 +243,17 @@ export default function ProfileClient({
               <p className="text-red-400 text-xs mb-1">{saveError}</p>
             )}
 
-            <p className="text-cream/50 text-sm">{email}</p>
+            <p className="text-cream/50 text-sm flex items-center gap-1.5">
+              {email}
+              {emailVerified && (
+                <span className="inline-flex items-center gap-0.5 text-green-400 text-xs" title="Email verified">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                  </svg>
+                  Verified
+                </span>
+              )}
+            </p>
             <p className="text-cream/30 text-xs mt-1">
               Member since {formatDate(memberSince)}
             </p>
