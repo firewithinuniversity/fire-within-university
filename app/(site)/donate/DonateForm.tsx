@@ -22,6 +22,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 type Frequency = "once" | "monthly";
 
@@ -47,7 +48,9 @@ export default function DonateForm() {
 
     // Client-side validation (server validates too — this is just for UX)
     if (finalAmountDollars < MIN_CUSTOM_DOLLARS) {
-      setError(`Minimum donation is $${MIN_CUSTOM_DOLLARS}.`);
+      const msg = `Minimum donation is $${MIN_CUSTOM_DOLLARS}.`;
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -68,11 +71,14 @@ export default function DonateForm() {
         // Redirect to Stripe's hosted checkout page
         window.location.href = data.url;
       } else {
-        setError(data.message ?? "Something went wrong. Please try again.");
+        const msg = data.message ?? "Something went wrong. Please try again.";
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
       }
     } catch {
       setError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
       setLoading(false);
     }
   }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 export default function LessonCompleteButton({
   lessonSlug,
@@ -38,18 +39,23 @@ export default function LessonCompleteButton({
 
     try {
       if (wasCompleted) {
-        await fetch(`/api/progress?lessonSlug=${encodeURIComponent(lessonSlug)}`, {
+        const res = await fetch(`/api/progress?lessonSlug=${encodeURIComponent(lessonSlug)}`, {
           method: "DELETE",
         });
+        if (!res.ok) throw new Error();
+        toast.success("Lesson unmarked");
       } else {
-        await fetch("/api/progress", {
+        const res = await fetch("/api/progress", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lessonSlug, courseSlug }),
         });
+        if (!res.ok) throw new Error();
+        toast.success("Lesson completed!");
       }
     } catch {
       setCompleted(wasCompleted);
+      toast.error("Failed to update progress. Please try again.");
     } finally {
       setLoading(false);
     }

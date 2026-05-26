@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type CourseProgress = {
   title: string;
@@ -19,6 +20,15 @@ type RecentCompletion = {
   completedAt: string;
 };
 
+type SavedItem = {
+  slug: string;
+  type: "course" | "lesson";
+  courseSlug: string | null;
+  title: string;
+  courseTitle: string;
+  savedAt: string;
+};
+
 type Props = {
   initialName: string;
   email: string;
@@ -28,6 +38,7 @@ type Props = {
   courseProgress: CourseProgress[];
   recentCompletions: RecentCompletion[];
   totalCompleted: number;
+  savedItems: SavedItem[];
 };
 
 function formatDate(iso: string) {
@@ -58,6 +69,7 @@ export default function ProfileClient({
   courseProgress,
   recentCompletions,
   totalCompleted,
+  savedItems,
 }: Props) {
   const router = useRouter();
   const [name, setName] = useState(initialName);
@@ -76,8 +88,14 @@ export default function ProfileClient({
         method: "POST",
       });
       const data = await res.json();
+      if (res.ok) {
+        toast.success("Verification email sent!");
+      } else {
+        toast.error(data.message || "Failed to send.");
+      }
       setResendMsg(data.message);
     } catch {
+      toast.error("Something went wrong.");
       setResendMsg("Something went wrong. Please try again.");
     } finally {
       setResending(false);
@@ -105,14 +123,17 @@ export default function ProfileClient({
       if (!res.ok) {
         const data = await res.json();
         setSaveError(data.message || "Failed to update.");
+        toast.error(data.message || "Failed to update name.");
         return;
       }
 
       setName(trimmed);
       setEditingName(false);
+      toast.success("Name updated!");
       router.refresh();
     } catch {
       setSaveError("Something went wrong.");
+      toast.error("Something went wrong.");
     } finally {
       setSaving(false);
     }
@@ -354,6 +375,52 @@ export default function ProfileClient({
           </div>
         )}
       </section>
+
+      {/* Saved Items */}
+      {savedItems.length > 0 && (
+        <section>
+          <h2 className="font-serif text-xl font-bold text-cream mb-5">
+            Saved Items
+          </h2>
+          <div className="bg-brown-card border border-white/[0.08] rounded-2xl divide-y divide-white/[0.06]">
+            {savedItems.map((item, i) => (
+              <Link
+                key={`${item.slug}-${item.type}-${i}`}
+                href={
+                  item.type === "course"
+                    ? `/courses/${item.slug}`
+                    : `/courses/${item.courseSlug}/lessons/${item.slug}`
+                }
+                className="flex items-center gap-3 px-5 py-3.5 hover:bg-cream/[0.03] transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+              >
+                <svg
+                  className="w-4 h-4 text-gold fill-gold flex-shrink-0"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                  />
+                </svg>
+                <div className="flex-grow min-w-0">
+                  <p className="text-cream/80 text-sm truncate capitalize">
+                    {item.title}
+                  </p>
+                  <p className="text-cream/30 text-xs">
+                    {item.type === "course" ? "Course" : item.courseTitle}
+                  </p>
+                </div>
+                <span className="text-cream/25 text-xs flex-shrink-0">
+                  {formatRelative(item.savedAt)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Recent Activity */}
       {recentCompletions.length > 0 && (

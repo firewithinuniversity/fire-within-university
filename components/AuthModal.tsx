@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
+import { toast } from "sonner";
 
 type Tab = "signin" | "register" | "forgot";
 
@@ -120,7 +121,9 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     setLoading(false);
     if (res?.error) {
       setError("Invalid email or password.");
+      toast.error("Invalid email or password.");
     } else {
+      toast.success("Welcome back!");
       onClose();
       router.refresh();
     }
@@ -153,7 +156,9 @@ function ModalContent({ onClose }: { onClose: () => void }) {
 
     if (!res.ok) {
       const data = await res.json();
-      setError(data.message || "Registration failed.");
+      const msg = data.message || "Registration failed.";
+      setError(msg);
+      toast.error(msg);
       setLoading(false);
       return;
     }
