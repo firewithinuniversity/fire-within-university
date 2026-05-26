@@ -168,7 +168,6 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      aria-hidden="true"
     >
       <div
         ref={dialogRef}

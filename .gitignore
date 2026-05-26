@@ -50,6 +50,12 @@ next-env.d.ts
 *.log
 .claude/*.lock
 
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Prisma
 /prisma/dev.db
 /prisma/dev.db-journal
