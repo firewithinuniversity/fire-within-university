@@ -50,6 +50,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: canonicalUrl(),
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "Fire Within University RSS Feed" }],
+    },
   },
   robots: {
     index: true,

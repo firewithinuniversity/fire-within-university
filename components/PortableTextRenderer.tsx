@@ -6,6 +6,26 @@ import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { imageUrlFor } from "@/lib/sanity/image";
 import ScriptureTooltip from "@/components/ScriptureTooltip";
 
+/** Convert heading text to a URL-safe slug for anchor links. */
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
+
+/** Extract plain text from React children (handles nested spans). */
+function childrenToText(children: React.ReactNode): string {
+  if (typeof children === "string") return children;
+  if (Array.isArray(children)) return children.map(childrenToText).join("");
+  if (children && typeof children === "object" && "props" in children) {
+    return childrenToText((children as React.ReactElement<{ children?: React.ReactNode }>).props.children);
+  }
+  return "";
+}
+
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
@@ -13,21 +33,33 @@ const components: PortableTextComponents = {
         {children}
       </p>
     ),
-    h2: ({ children }) => (
-      <h2 className="font-serif text-2xl font-bold text-cream mt-8 mb-3">
-        {children}
-      </h2>
-    ),
-    h3: ({ children }) => (
-      <h3 className="font-serif text-xl font-bold text-cream mt-6 mb-2">
-        {children}
-      </h3>
-    ),
-    h4: ({ children }) => (
-      <h4 className="font-serif text-lg font-semibold text-cream mt-4 mb-2">
-        {children}
-      </h4>
-    ),
+    h2: ({ children }) => {
+      const text = childrenToText(children);
+      const id = slugify(text);
+      return (
+        <h2 id={id} className="font-serif text-2xl font-bold text-cream mt-8 mb-3 scroll-mt-20">
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children }) => {
+      const text = childrenToText(children);
+      const id = slugify(text);
+      return (
+        <h3 id={id} className="font-serif text-xl font-bold text-cream mt-6 mb-2 scroll-mt-20">
+          {children}
+        </h3>
+      );
+    },
+    h4: ({ children }) => {
+      const text = childrenToText(children);
+      const id = slugify(text);
+      return (
+        <h4 id={id} className="font-serif text-lg font-semibold text-cream mt-4 mb-2 scroll-mt-20">
+          {children}
+        </h4>
+      );
+    },
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-gold pl-5 italic text-cream/70 my-6 text-lg leading-relaxed">
         {children}

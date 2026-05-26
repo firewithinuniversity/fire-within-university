@@ -15,6 +15,9 @@ import EmailSignup from "@/components/EmailSignup";
 import ShareButtons from "@/components/ShareButtons";
 import RelatedPostsAsync from "@/components/RelatedPostsAsync";
 import RelatedPostsSkeleton from "@/components/skeletons/RelatedPostsSkeleton";
+import ReadingProgress from "@/components/ReadingProgress";
+import TableOfContents from "@/components/TableOfContents";
+import { extractHeadings } from "@/lib/extractHeadings";
 
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
@@ -74,6 +77,7 @@ export default async function PostPage({
 
   const { title, publishedAt, author, category, series, mainImage, youtubeUrl, body, affiliateProducts } = post;
   const readTime = body ? readingTimeLabel(body as unknown[]) : null;
+  const headings = body ? extractHeadings(body as unknown[]) : [];
 
   const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -93,6 +97,8 @@ export default async function PostPage({
     : undefined;
 
   return (
+    <>
+    <ReadingProgress />
     <article className="max-w-3xl mx-auto px-4 py-14">
       {/* Structured data */}
       <script
@@ -198,6 +204,9 @@ export default async function PostPage({
         <YouTubeEmbed url={youtubeUrl} title={`${title} — sermon video`} />
       )}
 
+      {/* ── Table of contents ──────────────────────────────────────── */}
+      {headings.length >= 3 && <TableOfContents headings={headings} />}
+
       {/* ── Post body ───────────────────────────────────────────────── */}
       {body && body.length > 0 && (
         <div className="mb-10">
@@ -302,5 +311,6 @@ export default async function PostPage({
         </Link>
       </div>
     </article>
+    </>
   );
 }
