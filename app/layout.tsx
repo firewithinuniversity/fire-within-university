@@ -27,6 +27,12 @@ export const metadata: Metadata = {
   },
   description:
     "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
+  manifest: "/manifest.webmanifest",
+  other: {
+    "theme-color": "#1a0f05",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
