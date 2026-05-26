@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
 
-type Tab = "signin" | "register";
+type Tab = "signin" | "register" | "forgot";
 
 const FOCUSABLE_SELECTORS =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -24,6 +24,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotSuccess, setForgotSuccess] = useState("");
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -96,6 +97,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     setConfirmPassword("");
     setAgeConfirmed(false);
     setError("");
+    setForgotSuccess("");
   }
 
   function switchTab(t: Tab) {
@@ -174,6 +176,32 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     signIn("google", { callbackUrl: window.location.href });
   }
 
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setForgotSuccess("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Something went wrong.");
+      } else {
+        setForgotSuccess(data.message);
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const headingId = "auth-modal-heading";
 
   return (
@@ -204,59 +232,74 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         </button>
 
         {/* Tab header */}
-        <div className="flex border-b border-cream/[0.06]" role="tablist">
-          <button
-            id={tab === "signin" ? headingId : undefined}
-            role="tab"
-            aria-selected={tab === "signin"}
-            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
-            onClick={() => switchTab("signin")}
-          >
-            Sign In
-          </button>
-          <button
-            id={tab === "register" ? headingId : undefined}
-            role="tab"
-            aria-selected={tab === "register"}
-            className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
-            onClick={() => switchTab("register")}
-          >
-            Create Account
-          </button>
-        </div>
+        {tab === "forgot" ? (
+          <div className="flex border-b border-cream/[0.06]">
+            <button
+              id={headingId}
+              className="flex-1 py-3.5 text-sm font-semibold text-cream border-b-2 border-gold"
+            >
+              Reset Password
+            </button>
+          </div>
+        ) : (
+          <div className="flex border-b border-cream/[0.06]" role="tablist">
+            <button
+              id={tab === "signin" ? headingId : undefined}
+              role="tab"
+              aria-selected={tab === "signin"}
+              className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
+              onClick={() => switchTab("signin")}
+            >
+              Sign In
+            </button>
+            <button
+              id={tab === "register" ? headingId : undefined}
+              role="tab"
+              aria-selected={tab === "register"}
+              className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
+              onClick={() => switchTab("register")}
+            >
+              Create Account
+            </button>
+          </div>
+        )}
 
         <div className="p-6">
-          {/* Google sign-in */}
-          <button
-            onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-3 bg-cream/[0.05] border border-cream/[0.1] text-cream font-medium py-3 rounded-xl hover:bg-cream/[0.1] transition-colors mb-5"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
-            </svg>
-            Continue with Google
-          </button>
+          {/* Google sign-in — hidden on forgot password view */}
+          {tab !== "forgot" && (
+            <>
+              <button
+                onClick={handleGoogle}
+                className="w-full flex items-center justify-center gap-3 bg-cream/[0.05] border border-cream/[0.1] text-cream font-medium py-3 rounded-xl hover:bg-cream/[0.1] transition-colors mb-5"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                Continue with Google
+              </button>
 
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-cream/[0.08]" />
-            <span className="text-xs text-cream/30 uppercase tracking-wide">or</span>
-            <div className="flex-1 h-px bg-cream/[0.08]" />
-          </div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex-1 h-px bg-cream/[0.08]" />
+                <span className="text-xs text-cream/30 uppercase tracking-wide">or</span>
+                <div className="flex-1 h-px bg-cream/[0.08]" />
+              </div>
+            </>
+          )}
 
           {error && (
             <div className="bg-red-900/30 text-red-300 text-sm px-4 py-2.5 rounded-lg mb-4 border border-red-700/20">
@@ -299,7 +342,69 @@ function ModalContent({ onClose }: { onClose: () => void }) {
               >
                 {loading ? "Signing in..." : "Sign In"}
               </button>
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => switchTab("forgot")}
+                  className="text-xs text-cream/40 hover:text-gold transition-colors"
+                >
+                  Forgot your password?
+                </button>
+              </div>
             </form>
+          ) : tab === "forgot" ? (
+            forgotSuccess ? (
+              <div className="text-center space-y-4">
+                <div className="w-12 h-12 mx-auto rounded-full bg-green-900/30 border border-green-700/20 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                  </svg>
+                </div>
+                <p className="text-cream/70 text-sm leading-relaxed">{forgotSuccess}</p>
+                <button
+                  type="button"
+                  onClick={() => switchTab("signin")}
+                  className="text-sm text-gold hover:text-gold/80 transition-colors"
+                >
+                  Back to Sign In
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <p className="text-cream/50 text-sm">
+                  Enter your email and we&apos;ll send you a link to reset your password.
+                </p>
+                <div>
+                  <label htmlFor="forgot-email" className="block text-sm font-medium text-cream/60 mb-1">
+                    Email
+                  </label>
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={INPUT_CLASS}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-orange hover:bg-orange-hover text-cream font-semibold py-3 rounded-xl transition-colors disabled:opacity-50"
+                >
+                  {loading ? "Sending..." : "Send Reset Link"}
+                </button>
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => switchTab("signin")}
+                    className="text-xs text-cream/40 hover:text-gold transition-colors"
+                  >
+                    Back to Sign In
+                  </button>
+                </div>
+              </form>
+            )
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
