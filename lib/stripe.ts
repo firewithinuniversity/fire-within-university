@@ -13,7 +13,7 @@ export function getStripe(): Stripe {
   return stripeInstance;
 }
 
-export const ALLOWED_ONE_TIME_AMOUNTS_CENTS = [1000, 2500, 5000, 10000]; // $10, $25, $50, $100
-export const ALLOWED_RECURRING_AMOUNTS_CENTS = [1000, 2500, 5000, 10000];
-export const CUSTOM_AMOUNT_MIN_CENTS = 1000; // $10 minimum for custom amounts
+export const ALLOWED_ONE_TIME_AMOUNTS_CENTS = [500, 1000, 2500, 5000]; // $5, $10, $25, $50
+export const ALLOWED_RECURRING_AMOUNTS_CENTS = [500, 1000, 2500, 5000];
+export const CUSTOM_AMOUNT_MIN_CENTS = 500; // $5 minimum for custom amounts
 export const CUSTOM_AMOUNT_MAX_CENTS = 100000; // $1000 maximum

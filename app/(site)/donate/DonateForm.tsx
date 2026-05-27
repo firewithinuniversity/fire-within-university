@@ -3,7 +3,7 @@
  *
  * Client Component handling all the interactive state:
  * - Tab: "Give Once" vs "Give Monthly"
- * - Preset amount buttons ($10, $25, $50, $100)
+ * - Preset amount buttons ($5, $10, $25, $50)
  * - Custom amount input
  * - Form submission → API call → Stripe redirect
  *
@@ -17,7 +17,7 @@
  * SECURITY:
  * - Amount is validated AGAIN on the server in the API route
  * - We never send card data anywhere — Stripe handles all of that
- * - The $10 minimum is enforced both here and on the server
+ * - The $5 minimum is enforced both here and on the server
  */
 "use client";
 
@@ -27,8 +27,8 @@ import { trackDonationStart } from "@/lib/analytics";
 
 type Frequency = "once" | "monthly";
 
-const PRESET_AMOUNTS_DOLLARS = [10, 25, 50, 100];
-const MIN_CUSTOM_DOLLARS = 10;
+const PRESET_AMOUNTS_DOLLARS = [5, 10, 25, 50];
+const MIN_CUSTOM_DOLLARS = 5;
 
 export default function DonateForm() {
   const [frequency, setFrequency] = useState<Frequency>("once");
