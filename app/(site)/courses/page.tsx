@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import SectionReveal from "@/components/SectionReveal";
+import CourseProgressMini from "@/components/CourseProgressMini";
 import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
@@ -113,6 +114,7 @@ export default async function CoursesPage() {
                     {course.instructor && <span>{course.instructor}</span>}
                     <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
                   </div>
+                  <CourseProgressMini courseSlug={course.slug.current} totalLessons={course.lessonCount} />
                 </div>
               </Link>
             </SectionReveal>

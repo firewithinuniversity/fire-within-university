@@ -44,6 +44,7 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [filter, setFilter] = useState<"all" | "post" | "course" | "lesson">("all");
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -123,6 +124,7 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
 
   function handleInputChange(value: string) {
     setQuery(value);
+    setFilter("all");
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => search(value.trim()), 250);
   }
@@ -132,23 +134,25 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
     onClose();
   }
 
+  const filteredResults = filter === "all" ? results : results.filter(r => r.type === filter);
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((i) => Math.min(i + 1, results.length - 1));
+      setSelectedIndex((i) => Math.min(i + 1, filteredResults.length - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && results.length > 0) {
+    } else if (e.key === "Enter" && filteredResults.length > 0) {
       e.preventDefault();
-      navigate(results[selectedIndex]);
+      navigate(filteredResults[selectedIndex]);
     }
   }
 
   const listboxId = "search-results-listbox";
   const activeOptionId =
-    results.length > 0
-      ? `search-option-${results[selectedIndex]?.type}-${results[selectedIndex]?.slug}`
+    filteredResults.length > 0
+      ? `search-option-${filteredResults[selectedIndex]?.type}-${filteredResults[selectedIndex]?.slug}`
       : undefined;
 
   // Build status text for screen readers
@@ -157,8 +161,10 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
     statusText = "Searching...";
   } else if (query.length >= 2 && results.length === 0) {
     statusText = `No results found for "${query}".`;
-  } else if (results.length > 0) {
-    statusText = `${results.length} result${results.length === 1 ? "" : "s"} found. Use arrow keys to navigate.`;
+  } else if (filteredResults.length > 0) {
+    statusText = `${filteredResults.length} result${filteredResults.length === 1 ? "" : "s"} found. Use arrow keys to navigate.`;
+  } else if (results.length > 0 && filteredResults.length === 0) {
+    statusText = `No results match the selected filter.`;
   }
 
   return (
@@ -203,7 +209,7 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
             className="flex-grow bg-transparent text-cream placeholder:text-cream/30 text-sm focus:outline-none"
             role="combobox"
             aria-label="Search"
-            aria-expanded={results.length > 0}
+            aria-expanded={filteredResults.length > 0}
             aria-controls={listboxId}
             aria-activedescendant={activeOptionId}
             aria-autocomplete="list"
@@ -226,6 +232,28 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
 
         {/* Results */}
         <div className="max-h-[50vh] overflow-y-auto">
+          {/* Filter tabs */}
+          {query.length >= 2 && !loading && results.length > 0 && (
+            <div className="flex items-center gap-2 px-5 py-2.5 border-b border-cream/[0.06]">
+              {(["all", "post", "course", "lesson"] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => {
+                    setFilter(type);
+                    setSelectedIndex(0);
+                  }}
+                  className={`text-xs px-3 py-1 rounded-full transition-colors ${
+                    filter === type
+                      ? "bg-gold/20 text-gold font-semibold"
+                      : "text-cream/40 hover:text-cream/60 hover:bg-cream/[0.06]"
+                  }`}
+                >
+                  {type === "all" ? "All" : type === "post" ? "Sermons" : type === "course" ? "Courses" : "Lessons"}
+                </button>
+              ))}
+            </div>
+          )}
+
           {loading && (
             <div className="px-5 py-8 text-center text-cream/40 text-sm">
               Searching...
@@ -238,9 +266,9 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
             </div>
           )}
 
-          {!loading && results.length > 0 && (
+          {!loading && filteredResults.length > 0 && (
             <ul id={listboxId} className="py-2" role="listbox">
-              {results.map((result, i) => (
+              {filteredResults.map((result, i) => (
                 <li
                   key={`${result.type}-${result.slug}`}
                   id={`search-option-${result.type}-${result.slug}`}
@@ -292,6 +320,12 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
                 </li>
               ))}
             </ul>
+          )}
+
+          {!loading && query.length >= 2 && results.length > 0 && filteredResults.length === 0 && (
+            <div className="px-5 py-8 text-center text-cream/40 text-sm">
+              No results match this filter
+            </div>
           )}
 
           {!loading && query.length < 2 && (

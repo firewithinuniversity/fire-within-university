@@ -80,6 +80,7 @@ export default function ProfileClient({
   const [saveError, setSaveError] = useState("");
   const [resending, setResending] = useState(false);
   const [resendMsg, setResendMsg] = useState("");
+  const [items, setItems] = useState(savedItems);
 
   async function handleResendVerification() {
     setResending(true);
@@ -137,6 +138,29 @@ export default function ProfileClient({
       toast.error("Something went wrong.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleRemoveBookmark(slug: string, type: string) {
+    const prev = items;
+    setItems((cur) => cur.filter((b) => !(b.slug === slug && b.type === type)));
+
+    try {
+      const res = await fetch(
+        `/api/bookmarks?slug=${encodeURIComponent(slug)}&type=${encodeURIComponent(type)}`,
+        { method: "DELETE" }
+      );
+
+      if (!res.ok) {
+        setItems(prev);
+        toast.error("Failed to remove bookmark.");
+        return;
+      }
+
+      toast.success("Bookmark removed");
+    } catch {
+      setItems(prev);
+      toast.error("Something went wrong.");
     }
   }
 
@@ -382,13 +406,23 @@ export default function ProfileClient({
       </section>
 
       {/* Saved Items */}
-      {savedItems.length > 0 && (
-        <section>
-          <h2 className="font-serif text-xl font-bold text-cream mb-5">
-            Saved Items
-          </h2>
+      <section>
+        <h2 className="font-serif text-xl font-bold text-cream mb-5">
+          Saved Items
+        </h2>
+        {items.length === 0 ? (
+          <div className="bg-brown-card border border-white/[0.08] rounded-2xl p-8 text-center">
+            <p className="text-cream/50 mb-4">No saved items yet.</p>
+            <Link
+              href="/courses"
+              className="inline-block bg-orange hover:bg-orange-hover text-cream font-semibold py-2.5 px-6 rounded-xl transition-colors text-sm"
+            >
+              Browse Courses
+            </Link>
+          </div>
+        ) : (
           <div className="bg-brown-card border border-white/[0.08] rounded-2xl divide-y divide-white/[0.06]">
-            {savedItems.map((item, i) => (
+            {items.map((item, i) => (
               <Link
                 key={`${item.slug}-${item.type}-${i}`}
                 href={
@@ -418,14 +452,27 @@ export default function ProfileClient({
                     {item.type === "course" ? "Course" : item.courseTitle}
                   </p>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleRemoveBookmark(item.slug, item.type);
+                  }}
+                  aria-label="Remove bookmark"
+                  className="text-cream/30 hover:text-red-400 transition-colors flex-shrink-0 p-1"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
                 <span className="text-cream/25 text-xs flex-shrink-0">
                   {formatRelative(item.savedAt)}
                 </span>
               </Link>
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {/* Recent Activity */}
       {recentCompletions.length > 0 && (
