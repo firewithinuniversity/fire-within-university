@@ -110,3 +110,26 @@ export function breadcrumbJsonLd(
     })),
   };
 }
+
+/** JSON-LD: ItemList (for teaching series — ordered list of posts) */
+export function seriesJsonLd(opts: {
+  title: string;
+  description?: string;
+  url: string;
+  items: { name: string; url: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: opts.title,
+    description: opts.description,
+    url: opts.url,
+    numberOfItems: opts.items.length,
+    itemListElement: opts.items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: item.url,
+    })),
+  };
+}

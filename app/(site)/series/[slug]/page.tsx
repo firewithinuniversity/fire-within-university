@@ -10,8 +10,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getSeriesBySlug, getPostsBySeries, getAllSeries } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
-import { breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
+import { breadcrumbJsonLd, canonicalUrl, seriesJsonLd } from "@/lib/metadata";
 import PostCard from "@/components/PostCard";
+
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const allSeries = await getAllSeries();
@@ -26,6 +28,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const series = await getSeriesBySlug(slug);
   if (!series) return { title: "Series Not Found" };
+  const imageUrl = series.coverImage
+    ? imageUrlFor(series.coverImage).width(1200).height(630).fit("crop").auto("format").url()
+    : undefined;
   return {
     title: series.title,
     description: series.description,
@@ -37,6 +42,7 @@ export async function generateMetadata({
       description: series.description,
       type: "website",
       url: canonicalUrl(`/series/${slug}`),
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
     },
   };
 }
@@ -68,6 +74,22 @@ export default async function SeriesDetailPage({
               { name: "Teaching Series", url: canonicalUrl("/series") },
               { name: series.title, url: canonicalUrl(`/series/${slug}`) },
             ])
+          ).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            seriesJsonLd({
+              title: series.title,
+              description: series.description,
+              url: canonicalUrl(`/series/${slug}`),
+              items: posts.map((post) => ({
+                name: post.title,
+                url: canonicalUrl(`/blog/${post.slug.current}`),
+              })),
+            })
           ).replace(/</g, "\\u003c"),
         }}
       />

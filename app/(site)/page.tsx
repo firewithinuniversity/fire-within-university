@@ -5,6 +5,8 @@ import SectionReveal from "@/components/SectionReveal";
 import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 
+export const revalidate = 3600;
+
 const SCRIPTURES = [
   { text: "I have come to bring fire on the earth, and how I wish it were already kindled!", ref: "Luke 12:49", url: "https://www.biblegateway.com/passage/?search=Luke+12%3A49" },
   { text: "He makes his messengers winds, his servants flames of fire.", ref: "Psalm 104:4", url: "https://www.biblegateway.com/passage/?search=Psalm+104%3A4" },

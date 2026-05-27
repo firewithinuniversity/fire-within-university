@@ -5,6 +5,8 @@ import EmailSignup from "@/components/EmailSignup";
 import { getAllCategories, getFilteredPosts } from "@/lib/sanity/queries";
 import { canonicalUrl } from "@/lib/metadata";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Sermons & Articles",
   description:

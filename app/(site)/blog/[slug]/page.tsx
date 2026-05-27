@@ -19,6 +19,8 @@ import ReadingProgress from "@/components/ReadingProgress";
 import TableOfContents from "@/components/TableOfContents";
 import { extractHeadings } from "@/lib/extractHeadings";
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
   return slugs.map(({ slug }) => ({ slug }));

@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // Mock env before importing the module
 vi.stubEnv("NEXT_PUBLIC_BASE_URL", "https://test.example.com");
 
-const { canonicalUrl, organizationJsonLd, websiteJsonLd, articleJsonLd, courseJsonLd, breadcrumbJsonLd } = await import("@/lib/metadata");
+const { canonicalUrl, organizationJsonLd, websiteJsonLd, articleJsonLd, courseJsonLd, breadcrumbJsonLd, seriesJsonLd } = await import("@/lib/metadata");
 
 describe("canonicalUrl", () => {
   it("returns base URL for root path", () => {
@@ -98,7 +98,7 @@ describe("courseJsonLd", () => {
     });
     expect(result["@type"]).toBe("Course");
     expect(result.name).toBe("My Course");
-    expect(result.instructor.name).toBe("Dr. Smith");
+    expect(result.instructor!.name).toBe("Dr. Smith");
     expect(result.provider.name).toBe("Fire Within University");
   });
 
@@ -130,5 +130,50 @@ describe("breadcrumbJsonLd", () => {
       { name: "Home", url: "https://test.example.com/" },
     ]);
     expect(result.itemListElement).toHaveLength(1);
+  });
+});
+
+describe("seriesJsonLd", () => {
+  it("returns valid ItemList schema with correct positions", () => {
+    const result = seriesJsonLd({
+      title: "Walking in Faith",
+      description: "A 3-part series on faith",
+      url: "https://test.example.com/series/walking-in-faith",
+      items: [
+        { name: "Part 1: Beginning", url: "https://test.example.com/blog/part-1" },
+        { name: "Part 2: Growing", url: "https://test.example.com/blog/part-2" },
+        { name: "Part 3: Finishing", url: "https://test.example.com/blog/part-3" },
+      ],
+    });
+    expect(result["@context"]).toBe("https://schema.org");
+    expect(result["@type"]).toBe("ItemList");
+    expect(result.name).toBe("Walking in Faith");
+    expect(result.description).toBe("A 3-part series on faith");
+    expect(result.url).toBe("https://test.example.com/series/walking-in-faith");
+    expect(result.numberOfItems).toBe(3);
+    expect(result.itemListElement).toHaveLength(3);
+    expect(result.itemListElement[0].position).toBe(1);
+    expect(result.itemListElement[0].name).toBe("Part 1: Beginning");
+    expect(result.itemListElement[2].position).toBe(3);
+  });
+
+  it("handles empty items array", () => {
+    const result = seriesJsonLd({
+      title: "Empty Series",
+      url: "https://test.example.com/series/empty",
+      items: [],
+    });
+    expect(result.numberOfItems).toBe(0);
+    expect(result.itemListElement).toHaveLength(0);
+  });
+
+  it("omits description when not provided", () => {
+    const result = seriesJsonLd({
+      title: "No Description Series",
+      url: "https://test.example.com/series/no-desc",
+      items: [{ name: "Post 1", url: "https://test.example.com/blog/post-1" }],
+    });
+    expect(result.description).toBeUndefined();
+    expect(result.numberOfItems).toBe(1);
   });
 });

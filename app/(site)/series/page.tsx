@@ -12,6 +12,8 @@ import { getAllSeries } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Teaching Series",
   description:

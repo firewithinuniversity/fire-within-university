@@ -7,6 +7,8 @@ import { courseJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
 import CourseProgressBar from "@/components/CourseProgressBar";
 import BookmarkButton from "@/components/BookmarkButton";
 
+export const revalidate = 3600;
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
@@ -18,6 +20,9 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const course = await getCourseBySlug(slug);
   if (!course) return { title: "Course Not Found" };
+  const imageUrl = course.coverImage
+    ? imageUrlFor(course.coverImage).width(1200).height(630).fit("crop").auto("format").url()
+    : undefined;
   return {
     title: course.title,
     description: course.description,
@@ -29,6 +34,7 @@ export async function generateMetadata({ params }: Props) {
       description: course.description,
       type: "website",
       url: canonicalUrl(`/courses/${slug}`),
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
     },
   };
 }

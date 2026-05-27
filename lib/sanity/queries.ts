@@ -192,16 +192,16 @@ export const getFeaturedPosts = unstable_cache(
   { revalidate: FIVE_MIN }
 );
 
-export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
+export async function getAllPostSlugs(): Promise<{ slug: string; publishedAt?: string; _updatedAt?: string }[]> {
   return safeFetch(
-    () => client.fetch(`*[_type == "post"] { "slug": slug.current }`),
+    () => client.fetch(`*[_type == "post"] { "slug": slug.current, publishedAt, _updatedAt }`),
     []
   );
 }
 
-export async function getAllAuthors(): Promise<Author[]> {
+export async function getAllAuthors(): Promise<(Author & { _updatedAt?: string })[]> {
   return safeFetch(
-    () => client.fetch(`*[_type == "author"] | order(name asc) { _id, name, role, bio, photo, slug }`),
+    () => client.fetch(`*[_type == "author"] | order(name asc) { _id, name, role, bio, photo, slug, _updatedAt }`),
     []
   );
 }
@@ -213,6 +213,7 @@ export type SeriesSummary = {
   description?: string;
   coverImage?: SanityImage;
   postCount: number;
+  _updatedAt?: string;
 };
 
 export const getAllSeries = unstable_cache(
@@ -221,7 +222,7 @@ export const getAllSeries = unstable_cache(
       () =>
         client.fetch(
           `*[_type == "series"] | order(title asc) {
-            _id, title, slug, description, coverImage,
+            _id, title, slug, description, coverImage, _updatedAt,
             "postCount": count(*[_type == "post" && references(^._id)])
           }`
         ),
@@ -370,6 +371,7 @@ export type CourseSummary = {
 
 export type CourseDetail = CourseSummary & {
   whatYoullLearn?: string[];
+  _updatedAt?: string;
   lessons?: {
     _id: string;
     title: string;
@@ -377,6 +379,7 @@ export type CourseDetail = CourseSummary & {
     lessonNumber?: number;
     scripture?: string;
     duration?: string;
+    _updatedAt?: string;
   }[];
 };
 
@@ -445,8 +448,9 @@ export async function getCourseBySlug(slug: string): Promise<CourseDetail | null
           _id, title, slug, description, coverImage, instructor, featured,
           "lessonCount": count(lessons),
           whatYoullLearn,
+          _updatedAt,
           "lessons": lessons[]-> {
-            _id, title, slug, lessonNumber, scripture, duration
+            _id, title, slug, lessonNumber, scripture, duration, _updatedAt
           }
         }`,
         { slug }
@@ -455,9 +459,9 @@ export async function getCourseBySlug(slug: string): Promise<CourseDetail | null
   );
 }
 
-export async function getAllCourseSlugs(): Promise<{ slug: string }[]> {
+export async function getAllCourseSlugs(): Promise<{ slug: string; _updatedAt?: string }[]> {
   return safeFetch(
-    () => client.fetch(`*[_type == "course"] { "slug": slug.current }`),
+    () => client.fetch(`*[_type == "course"] { "slug": slug.current, _updatedAt }`),
     []
   );
 }
