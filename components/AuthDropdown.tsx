@@ -4,13 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-
-const AuthModal = dynamic(() => import("./AuthModal"), { ssr: false });
+import { useAuthModal } from "./AuthModalProvider";
 
 export default function AuthDropdown() {
   const { data: session, status } = useSession();
-  const [showModal, setShowModal] = useState(false);
+  const { openAuthModal } = useAuthModal();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -30,15 +28,12 @@ export default function AuthDropdown() {
 
   if (!session) {
     return (
-      <>
-        <button
-          onClick={() => setShowModal(true)}
-          className="text-sm font-medium text-cream/90 hover:text-gold transition-colors"
-        >
-          Sign In
-        </button>
-        {showModal && <AuthModal onClose={() => setShowModal(false)} />}
-      </>
+      <button
+        onClick={openAuthModal}
+        className="text-sm font-medium text-cream/90 hover:text-gold transition-colors"
+      >
+        Sign In
+      </button>
     );
   }
 
