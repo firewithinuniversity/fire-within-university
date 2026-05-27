@@ -170,6 +170,7 @@ export default async function AboutPage() {
                       alt={author.name}
                       width={80}
                       height={80}
+                      sizes="80px"
                       className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-2 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
                     />
                   ) : (

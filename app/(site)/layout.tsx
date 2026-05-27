@@ -16,6 +16,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export default function SiteLayout({
   children,
@@ -34,6 +35,7 @@ export default function SiteLayout({
         <Navbar />
         <main id="main-content" className="flex-grow bg-brown-deep">{children}</main>
         <Footer />
+        <ScrollToTop />
       </div>
     </Providers>
   );
