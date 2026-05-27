@@ -137,7 +137,7 @@ const components: PortableTextComponents = {
             className="rounded-lg w-full h-auto"
           />
           {value.caption && (
-            <figcaption className="text-xs text-cream/40 text-center mt-2 italic">
+            <figcaption className="text-xs text-cream/50 text-center mt-2 italic">
               {value.caption}
             </figcaption>
           )}

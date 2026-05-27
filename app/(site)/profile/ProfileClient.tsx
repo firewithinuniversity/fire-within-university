@@ -269,7 +269,7 @@ export default function ProfileClient({
                     setNameInput(name);
                     setSaveError("");
                   }}
-                  className="text-cream/40 hover:text-cream/70 transition-colors"
+                  className="text-cream/50 hover:text-cream/70 transition-colors"
                   aria-label="Cancel editing"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -284,7 +284,7 @@ export default function ProfileClient({
                 </h2>
                 <button
                   onClick={() => setEditingName(true)}
-                  className="text-cream/30 hover:text-gold transition-colors flex-shrink-0"
+                  className="text-cream/50 hover:text-gold transition-colors flex-shrink-0"
                   aria-label="Edit name"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -309,7 +309,7 @@ export default function ProfileClient({
                 </span>
               )}
             </p>
-            <p className="text-cream/30 text-xs mt-1">
+            <p className="text-cream/50 text-xs mt-1">
               Member since {formatDate(memberSince)}
             </p>
           </div>
@@ -328,7 +328,7 @@ export default function ProfileClient({
             className="bg-brown-card border border-white/[0.08] rounded-xl p-5 text-center"
           >
             <p className="text-2xl sm:text-3xl font-bold text-gold">{stat.value}</p>
-            <p className="text-cream/40 text-xs sm:text-sm mt-1">{stat.label}</p>
+            <p className="text-cream/50 text-xs sm:text-sm mt-1">{stat.label}</p>
           </div>
         ))}
       </section>
@@ -372,7 +372,7 @@ export default function ProfileClient({
                         {c.title}
                       </h3>
                       {c.description && (
-                        <p className="text-cream/40 text-sm mt-1 line-clamp-1">
+                        <p className="text-cream/50 text-sm mt-1 line-clamp-1">
                           {c.description}
                         </p>
                       )}
@@ -385,7 +385,7 @@ export default function ProfileClient({
                         Complete
                       </span>
                     ) : (
-                      <span className="text-cream/40 text-sm flex-shrink-0">
+                      <span className="text-cream/50 text-sm flex-shrink-0">
                         {c.completedLessons}/{c.totalLessons}
                       </span>
                     )}
@@ -402,7 +402,7 @@ export default function ProfileClient({
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <p className="text-cream/30 text-xs mt-1.5">{pct}% complete</p>
+                  <p className="text-cream/50 text-xs mt-1.5">{pct}% complete</p>
                 </Link>
               );
             })}
@@ -453,7 +453,7 @@ export default function ProfileClient({
                   <p className="text-cream/80 text-sm truncate capitalize">
                     {item.title}
                   </p>
-                  <p className="text-cream/30 text-xs">
+                  <p className="text-cream/50 text-xs">
                     {item.type === "course" ? "Course" : item.courseTitle}
                   </p>
                 </div>
@@ -464,7 +464,7 @@ export default function ProfileClient({
                     handleRemoveBookmark(item.slug, item.type);
                   }}
                   aria-label="Remove bookmark"
-                  className="text-cream/30 hover:text-red-400 transition-colors flex-shrink-0 p-1"
+                  className="text-cream/50 hover:text-red-400 transition-colors flex-shrink-0 p-1"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -502,7 +502,7 @@ export default function ProfileClient({
                       {rc.lessonSlug.replace(/-/g, " ")}
                     </span>
                   </p>
-                  <p className="text-cream/30 text-xs">{rc.courseTitle}</p>
+                  <p className="text-cream/50 text-xs">{rc.courseTitle}</p>
                 </div>
                 <span className="text-cream/25 text-xs flex-shrink-0">
                   {formatRelative(rc.completedAt)}

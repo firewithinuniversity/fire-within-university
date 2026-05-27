@@ -76,7 +76,7 @@ export default async function CourseDetailPage({ params }: Props) {
       />
 
       {/* Breadcrumb */}
-      <nav className="max-w-4xl mx-auto px-4 pt-8 text-sm text-cream/35 flex items-center gap-2" aria-label="Breadcrumb">
+      <nav className="max-w-4xl mx-auto px-4 pt-8 text-sm text-cream/50 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/courses" className="hover:text-gold transition-colors">
           Courses
         </Link>
@@ -174,12 +174,12 @@ export default async function CourseDetailPage({ params }: Props) {
                       <h3 className="text-cream font-semibold group-hover:text-gold transition-colors truncate">
                         {lesson.title}
                       </h3>
-                      <div className="flex items-center gap-3 text-xs text-cream/40 mt-1">
+                      <div className="flex items-center gap-3 text-xs text-cream/50 mt-1">
                         {lesson.scripture && <span>{lesson.scripture}</span>}
                         {lesson.duration && <span>{lesson.duration}</span>}
                       </div>
                     </div>
-                    <svg className="w-5 h-5 text-cream/30 group-hover:text-gold transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <svg className="w-5 h-5 text-cream/50 group-hover:text-gold transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                   </Link>

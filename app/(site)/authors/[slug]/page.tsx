@@ -59,7 +59,7 @@ export default async function AuthorPage({
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
       {/* Breadcrumb */}
-      <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+      <nav className="text-sm text-cream/50 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/about" className="hover:text-gold transition-colors">
           About
         </Link>
@@ -95,7 +95,7 @@ export default async function AuthorPage({
           {author.bio && (
             <p className="text-cream/60 leading-relaxed max-w-2xl">{author.bio}</p>
           )}
-          <p className="text-xs text-cream/40 mt-3">
+          <p className="text-xs text-cream/50 mt-3">
             {posts.length} {posts.length === 1 ? "post" : "posts"} published
           </p>
         </div>
@@ -112,7 +112,7 @@ export default async function AuthorPage({
       </div>
 
       {posts.length === 0 ? (
-        <p className="text-cream/40 text-center py-16">No posts published yet.</p>
+        <p className="text-cream/50 text-center py-16">No posts published yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (

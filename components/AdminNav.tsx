@@ -51,7 +51,7 @@ export default function AdminNav() {
       <div className="px-3 py-4 border-t border-cream/[0.08] space-y-2">
         <Link
           href="/"
-          className="flex items-center gap-2 px-3 py-1.5 text-xs text-cream/40 hover:text-cream/70 transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 text-xs text-cream/50 hover:text-cream/70 transition-colors"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
@@ -60,10 +60,10 @@ export default function AdminNav() {
         </Link>
         {session?.user && (
           <div className="px-3 flex items-center justify-between">
-            <span className="text-xs text-cream/40 truncate max-w-[120px]">{session.user.email}</span>
+            <span className="text-xs text-cream/50 truncate max-w-[120px]">{session.user.email}</span>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="text-xs text-cream/40 hover:text-gold transition-colors"
+              className="text-xs text-cream/50 hover:text-gold transition-colors"
             >
               Sign Out
             </button>

@@ -95,7 +95,7 @@ export default async function SeriesDetailPage({
       />
 
       {/* Breadcrumb */}
-      <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+      <nav className="text-sm text-cream/50 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/series" className="hover:text-gold transition-colors">
           Teaching Series
         </Link>
@@ -133,7 +133,7 @@ export default async function SeriesDetailPage({
 
       {/* Posts in this series */}
       {posts.length === 0 ? (
-        <p className="text-cream/40 text-center py-16">
+        <p className="text-cream/50 text-center py-16">
           No posts published in this series yet. Check back soon.
         </p>
       ) : (

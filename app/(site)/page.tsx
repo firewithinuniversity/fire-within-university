@@ -190,9 +190,9 @@ export default async function HomePage() {
                       {course.title}
                     </h3>
                     {course.description && (
-                      <p className="text-cream/45 text-[13px] line-clamp-2 mb-3 leading-relaxed">{course.description}</p>
+                      <p className="text-cream/50 text-[13px] line-clamp-2 mb-3 leading-relaxed">{course.description}</p>
                     )}
-                    <span className="text-[11px] text-cream/40 uppercase tracking-wider font-medium">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+                    <span className="text-[11px] text-cream/50 uppercase tracking-wider font-medium">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
                   </div>
                 </Link>
               </SectionReveal>
@@ -226,7 +226,7 @@ export default async function HomePage() {
                   <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-2 leading-snug">
                     {p.title}
                   </h3>
-                  <p className="text-cream/40 text-[13px] leading-relaxed mb-4 flex-grow">{p.description}</p>
+                  <p className="text-cream/50 text-[13px] leading-relaxed mb-4 flex-grow">{p.description}</p>
                   <span className="text-gold/50 text-xs font-semibold uppercase tracking-wider transition-all duration-300 group-hover:text-gold/80 flex items-center gap-1">
                     Explore
                     <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
@@ -249,7 +249,7 @@ export default async function HomePage() {
             <p className="text-cream/60 text-lg leading-[1.8] max-w-xl mx-auto">
               Fire Within University exists to equip believers with sound biblical teaching, practical discipleship resources, and a community that stirs one another toward love and good deeds.
             </p>
-            <p className="text-cream/40 italic text-sm leading-relaxed">
+            <p className="text-cream/50 italic text-sm leading-relaxed">
               &ldquo;And let us consider how we may spur one another on toward love and good deeds.&rdquo; — Hebrews 10:24
             </p>
             <Link href="/about" className="group inline-flex items-center gap-2 text-gold/80 hover:text-gold font-semibold transition-all duration-300 text-sm">
@@ -299,7 +299,7 @@ export default async function HomePage() {
             <p className="text-cream/55 text-lg leading-[1.8] max-w-lg mx-auto">
               Every seed sown bears fruit. Your generosity fuels sermons, articles, and resources that reach souls for Christ.
             </p>
-            <p className="text-cream/35 text-sm italic leading-relaxed">
+            <p className="text-cream/50 text-sm italic leading-relaxed">
               &ldquo;Remember this: Whoever sows generously will also reap generously.&rdquo; — 2 Corinthians 9:6
             </p>
             <Link
@@ -309,7 +309,7 @@ export default async function HomePage() {
               Give Today
               <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
             </Link>
-            <p className="text-[11px] text-cream/40 tracking-wide">We are not a 501(c)(3). Donations are not tax-deductible.</p>
+            <p className="text-[11px] text-cream/50 tracking-wide">We are not a 501(c)(3). Donations are not tax-deductible.</p>
           </div>
         </section>
       </SectionReveal>

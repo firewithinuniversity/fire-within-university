@@ -233,7 +233,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-cream/40 hover:text-cream hover:bg-cream/10 transition-colors"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-cream/50 hover:text-cream hover:bg-cream/10 transition-colors"
           aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -305,7 +305,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
 
               <div className="flex items-center gap-3 mb-5">
                 <div className="flex-1 h-px bg-cream/[0.08]" />
-                <span className="text-xs text-cream/30 uppercase tracking-wide">or</span>
+                <span className="text-xs text-cream/50 uppercase tracking-wide">or</span>
                 <div className="flex-1 h-px bg-cream/[0.08]" />
               </div>
             </>
@@ -356,7 +356,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={() => switchTab("forgot")}
-                  className="text-xs text-cream/40 hover:text-gold transition-colors"
+                  className="text-xs text-cream/50 hover:text-gold transition-colors"
                 >
                   Forgot your password?
                 </button>
@@ -408,7 +408,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                   <button
                     type="button"
                     onClick={() => switchTab("signin")}
-                    className="text-xs text-cream/40 hover:text-gold transition-colors"
+                    className="text-xs text-cream/50 hover:text-gold transition-colors"
                   >
                     Back to Sign In
                   </button>
@@ -476,7 +476,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
                 {password.length > 0 && (
                   <ul className="mt-2 space-y-1">
                     {validatePassword(password).map((c) => (
-                      <li key={c.key} className={`flex items-center gap-1.5 text-xs ${c.met ? "text-green-400" : "text-cream/40"}`}>
+                      <li key={c.key} className={`flex items-center gap-1.5 text-xs ${c.met ? "text-green-400" : "text-cream/50"}`}>
                         {c.met ? (
                           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />

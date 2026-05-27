@@ -125,7 +125,7 @@ export default function ResetPasswordPage() {
                 {password.length > 0 && (
                   <ul className="mt-2 space-y-1">
                     {validatePassword(password).map((c) => (
-                      <li key={c.key} className={`flex items-center gap-1.5 text-xs ${c.met ? "text-green-400" : "text-cream/40"}`}>
+                      <li key={c.key} className={`flex items-center gap-1.5 text-xs ${c.met ? "text-green-400" : "text-cream/50"}`}>
                         {c.met ? (
                           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />

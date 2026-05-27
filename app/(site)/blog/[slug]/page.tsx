@@ -132,7 +132,7 @@ export default async function PostPage({
       />
 
       {/* ── Breadcrumb ──────────────────────────────────────────────── */}
-      <nav className="text-sm text-cream/35 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
+      <nav className="text-sm text-cream/50 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/blog" className="hover:text-gold transition-colors">
           Sermons &amp; Articles
         </Link>
@@ -151,7 +151,7 @@ export default async function PostPage({
 
         {/* Series badge */}
         {series && (
-          <p className="text-xs text-cream/40">
+          <p className="text-xs text-cream/50">
             Part of the{" "}
             <span className="font-medium text-cream/60">{series.title}</span>{" "}
             series
@@ -177,11 +177,11 @@ export default async function PostPage({
           <div className="text-sm text-cream/50">
             <span className="font-medium text-cream/80">{author.name}</span>
             {author.role && (
-              <span className="text-cream/40"> · {author.role}</span>
+              <span className="text-cream/50"> · {author.role}</span>
             )}
             <br />
             <time dateTime={publishedAt}>{formattedDate}</time>
-            {readTime && <span className="text-cream/40"> · {readTime}</span>}
+            {readTime && <span className="text-cream/50"> · {readTime}</span>}
           </div>
         </div>
       </header>
@@ -222,7 +222,7 @@ export default async function PostPage({
           className="border-t border-b border-cream/[0.06] py-4 mb-10"
           aria-label="Series navigation"
         >
-          <p className="text-xs text-cream/40 text-center mb-3 font-medium uppercase tracking-wider">
+          <p className="text-xs text-cream/50 text-center mb-3 font-medium uppercase tracking-wider">
             {seriesNav.seriesTitle} &mdash; Part {seriesNav.currentIndex} of {seriesNav.totalPosts}
           </p>
           <div className="flex items-center justify-between gap-4">
@@ -230,7 +230,7 @@ export default async function PostPage({
             {seriesNav.prev ? (
               <Link
                 href={`/blog/${seriesNav.prev.slug}`}
-                className="group flex items-center gap-2 text-sm text-cream/40 hover:text-gold transition-colors duration-150 max-w-[45%]"
+                className="group flex items-center gap-2 text-sm text-cream/50 hover:text-gold transition-colors duration-150 max-w-[45%]"
               >
                 <span className="text-lg leading-none group-hover:-translate-x-0.5 transition-transform duration-150" aria-hidden="true">←</span>
                 <span className="truncate">{seriesNav.prev.title}</span>
@@ -243,7 +243,7 @@ export default async function PostPage({
             {seriesNav.next ? (
               <Link
                 href={`/blog/${seriesNav.next.slug}`}
-                className="group flex items-center gap-2 text-sm text-cream/40 hover:text-gold transition-colors duration-150 max-w-[45%] ml-auto"
+                className="group flex items-center gap-2 text-sm text-cream/50 hover:text-gold transition-colors duration-150 max-w-[45%] ml-auto"
               >
                 <span className="truncate text-right">{seriesNav.next.title}</span>
                 <span className="text-lg leading-none group-hover:translate-x-0.5 transition-transform duration-150" aria-hidden="true">→</span>
@@ -262,7 +262,7 @@ export default async function PostPage({
           aria-label="Recommended resources"
         >
           {/* FTC disclosure — legally required */}
-          <p className="text-xs text-cream/40 italic mb-4">
+          <p className="text-xs text-cream/50 italic mb-4">
             This page contains affiliate links. We may earn a small commission
             at no cost to you if you purchase through these links.
           </p>

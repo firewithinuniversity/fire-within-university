@@ -30,7 +30,7 @@ export default function TermsPage() {
       <div className="mb-10">
         <p className="text-gold font-bold text-xs uppercase tracking-widest mb-2">Legal</p>
         <h1 className="font-serif text-4xl font-bold text-cream mb-2">Terms of Service</h1>
-        <p className="text-sm text-cream/35">Last updated: {LAST_UPDATED}</p>
+        <p className="text-sm text-cream/50">Last updated: {LAST_UPDATED}</p>
       </div>
 
       {/* Intro */}

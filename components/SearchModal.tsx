@@ -19,12 +19,6 @@ const TYPE_LABELS: Record<string, string> = {
   lesson: "Lesson",
 };
 
-const TYPE_COLORS: Record<string, string> = {
-  post: "bg-gold/20 text-gold",
-  course: "bg-orange/20 text-orange",
-  lesson: "bg-green-800/30 text-green-400",
-};
-
 function getResultHref(result: SearchResult): string {
   switch (result.type) {
     case "post":
@@ -44,7 +38,6 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [filter, setFilter] = useState<"all" | "post" | "course" | "lesson">("all");
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -124,7 +117,6 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
 
   function handleInputChange(value: string) {
     setQuery(value);
-    setFilter("all");
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => search(value.trim()), 250);
   }
@@ -134,27 +126,25 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
     onClose();
   }
 
-  const filteredResults = filter === "all" ? results : results.filter(r => r.type === filter);
-
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      if (filteredResults.length > 0) {
-        setSelectedIndex((i) => Math.min(i + 1, filteredResults.length - 1));
+      if (results.length > 0) {
+        setSelectedIndex((i) => Math.min(i + 1, results.length - 1));
       }
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && filteredResults.length > 0) {
+    } else if (e.key === "Enter" && results.length > 0) {
       e.preventDefault();
-      navigate(filteredResults[selectedIndex]);
+      navigate(results[selectedIndex]);
     }
   }
 
   const listboxId = "search-results-listbox";
   const activeOptionId =
-    filteredResults.length > 0
-      ? `search-option-${filteredResults[selectedIndex]?.type}-${filteredResults[selectedIndex]?.slug}`
+    results.length > 0
+      ? `search-option-${results[selectedIndex]?.type}-${results[selectedIndex]?.slug}`
       : undefined;
 
   // Build status text for screen readers
@@ -163,16 +153,14 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
     statusText = "Searching...";
   } else if (query.length >= 2 && results.length === 0) {
     statusText = `No results found for "${query}".`;
-  } else if (filteredResults.length > 0) {
-    statusText = `${filteredResults.length} result${filteredResults.length === 1 ? "" : "s"} found. Use arrow keys to navigate.`;
-  } else if (results.length > 0 && filteredResults.length === 0) {
-    statusText = `No results match the selected filter.`;
+  } else if (results.length > 0) {
+    statusText = `${results.length} result${results.length === 1 ? "" : "s"} found. Use arrow keys to navigate.`;
   }
 
   return (
     <div
       style={{ position: "fixed", inset: 0, zIndex: 9999 }}
-      className="flex items-start justify-center bg-black/60 backdrop-blur-sm px-4 pt-[15vh]"
+      className="flex items-start justify-center bg-black/60 backdrop-blur-sm px-4 pt-[12vh]"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -182,44 +170,57 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         aria-label="Search sermons, courses, and lessons"
-        className="bg-[#2a1a0e] rounded-2xl shadow-2xl w-full max-w-lg border border-white/[0.08] overflow-hidden"
+        className="w-full max-w-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Search input — combobox pattern */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-cream/[0.06]">
-          <svg
-            className="w-5 h-5 text-cream/40 flex-shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+        {/* Search input — large rounded bar like Bible Project */}
+        <div className="relative">
+          <div className="flex items-center bg-cream rounded-full shadow-2xl shadow-black/40 px-5 py-3.5">
+            <svg
+              className="w-5 h-5 text-brown-deep/40 flex-shrink-0 mr-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-grow bg-transparent text-brown-deep placeholder:text-brown-deep/35 text-base focus:outline-none"
+              role="combobox"
+              aria-label="Search"
+              aria-expanded={results.length > 0}
+              aria-controls={listboxId}
+              aria-activedescendant={activeOptionId}
+              aria-autocomplete="list"
             />
-          </svg>
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search sermons, courses, lessons..."
-            value={query}
-            onChange={(e) => handleInputChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-grow bg-transparent text-cream placeholder:text-cream/30 text-sm focus:outline-none"
-            role="combobox"
-            aria-label="Search"
-            aria-expanded={filteredResults.length > 0}
-            aria-controls={listboxId}
-            aria-activedescendant={activeOptionId}
-            aria-autocomplete="list"
-            aria-describedby="search-hint"
-          />
-          <kbd className="hidden sm:inline-block text-[10px] text-cream/25 bg-cream/[0.06] border border-cream/[0.1] rounded px-1.5 py-0.5 font-mono">
-            ESC
-          </kbd>
+            {query.length > 0 && (
+              <button
+                onClick={() => {
+                  setQuery("");
+                  setResults([]);
+                  inputRef.current?.focus();
+                }}
+                className="text-brown-deep/30 hover:text-brown-deep/60 transition-colors p-1"
+                aria-label="Clear search"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Screen reader status announcements */}
@@ -232,125 +233,60 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
           {statusText}
         </div>
 
-        {/* Results */}
-        <div className="max-h-[50vh] overflow-y-auto">
-          {/* Filter tabs */}
-          {query.length >= 2 && !loading && results.length > 0 && (
-            <div className="flex items-center gap-2 px-5 py-2.5 border-b border-cream/[0.06]">
-              {(["all", "post", "course", "lesson"] as const).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => {
-                    setFilter(type);
-                    setSelectedIndex(0);
-                  }}
-                  className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                    filter === type
-                      ? "bg-gold/20 text-gold font-semibold"
-                      : "text-cream/40 hover:text-cream/60 hover:bg-cream/[0.06]"
-                  }`}
-                >
-                  {type === "all" ? "All" : type === "post" ? "Sermons" : type === "course" ? "Courses" : "Lessons"}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Results dropdown */}
+        {(query.length >= 2 || loading) && (
+          <div className="mt-2 bg-cream rounded-2xl shadow-2xl shadow-black/30 overflow-hidden">
+            <div className="max-h-[50vh] overflow-y-auto">
+              {loading && (
+                <div className="px-6 py-5 flex items-center gap-3">
+                  <div className="w-4 h-4 border-2 border-brown-deep/20 border-t-brown-deep/60 rounded-full animate-spin" />
+                  <span className="text-brown-deep/70 text-sm">Searching...</span>
+                </div>
+              )}
 
-          {loading && (
-            <div className="px-5 py-8 text-center text-cream/40 text-sm">
-              Searching...
-            </div>
-          )}
+              {!loading && query.length >= 2 && results.length === 0 && (
+                <div className="px-6 py-8 text-center">
+                  <p className="text-brown-deep/70 text-sm">
+                    No results found for &ldquo;{query}&rdquo;
+                  </p>
+                </div>
+              )}
 
-          {!loading && query.length >= 2 && results.length === 0 && (
-            <div className="px-5 py-8 text-center text-cream/40 text-sm">
-              No results found for &ldquo;{query}&rdquo;
-            </div>
-          )}
-
-          {!loading && filteredResults.length > 0 && (
-            <ul id={listboxId} className="py-2" role="listbox">
-              {filteredResults.map((result, i) => (
-                <li
-                  key={`${result.type}-${result.slug}`}
-                  id={`search-option-${result.type}-${result.slug}`}
-                  role="option"
-                  aria-selected={i === selectedIndex}
-                >
-                  <button
-                    onClick={() => navigate(result)}
-                    onMouseEnter={() => setSelectedIndex(i)}
-                    tabIndex={-1}
-                    className={`w-full text-left px-5 py-3 flex items-center gap-3 transition-colors ${
-                      i === selectedIndex
-                        ? "bg-cream/[0.06]"
-                        : "hover:bg-cream/[0.03]"
-                    }`}
-                  >
-                    <span
-                      className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md flex-shrink-0 ${
-                        TYPE_COLORS[result.type]
-                      }`}
+              {!loading && results.length > 0 && (
+                <ul id={listboxId} className="py-2" role="listbox">
+                  {results.map((result, i) => (
+                    <li
+                      key={`${result.type}-${result.slug}`}
+                      id={`search-option-${result.type}-${result.slug}`}
+                      role="option"
+                      aria-selected={i === selectedIndex}
                     >
-                      {TYPE_LABELS[result.type]}
-                    </span>
-                    <div className="flex-grow min-w-0">
-                      <p className="text-cream text-sm font-medium truncate">
-                        {result.title}
-                      </p>
-                      {result.description && (
-                        <p className="text-cream/35 text-xs truncate mt-0.5">
-                          {result.description}
-                        </p>
-                      )}
-                    </div>
-                    <svg
-                      className="w-4 h-4 text-cream/20 flex-shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                      />
-                    </svg>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {!loading && query.length >= 2 && results.length > 0 && filteredResults.length === 0 && (
-            <div className="px-5 py-8 text-center text-cream/40 text-sm">
-              No results match this filter
+                      <button
+                        onClick={() => navigate(result)}
+                        onMouseEnter={() => setSelectedIndex(i)}
+                        tabIndex={-1}
+                        className={`w-full text-left px-6 py-3 flex items-center gap-3 transition-colors ${
+                          i === selectedIndex
+                            ? "bg-brown-deep/[0.06]"
+                            : "hover:bg-brown-deep/[0.04]"
+                        }`}
+                      >
+                        <div className="flex-grow min-w-0">
+                          <p className="text-brown-deep text-[15px] font-medium truncate">
+                            {result.title}
+                          </p>
+                        </div>
+                        <span className="text-brown-deep/60 text-xs flex-shrink-0">
+                          {TYPE_LABELS[result.type]}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          )}
-
-          {!loading && query.length < 2 && (
-            <div id="search-hint" className="px-5 py-8 text-center text-cream/30 text-xs">
-              Type at least 2 characters to search
-            </div>
-          )}
-        </div>
-
-        {/* Footer hint */}
-        <div className="border-t border-cream/[0.06] px-5 py-2.5 flex items-center justify-between text-[10px] text-cream/25" aria-hidden="true">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <kbd className="bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono">↑</kbd>
-              <kbd className="bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono">↓</kbd>
-              navigate
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono">↵</kbd>
-              open
-            </span>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

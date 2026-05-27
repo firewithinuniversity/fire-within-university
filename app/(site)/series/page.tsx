@@ -67,7 +67,7 @@ export default async function SeriesPage() {
             <EmailSignup variant="inline" />
           </div>
 
-          <p className="text-cream/35 text-sm italic pt-4 border-t border-cream/[0.06]">
+          <p className="text-cream/50 text-sm italic pt-4 border-t border-cream/[0.06]">
             &ldquo;The unfolding of your words gives light; it gives understanding to the simple.&rdquo;
             {" "}
             <a

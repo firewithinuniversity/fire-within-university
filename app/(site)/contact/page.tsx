@@ -32,7 +32,7 @@ export default function ContactPage() {
           Whether it&apos;s a prayer request, a question about the faith, or just a
           word of encouragement — your message matters to us.
         </p>
-        <p className="text-cream/35 text-sm italic max-w-md mx-auto">
+        <p className="text-cream/50 text-sm italic max-w-md mx-auto">
           &ldquo;Carry each other&apos;s burdens, and in this way you will fulfill
           the law of Christ.&rdquo; — Galatians 6:2
         </p>

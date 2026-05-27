@@ -92,7 +92,7 @@ export default function BookmarkButton({ slug, type, courseSlug, className = "" 
         </svg>
       ) : (
         <svg
-          className="w-5 h-5 text-cream/40 hover:text-gold transition-all group-hover:scale-110"
+          className="w-5 h-5 text-cream/50 hover:text-gold transition-all group-hover:scale-110"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}

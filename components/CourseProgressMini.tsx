@@ -39,7 +39,7 @@ export default function CourseProgressMini({ courseSlug, totalLessons }: Props) 
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className={`text-xs flex-shrink-0 ${isComplete ? "text-green-400" : "text-cream/40"}`}>
+      <span className={`text-xs flex-shrink-0 ${isComplete ? "text-green-400" : "text-cream/50"}`}>
         {completedCount}/{totalLessons}
       </span>
     </div>

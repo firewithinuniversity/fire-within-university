@@ -222,7 +222,7 @@ export default function ContactForm() {
               : "How can we help?"
           }
         />
-        <p className="text-xs text-cream/40 mt-1 text-right">
+        <p className="text-xs text-cream/50 mt-1 text-right">
           {form.message.length}/2000
         </p>
       </div>
@@ -235,7 +235,7 @@ export default function ContactForm() {
       )}
 
       {/* Consent notice */}
-      <p className="text-xs text-cream/40 leading-relaxed">
+      <p className="text-xs text-cream/50 leading-relaxed">
         By submitting this form, you agree that we may store your name, email, and
         message to respond to your inquiry. See our{" "}
         <a href="/privacy-policy" className="text-gold underline hover:text-gold/80 transition-colors">
@@ -257,7 +257,7 @@ export default function ContactForm() {
             ? "Submit Prayer Request"
             : "Send Message"}
         </button>
-        <p className="text-xs text-cream/40 sm:text-left">
+        <p className="text-xs text-cream/50 sm:text-left">
           We typically respond within 1-2 business days.
         </p>
       </div>

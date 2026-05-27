@@ -1,70 +1,64 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Global search", () => {
-  test("opens search modal from desktop navbar button", async ({ page }) => {
+  test("search input is visible in desktop navbar", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/");
 
-    // Click the search button in the navbar
-    await page.getByLabel("Search (Ctrl+K)").click();
-
-    const dialog = page.getByRole("dialog", { name: /search/i });
-    await expect(dialog).toBeVisible({ timeout: 5000 });
-
-    const input = dialog.getByRole("combobox", { name: "Search" });
-    await expect(input).toBeFocused();
+    // Search input should be visible in the navbar
+    const input = page.getByRole("combobox", { name: "Search" });
+    await expect(input).toBeVisible({ timeout: 5000 });
   });
 
-  test("opens search modal from mobile navbar button", async ({ page }) => {
+  test("mobile search expands on icon click", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/");
 
-    // Mobile search button has aria-label="Search" (no Ctrl+K suffix)
+    // Click the mobile search button
     await page.locator('button[aria-label="Search"]').click();
 
-    const dialog = page.getByRole("dialog", { name: /search/i });
-    await expect(dialog).toBeVisible({ timeout: 5000 });
+    // Search input should now be visible
+    const inputs = page.getByRole("combobox", { name: "Search" });
+    await expect(inputs.first()).toBeVisible({ timeout: 5000 });
   });
 
-  test("closes search modal with Escape", async ({ page }) => {
+  test("dropdown closes on Escape", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/");
 
-    await page.getByLabel("Search (Ctrl+K)").click();
+    const input = page.getByRole("combobox", { name: "Search" });
+    await input.fill("test query");
 
-    const dialog = page.getByRole("dialog", { name: /search/i });
-    await expect(dialog).toBeVisible({ timeout: 5000 });
+    // Wait for dropdown to appear (either results or no-results)
+    await page.waitForTimeout(500);
 
     await page.keyboard.press("Escape");
-    await expect(dialog).not.toBeVisible();
+
+    // Listbox should not be visible after Escape
+    await expect(page.getByRole("listbox")).not.toBeVisible();
   });
 
-  test("shows hint for short queries", async ({ page }) => {
+  test("shows clean state before typing", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/");
 
-    await page.getByLabel("Search (Ctrl+K)").click();
+    const input = page.getByRole("combobox", { name: "Search" });
+    await expect(input).toBeVisible({ timeout: 5000 });
 
-    const dialog = page.getByRole("dialog", { name: /search/i });
-    await expect(dialog).toBeVisible({ timeout: 5000 });
-    await expect(dialog.getByText("Type at least 2 characters")).toBeVisible();
+    // No dropdown should be visible before typing
+    await expect(page.getByRole("listbox")).not.toBeVisible();
   });
 
   test("performs search and shows results or empty state", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/");
 
-    await page.getByLabel("Search (Ctrl+K)").click();
-
-    const dialog = page.getByRole("dialog", { name: /search/i });
-    await expect(dialog).toBeVisible({ timeout: 5000 });
-
-    const input = dialog.getByRole("combobox", { name: "Search" });
+    const input = page.getByRole("combobox", { name: "Search" });
     await input.fill("Jesus");
 
     // Wait for debounce (250ms) + API response — either results appear or empty state
-    const results = dialog.getByRole("listbox");
-    const emptyState = dialog.locator("text=/No results found/i").first();
+    const results = page.getByRole("listbox");
+    const emptyState = page.locator("text=/No results for/i").first();
     await expect(results.or(emptyState)).toBeVisible({ timeout: 8000 });
   });
 });

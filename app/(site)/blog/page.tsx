@@ -98,7 +98,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
             Search posts
           </label>
           <div className="relative">
-            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-cream/30" aria-hidden="true">
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-cream/50" aria-hidden="true">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -115,7 +115,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
             {searchQuery && (
               <Link
                 href={buildHref({ q: "", page: 1 })}
-                className="absolute inset-y-0 right-4 flex items-center text-cream/30 hover:text-cream/60 transition-colors text-xs"
+                className="absolute inset-y-0 right-4 flex items-center text-cream/50 hover:text-cream/60 transition-colors text-xs"
                 aria-label="Clear search"
               >
                 ✕
@@ -181,7 +181,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
                 ← Previous
               </Link>
 
-              <span className="text-sm text-cream/40 px-2">
+              <span className="text-sm text-cream/50 px-2">
                 Page {currentPage} of {totalPages}
               </span>
 
@@ -221,7 +221,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
             <EmailSignup variant="inline" />
           </div>
 
-          <p className="text-cream/35 text-sm italic pt-4 border-t border-cream/[0.06]">
+          <p className="text-cream/50 text-sm italic pt-4 border-t border-cream/[0.06]">
             &ldquo;Blessed are those who hunger and thirst for righteousness, for they will be filled.&rdquo;
             {" "}
             <a
@@ -238,13 +238,13 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
         /* ── Search / filter returned no results ── */
         <div className="max-w-md mx-auto text-center py-16 space-y-4">
           <div className="w-14 h-14 rounded-full bg-cream/[0.04] flex items-center justify-center mx-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-cream/30">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-cream/50">
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </div>
           <p className="font-serif text-2xl font-bold text-cream">No results found</p>
-          <p className="text-cream/45 text-sm leading-relaxed">
+          <p className="text-cream/50 text-sm leading-relaxed">
             {searchQuery && categorySlug
               ? `No posts matched "${searchQuery}" in this category.`
               : searchQuery

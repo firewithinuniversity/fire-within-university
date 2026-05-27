@@ -150,7 +150,7 @@ export default function DonateForm() {
             Or enter a custom amount
           </p>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cream/40 font-medium">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cream/50 font-medium">
               $
             </span>
             <input
@@ -173,7 +173,7 @@ export default function DonateForm() {
               aria-label="Custom donation amount in dollars"
             />
           </div>
-          <p className="text-xs text-cream/40 mt-1">
+          <p className="text-xs text-cream/50 mt-1">
             Minimum ${MIN_CUSTOM_DOLLARS}
           </p>
         </div>
@@ -206,7 +206,7 @@ export default function DonateForm() {
             : `Give $${finalAmountDollars > 0 ? finalAmountDollars.toFixed(0) : "—"} ${frequency === "monthly" ? "/ month" : ""}`}
         </button>
 
-        <p className="text-xs text-cream/40 text-center">
+        <p className="text-xs text-cream/50 text-center">
           🔒 Secure checkout powered by Stripe. We never store your card information.
         </p>
       </div>

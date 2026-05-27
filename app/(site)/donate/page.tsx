@@ -69,7 +69,7 @@ export default function DonatePage() {
       <DonateForm />
 
       {/* Trust signals */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-8 mb-6 text-cream/40">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-8 mb-6 text-cream/50">
         <div className="flex items-center gap-2 text-xs">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -86,7 +86,7 @@ export default function DonatePage() {
 
       {/* Disclaimer — legally required, clearly visible */}
       <div className="p-5 bg-brown-card/40 rounded-2xl border border-white/[0.06]">
-        <p className="text-xs text-cream/40 leading-relaxed text-center">
+        <p className="text-xs text-cream/50 leading-relaxed text-center">
           <strong className="text-cream/55">Important:</strong> Fire Within
           University is not a registered 501(c)(3) nonprofit organization.
           Donations are not tax-deductible under U.S. federal or state law. By

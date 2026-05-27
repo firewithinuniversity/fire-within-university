@@ -27,7 +27,7 @@ export default function ConfirmEmailPage() {
         A confirmation link is on its way. Click it to complete your subscription and start receiving sermons and articles.
       </p>
 
-      <p className="text-cream/35 text-sm italic mb-10 max-w-sm mx-auto">
+      <p className="text-cream/50 text-sm italic mb-10 max-w-sm mx-auto">
         &ldquo;Blessed are those who hunger and thirst for righteousness,
         for they will be filled.&rdquo; — Matthew 5:6
       </p>
@@ -38,7 +38,7 @@ export default function ConfirmEmailPage() {
         <div className="w-10 h-px bg-gold/40" />
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-widest text-cream/40 mb-5">
+      <p className="text-xs font-bold uppercase tracking-widest text-cream/50 mb-5">
         While you wait
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -61,7 +61,7 @@ export default async function ResourcesPage() {
       {products.length === 0 ? (
         <div className="text-center py-28 space-y-4">
           <p className="font-serif text-2xl font-bold text-cream">Resources Coming Soon</p>
-          <p className="text-cream/45 max-w-md mx-auto">
+          <p className="text-cream/50 max-w-md mx-auto">
             Our team is carefully selecting the best tools and books to recommend.
             Check back soon.
           </p>

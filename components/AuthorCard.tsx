@@ -19,13 +19,13 @@ export default function AuthorCard({ author }: Props) {
           alt={author.name}
           width={80}
           height={80}
-          className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
+          className="rounded-full w-16 h-16 object-cover flex-shrink-0 ring-2 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
           loading="lazy"
           sizes="64px"
         />
       ) : (
         <div
-          className="rounded-full w-16 h-16 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
+          className="rounded-full w-16 h-16 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-2 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
           aria-hidden="true"
         >
           <span className="text-2xl font-serif font-bold">

@@ -23,9 +23,10 @@ const config: Config = {
           200: "#E8D1AB",
         },
         orange: {
-          DEFAULT: "#C45E1A",
-          hover: "#A34D14",
+          DEFAULT: "#A34D14",
+          hover: "#8B4012",
           light: "#D97A3E",
+          bright: "#C45E1A",
         },
         gold: {
           DEFAULT: "#E8A020",

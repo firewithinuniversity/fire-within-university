@@ -85,7 +85,7 @@ export default function TableOfContents({ headings }: Props) {
           Table of Contents
         </span>
         <svg
-          className={`w-4 h-4 text-cream/30 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-cream/50 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={2}

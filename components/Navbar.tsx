@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthDropdown from "./AuthDropdown";
-import SearchModal from "./SearchModal";
+import SearchBar from "./SearchBar";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -15,8 +15,8 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -28,18 +28,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Cmd+K / Ctrl+K keyboard shortcut
-  const handleSearchShortcut = useCallback((e: KeyboardEvent) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-      e.preventDefault();
-      setSearchOpen((prev) => !prev);
-    }
-  }, []);
-
+  // Close mobile search when navigating
   useEffect(() => {
-    document.addEventListener("keydown", handleSearchShortcut);
-    return () => document.removeEventListener("keydown", handleSearchShortcut);
-  }, [handleSearchShortcut]);
+    setMobileSearchOpen(false);
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <header
@@ -82,18 +75,8 @@ export default function Navbar() {
         </ul>
 
         {/* Right actions — desktop */}
-        <div className="hidden md:flex items-center gap-4 shrink-0">
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2 text-cream/50 hover:text-cream border border-cream/[0.1] hover:border-cream/[0.2] rounded-full px-3 py-1.5 transition-all text-[12px]"
-            aria-label="Search (Ctrl+K)"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
-            <span className="hidden lg:inline">Search</span>
-            <kbd className="hidden lg:inline text-[10px] text-cream/25 bg-cream/[0.06] border border-cream/[0.1] rounded px-1 py-0.5 font-mono ml-1" aria-hidden="true">⌘K</kbd>
-          </button>
+        <div className="hidden md:flex items-center gap-3 shrink-0">
+          <SearchBar />
           <Link
             href="/donate"
             className="bg-orange hover:bg-orange-hover text-cream text-[13px] font-semibold px-5 py-2 rounded-full transition-all duration-300 shadow-[0_2px_12px_rgba(196,94,26,0.25)] hover:shadow-[0_4px_20px_rgba(196,94,26,0.4)] hover:-translate-y-0.5"
@@ -105,9 +88,13 @@ export default function Navbar() {
 
         {/* Search — mobile */}
         <button
-          onClick={() => setSearchOpen(true)}
+          onClick={() => {
+            setMobileSearchOpen((prev) => !prev);
+            setMobileOpen(false);
+          }}
           className="md:hidden ml-auto p-2 text-cream/50 hover:text-cream rounded-lg hover:bg-cream/10 transition-colors"
           aria-label="Search"
+          aria-expanded={mobileSearchOpen}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -117,7 +104,10 @@ export default function Navbar() {
         {/* Hamburger — mobile */}
         <button
           className="md:hidden p-3 text-cream rounded-lg hover:bg-cream/10 transition-colors min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1.5"
-          onClick={() => setMobileOpen((prev) => !prev)}
+          onClick={() => {
+            setMobileOpen((prev) => !prev);
+            setMobileSearchOpen(false);
+          }}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -127,6 +117,17 @@ export default function Navbar() {
           <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`} aria-hidden="true" />
         </button>
       </nav>
+
+      {/* Mobile search bar — slides down */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          mobileSearchOpen ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-4 pb-4">
+          <SearchBar onNavigate={() => setMobileSearchOpen(false)} />
+        </div>
+      </div>
 
       {/* Mobile menu */}
       <div
@@ -161,7 +162,6 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

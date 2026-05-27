@@ -106,11 +106,11 @@ export default async function CoursesPage() {
                     {course.title}
                   </h2>
                   {course.description && (
-                    <p className="text-cream/45 text-[13px] leading-relaxed mb-4 line-clamp-2">
+                    <p className="text-cream/50 text-[13px] leading-relaxed mb-4 line-clamp-2">
                       {course.description}
                     </p>
                   )}
-                  <div className="flex items-center justify-between text-[11px] text-cream/35 uppercase tracking-wider font-medium">
+                  <div className="flex items-center justify-between text-[11px] text-cream/50 uppercase tracking-wider font-medium">
                     {course.instructor && <span>{course.instructor}</span>}
                     <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
                   </div>

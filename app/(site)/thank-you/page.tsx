@@ -36,7 +36,7 @@ export default function ThankYouPage() {
         people for Christ and builds up the body of believers.
       </p>
 
-      <p className="text-cream/45 leading-relaxed max-w-md mx-auto">
+      <p className="text-cream/50 leading-relaxed max-w-md mx-auto">
         We are praying for you and deeply grateful for your partnership in
         this ministry. Together, we&apos;re keeping the fire burning.
       </p>
@@ -76,7 +76,7 @@ export default function ThankYouPage() {
       </div>
 
       {/* Donation disclaimer — reiterate after the transaction */}
-      <p className="text-xs text-cream/40 max-w-sm mx-auto mt-8">
+      <p className="text-xs text-cream/50 max-w-sm mx-auto mt-8">
         As a reminder, Fire Within University is not a 501(c)(3) nonprofit.
         Your donation is not tax-deductible. A receipt from Stripe has been
         sent to your email.

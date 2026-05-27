@@ -40,7 +40,7 @@ export default async function AboutPage() {
           teaching, practical discipleship resources, and a community that stirs
           one another toward love and good deeds.
         </p>
-        <p className="text-cream/40 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-cream/50 max-w-2xl mx-auto leading-relaxed">
           We believe the Word of God is living and active — capable of setting
           hearts on fire for Jesus. Our goal is simple: produce content that
           drives people into Scripture and deeper relationship with Christ.
@@ -130,7 +130,7 @@ export default async function AboutPage() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-cream/[0.06] flex flex-col sm:flex-row gap-3 justify-center items-center">
-          <span className="text-xs text-cream/40 uppercase tracking-widest font-semibold">
+          <span className="text-xs text-cream/50 uppercase tracking-widest font-semibold">
             Or
           </span>
           <Link
@@ -170,10 +170,10 @@ export default async function AboutPage() {
                       alt={author.name}
                       width={80}
                       height={80}
-                      className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
+                      className="rounded-full w-20 h-20 object-cover flex-shrink-0 ring-2 ring-gold/30 ring-offset-2 ring-offset-brown-deep"
                     />
                   ) : (
-                    <div className="rounded-full w-20 h-20 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-3 ring-gold/30 ring-offset-2 ring-offset-brown-deep">
+                    <div className="rounded-full w-20 h-20 bg-orange text-cream flex items-center justify-center flex-shrink-0 ring-2 ring-gold/30 ring-offset-2 ring-offset-brown-deep">
                       <span className="text-3xl font-serif font-bold">
                         {author.name[0]}
                       </span>
