@@ -107,12 +107,7 @@ export default function ScriptureTooltip({ reference, children }: Props) {
           )}
 
           <span
-            className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-0 h-0"
-            style={{
-              borderLeft: "7px solid transparent",
-              borderRight: "7px solid transparent",
-              borderTop: "7px solid #3d1f0a",
-            }}
+            className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-0 h-0 border-l-[7px] border-r-[7px] border-t-[7px] border-l-transparent border-r-transparent border-t-brown"
             aria-hidden="true"
           />
         </span>
