@@ -1,3 +1,5 @@
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
 /** @type {import('next').NextConfig} */
 
 // SECURITY HEADERS NOTE:
@@ -5,6 +7,10 @@
 // are now set in middleware.ts instead of here. This allows dynamic per-request
 // CSP nonce generation, which replaces 'unsafe-inline'/'unsafe-eval' in script-src
 // with a cryptographic nonce for stronger XSS protection.
+
+const analyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const nextConfig = {
   reactStrictMode: true,
@@ -32,4 +38,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default analyzer(nextConfig);
