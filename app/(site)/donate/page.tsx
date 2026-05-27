@@ -58,7 +58,7 @@ export default function DonatePage() {
             href="https://www.biblegateway.com/passage/?search=2+Corinthians+9%3A7&version=NIV"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gold hover:text-gold text-xs font-semibold mt-2 inline-block transition-colors"
+            className="text-gold hover:text-gold-light text-xs font-semibold mt-2 inline-block transition-colors"
           >
             — 2 Corinthians 9:7
           </a>

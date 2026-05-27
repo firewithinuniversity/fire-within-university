@@ -54,7 +54,7 @@ export default async function AboutPage() {
             href="https://www.biblegateway.com/passage/?search=Hebrews+4%3A12&version=NIV"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gold hover:text-gold text-xs font-semibold mt-2 inline-block transition-colors"
+            className="text-gold hover:text-gold-light text-xs font-semibold mt-2 inline-block transition-colors"
           >
             — Hebrews 4:12
           </a>
@@ -135,7 +135,7 @@ export default async function AboutPage() {
           </span>
           <Link
             href="/donate"
-            className="text-gold hover:text-gold font-semibold text-sm transition-colors inline-flex items-center gap-1.5 hover:gap-2"
+            className="text-gold hover:text-gold-light font-semibold text-sm transition-colors inline-flex items-center gap-1.5 hover:gap-2"
           >
             Support the Ministry with a Gift <span aria-hidden="true">&rarr;</span>
           </Link>

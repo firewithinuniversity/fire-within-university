@@ -23,7 +23,7 @@ export default function ScriptureOfTheDay() {
               href={scripture.bibleGatewayUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gold hover:text-gold font-semibold text-sm transition-colors hover:underline underline-offset-2"
+              className="text-gold hover:text-gold-light font-semibold text-sm transition-colors hover:underline underline-offset-2"
               aria-label={`Read ${scripture.reference} on BibleGateway`}
             >
               — {scripture.reference}

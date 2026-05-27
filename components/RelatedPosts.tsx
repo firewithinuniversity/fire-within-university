@@ -22,7 +22,7 @@ export default function RelatedPosts({ posts }: Props) {
         </div>
         <Link
           href="/blog"
-          className="text-sm font-semibold text-gold hover:text-gold transition-colors flex-shrink-0 flex items-center gap-1 hover:gap-2 duration-150"
+          className="text-sm font-semibold text-gold hover:text-gold-light transition-colors flex-shrink-0 flex items-center gap-1 hover:gap-2 duration-150"
         >
           All posts <span aria-hidden="true">&rarr;</span>
         </Link>

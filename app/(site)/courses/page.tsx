@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SectionReveal from "@/components/SectionReveal";
 import CourseProgressMini from "@/components/CourseProgressMini";
+import EmailSignup from "@/components/EmailSignup";
 import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
@@ -66,6 +67,38 @@ export default async function CoursesPage() {
           </p>
         </div>
       </section>
+
+      {/* Empty state */}
+      {sanityCourses.length === 0 && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12">
+          <div className="max-w-lg mx-auto text-center py-14 space-y-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold/[0.08] text-gold mx-auto">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493a59.903 59.903 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+              </svg>
+            </div>
+            <h2 className="font-serif text-2xl font-bold text-cream">
+              Courses Coming Soon
+            </h2>
+            <p className="text-cream/55 leading-relaxed">
+              We&apos;re building out our course library. Drop your email below to be the first to know when new courses launch.
+            </p>
+            <p className="text-cream/50 text-sm italic">
+              &ldquo;Study to shew thyself approved unto God, a workman that needeth not to be ashamed.&rdquo; — 2 Timothy 2:15
+            </p>
+            <div className="pt-2">
+              <EmailSignup variant="inline" />
+            </div>
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 text-gold hover:text-gold-light font-semibold text-sm transition-colors"
+            >
+              Browse sermons while you wait
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Course grid */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28">

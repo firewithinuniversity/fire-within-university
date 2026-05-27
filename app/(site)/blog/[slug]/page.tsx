@@ -307,7 +307,7 @@ export default async function PostPage({
       <div className="text-center mt-10">
         <Link
           href="/blog"
-          className="text-gold hover:text-gold text-sm font-medium transition-colors"
+          className="text-gold hover:text-gold-light text-sm font-medium transition-colors"
         >
           ← Back to Sermons &amp; Articles
         </Link>

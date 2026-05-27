@@ -228,7 +228,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
               href="https://www.biblegateway.com/passage/?search=Matthew+5%3A6&version=NIV"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gold hover:text-gold not-italic font-semibold text-xs transition-colors"
+              className="text-gold hover:text-gold-light not-italic font-semibold text-xs transition-colors"
             >
               — Matthew 5:6
             </a>

@@ -81,6 +81,8 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()).replace(/</g, "\\u003c") }}
         />
         {children}
+        {/* Sonner requires inline styles — these map to the design system:
+            background ≈ brown-card darker, border ≈ cream/15, color ≈ cream */}
         <Toaster
           position="bottom-right"
           theme="dark"
@@ -88,7 +90,7 @@ export default async function RootLayout({
             style: {
               background: "#2d1a0a",
               border: "1px solid rgba(212,184,150,0.15)",
-              color: "#F5EFE6",
+              color: "#FDF6EC",
             },
           }}
         />

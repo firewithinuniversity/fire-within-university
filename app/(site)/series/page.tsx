@@ -74,13 +74,13 @@ export default async function SeriesPage() {
               href="https://www.biblegateway.com/passage/?search=Psalm+119%3A130&version=NIV"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gold hover:text-gold not-italic font-semibold text-xs transition-colors"
+              className="text-gold hover:text-gold-light not-italic font-semibold text-xs transition-colors"
             >
               — Psalm 119:130
             </a>
           </p>
 
-          <Link href="/blog" className="inline-flex items-center gap-2 text-gold hover:text-gold font-semibold text-sm transition-colors">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-gold hover:text-gold-light font-semibold text-sm transition-colors">
             Browse individual posts <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
