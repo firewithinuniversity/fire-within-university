@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthDropdown from "./AuthDropdown";
@@ -13,11 +13,16 @@ const navLinks = [
   { href: "/about", label: "About" },
 ];
 
+const FOCUSABLE_SELECTORS =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function onScroll() {
@@ -33,6 +38,52 @@ export default function Navbar() {
     setMobileSearchOpen(false);
     setMobileOpen(false);
   }, [pathname]);
+
+  // Focus trap + Escape + return focus on close
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    // Move focus to the first focusable element in the menu
+    const menu = menuRef.current;
+    if (!menu) return;
+    const focusable = Array.from(
+      menu.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
+    );
+    focusable[0]?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (!menu) return;
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        hamburgerRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const elements = Array.from(
+        menu.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
+      );
+      if (elements.length === 0) return;
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileOpen]);
 
   return (
     <header
@@ -92,9 +143,10 @@ export default function Navbar() {
             setMobileSearchOpen((prev) => !prev);
             setMobileOpen(false);
           }}
-          className="md:hidden ml-auto p-2 text-cream/50 hover:text-cream rounded-lg hover:bg-cream/10 transition-colors"
+          className="md:hidden ml-auto p-2 text-cream/70 hover:text-cream rounded-lg hover:bg-cream/10 transition-colors"
           aria-label="Search"
           aria-expanded={mobileSearchOpen}
+          aria-controls="mobile-search-panel"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -103,6 +155,7 @@ export default function Navbar() {
 
         {/* Hamburger — mobile */}
         <button
+          ref={hamburgerRef}
           className="md:hidden p-3 text-cream rounded-lg hover:bg-cream/10 transition-colors min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1.5"
           onClick={() => {
             setMobileOpen((prev) => !prev);
@@ -120,6 +173,7 @@ export default function Navbar() {
 
       {/* Mobile search bar — slides down */}
       <div
+        id="mobile-search-panel"
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
           mobileSearchOpen ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
         }`}
@@ -131,6 +185,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
+        ref={menuRef}
         id="mobile-menu"
         aria-hidden={!mobileOpen}
         inert={!mobileOpen ? true : undefined}
@@ -142,7 +197,7 @@ export default function Navbar() {
               <Link
                 href={href}
                 className={`block py-3.5 text-[15px] font-medium border-b border-cream/[0.06] transition-all duration-200 hover:text-gold ${pathname === href ? "text-gold" : "text-cream/80"}`}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => { setMobileOpen(false); hamburgerRef.current?.focus(); }}
                 aria-current={pathname === href ? "page" : undefined}
               >
                 {label}
@@ -153,7 +208,7 @@ export default function Navbar() {
             <Link
               href="/donate"
               className="block text-center bg-orange hover:bg-orange-hover text-cream text-sm font-semibold px-5 py-3 rounded-full transition-colors"
-              onClick={() => setMobileOpen(false)}
+              onClick={() => { setMobileOpen(false); hamburgerRef.current?.focus(); }}
             >
               Give
             </Link>

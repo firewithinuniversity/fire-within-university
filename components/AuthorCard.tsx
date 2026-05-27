@@ -42,7 +42,7 @@ export default function AuthorCard({ author }: Props) {
           </p>
         )}
         {author.bio && (
-          <p className="text-sm text-cream/55 leading-relaxed">{author.bio}</p>
+          <p className="text-sm text-cream/70 leading-relaxed">{author.bio}</p>
         )}
       </div>
     </div>

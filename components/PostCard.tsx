@@ -53,7 +53,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
         </h3>
 
         {excerpt && (
-          <p className="text-[13px] text-cream/60 leading-relaxed mb-4 flex-grow line-clamp-3">{excerpt}</p>
+          <p className="text-[13px] text-cream/70 leading-relaxed mb-4 flex-grow line-clamp-3">{excerpt}</p>
         )}
 
         <div className="flex items-center gap-3 mt-auto pt-4 border-t border-cream/[0.06]">
@@ -70,7 +70,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
           )}
           <div className="text-xs text-cream/60 leading-snug">
             <span className="block font-semibold text-cream/80">{author.name}</span>
-            <span className="text-cream/50">
+            <span className="text-cream/60">
               <time dateTime={publishedAt}>{formattedDate}</time>
               {readingTimeMinutes && (
                 <> &middot; {readingTimeMinutes} min read</>

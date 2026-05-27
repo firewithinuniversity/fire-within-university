@@ -100,7 +100,7 @@ export default function DonateForm() {
             className={`flex-1 py-4 text-sm font-semibold transition-colors ${
               frequency === freq
                 ? "bg-orange text-cream"
-                : "text-cream/50 hover:bg-cream/[0.05]"
+                : "text-cream/70 hover:bg-cream/[0.05]"
             }`}
           >
             {freq === "once" ? "Give Once" : "Give Monthly"}
@@ -118,7 +118,7 @@ export default function DonateForm() {
 
         {/* ── Preset amount buttons ──────────────────────────────── */}
         <div>
-          <p className="text-sm font-medium text-cream/50 mb-3">
+          <p className="text-sm font-medium text-cream/70 mb-3">
             Select an amount
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -146,7 +146,7 @@ export default function DonateForm() {
 
         {/* ── Custom amount input ────────────────────────────────── */}
         <div>
-          <p className="text-sm font-medium text-cream/50 mb-2">
+          <p className="text-sm font-medium text-cream/70 mb-2">
             Or enter a custom amount
           </p>
           <div className="relative">
@@ -165,7 +165,7 @@ export default function DonateForm() {
                 setIsCustom(true);
               }}
               onFocus={() => setIsCustom(true)}
-              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-brown-deep text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/35 ${
+              className={`w-full pl-8 pr-4 py-3 rounded-xl border-2 bg-brown-deep text-cream text-sm focus:outline-none transition-colors placeholder:text-cream/50 ${
                 isCustom
                   ? "border-gold"
                   : "border-cream/[0.1] focus:border-gold"

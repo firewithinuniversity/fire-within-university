@@ -7,7 +7,16 @@ import { getAllPostSlugs, getPostBySlug, getSeriesNavigation } from "@/lib/sanit
 import { imageUrlFor } from "@/lib/sanity/image";
 import { readingTimeLabel } from "@/lib/readingTime";
 import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
-import PortableTextRenderer from "@/components/PortableTextRenderer";
+import dynamic from "next/dynamic";
+const PortableTextRenderer = dynamic(() => import("@/components/PortableTextRenderer"), {
+  loading: () => (
+    <div className="animate-pulse space-y-3">
+      <div className="h-4 bg-cream/[0.06] rounded w-full" />
+      <div className="h-4 bg-cream/[0.06] rounded w-3/4" />
+      <div className="h-4 bg-cream/[0.06] rounded w-5/6" />
+    </div>
+  ),
+});
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import AuthorCard from "@/components/AuthorCard";
 import AffiliateCard from "@/components/AffiliateCard";

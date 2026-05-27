@@ -61,7 +61,7 @@ export default async function CoursesPage() {
           <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-cream mb-6 tracking-[-0.02em] leading-[0.95]">
             Courses
           </h1>
-          <p className="text-cream/55 max-w-lg mx-auto text-lg leading-[1.7]">
+          <p className="text-cream/70 max-w-lg mx-auto text-lg leading-[1.7]">
             Structured Bible study to deepen your walk with Christ. Each course
             includes video lessons, Scripture readings, and downloadable resources.
           </p>
@@ -80,7 +80,7 @@ export default async function CoursesPage() {
             <h2 className="font-serif text-2xl font-bold text-cream">
               Courses Coming Soon
             </h2>
-            <p className="text-cream/55 leading-relaxed">
+            <p className="text-cream/70 leading-relaxed">
               We&apos;re building out our course library. Drop your email below to be the first to know when new courses launch.
             </p>
             <p className="text-cream/50 text-sm italic">
@@ -139,11 +139,11 @@ export default async function CoursesPage() {
                     {course.title}
                   </h2>
                   {course.description && (
-                    <p className="text-cream/50 text-[13px] leading-relaxed mb-4 line-clamp-2">
+                    <p className="text-cream/70 text-[13px] leading-relaxed mb-4 line-clamp-2">
                       {course.description}
                     </p>
                   )}
-                  <div className="flex items-center justify-between text-[11px] text-cream/50 uppercase tracking-wider font-medium">
+                  <div className="flex items-center justify-between text-[11px] text-cream/60 uppercase tracking-wider font-medium">
                     {course.instructor && <span>{course.instructor}</span>}
                     <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
                   </div>

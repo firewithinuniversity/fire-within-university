@@ -89,7 +89,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
         <p className="text-red-600 text-xs mt-2 text-center" role="alert" aria-live="polite">{message}</p>
       )}
 
-      <p id="email-signup-hint" className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/60" : "text-cream/50"}`}>
+      <p id="email-signup-hint" className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/60" : "text-cream/60"}`}>
         No spam, ever. Unsubscribe anytime.
       </p>
     </form>

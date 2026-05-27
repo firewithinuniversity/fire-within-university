@@ -212,7 +212,11 @@ function ModalContent({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const headingId = "auth-modal-heading";
+  // Point the dialog label at the currently active heading/tab
+  const dialogLabelId =
+    tab === "signin" ? "tab-signin" :
+    tab === "register" ? "tab-register" :
+    "tab-forgot";
 
   return (
     <div
@@ -226,7 +230,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={headingId}
+        aria-labelledby={dialogLabelId}
         className="bg-brown-modal rounded-2xl shadow-2xl w-full max-w-md relative border border-white/[0.06]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -245,7 +249,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         {tab === "forgot" ? (
           <div className="flex border-b border-cream/[0.06]">
             <button
-              id={headingId}
+              id="tab-forgot"
               className="flex-1 py-3.5 text-sm font-semibold text-cream border-b-2 border-gold"
             >
               Reset Password
@@ -254,18 +258,20 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         ) : (
           <div className="flex border-b border-cream/[0.06]" role="tablist">
             <button
-              id={tab === "signin" ? headingId : undefined}
+              id="tab-signin"
               role="tab"
               aria-selected={tab === "signin"}
+              aria-controls="panel-signin"
               className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "signin" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
               onClick={() => switchTab("signin")}
             >
               Sign In
             </button>
             <button
-              id={tab === "register" ? headingId : undefined}
+              id="tab-register"
               role="tab"
               aria-selected={tab === "register"}
+              aria-controls="panel-register"
               className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === "register" ? "text-cream border-b-2 border-gold" : "text-cream/60 hover:text-cream/80"}`}
               onClick={() => switchTab("register")}
             >
@@ -274,7 +280,12 @@ function ModalContent({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        <div className="p-6">
+        <div
+          id={tab === "signin" ? "panel-signin" : tab === "register" ? "panel-register" : undefined}
+          role={tab !== "forgot" ? "tabpanel" : undefined}
+          aria-labelledby={tab === "signin" ? "tab-signin" : tab === "register" ? "tab-register" : undefined}
+          className="p-6"
+        >
           {/* Google sign-in — hidden on forgot password view */}
           {tab !== "forgot" && (
             <>

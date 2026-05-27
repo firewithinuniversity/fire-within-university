@@ -165,7 +165,7 @@ export default function SearchBar({ onNavigate }: { onNavigate?: () => void }) {
             if (query.length >= 2) setDropdownOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          className="bg-transparent text-cream placeholder:text-cream/35 text-[13px] focus:outline-none w-36 lg:w-52"
+          className="bg-transparent text-cream placeholder:text-cream/50 text-[13px] focus:outline-none w-36 lg:w-52"
           role="combobox"
           aria-label="Search"
           aria-expanded={showDropdown && results.length > 0}
@@ -181,7 +181,7 @@ export default function SearchBar({ onNavigate }: { onNavigate?: () => void }) {
               setDropdownOpen(false);
               inputRef.current?.focus();
             }}
-            className="text-cream/50 hover:text-cream/60 transition-colors p-0.5 ml-1"
+            className="text-cream/70 hover:text-cream transition-colors p-0.5 ml-1"
             aria-label="Clear search"
           >
             <svg

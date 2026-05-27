@@ -62,7 +62,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-cream/50 hover:text-gold transition-colors duration-200 p-1.5"
+                  className="text-cream/70 hover:text-gold transition-colors duration-200 p-1.5"
                   aria-label={label}
                 >
                   {icon}
@@ -121,13 +121,13 @@ export default function Footer() {
 
         {/* Donation disclaimer */}
         <div className="border border-cream/10 rounded-xl px-5 py-4 mb-8 bg-cream/5">
-          <p className="text-xs text-cream/60 max-w-2xl leading-relaxed">
+          <p className="text-xs text-cream/70 max-w-2xl leading-relaxed">
             <strong className="text-cream/80">Donation Disclaimer:</strong>{" "}
             Fire Within University is not a registered 501(c)(3) nonprofit organization. Donations are not tax-deductible. We are grateful for every contribution.
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/60 pt-6 border-t border-cream/10">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/70 pt-6 border-t border-cream/10">
           <p>&copy; {currentYear} Fire Within University. All rights reserved.</p>
           <p className="text-gold/60 font-medium italic">Built for the Kingdom.</p>
         </div>
