@@ -207,7 +207,7 @@ export default function DonateForm() {
         </button>
 
         <p className="text-xs text-cream/50 text-center">
-          🔒 Secure checkout powered by Stripe. We never store your card information.
+          Secure checkout powered by Stripe. We never store your card information.
         </p>
       </div>
     </form>
