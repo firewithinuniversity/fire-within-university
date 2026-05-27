@@ -47,7 +47,15 @@ export async function POST(request: Request) {
   const email = result.data.email.toLowerCase().trim();
 
   // Always return success — even if account doesn't exist (prevents enumeration)
-  const user = await prisma.user.findUnique({ where: { email } });
+  let user;
+  try {
+    user = await prisma.user.findUnique({ where: { email } });
+  } catch {
+    return NextResponse.json(
+      { message: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
   if (!user || !user.password) {
     // No account or OAuth-only account — silently succeed
     return NextResponse.json({ message: SUCCESS_MSG });
@@ -76,7 +84,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (err) {
-    console.error("[Forgot Password] Failed to create token:", err);
+    console.error("[Forgot Password] Failed to create token:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }
@@ -116,7 +124,7 @@ export async function POST(request: Request) {
       `,
     });
   } catch (err) {
-    console.error("[Forgot Password] Failed to send email:", err);
+    console.error("[Forgot Password] Failed to send email:", err instanceof Error ? err.message : "Unknown error");
     // Still return success — don't leak that sending failed
   }
 

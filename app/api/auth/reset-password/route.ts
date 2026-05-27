@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import crypto from "crypto";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
 import { isPasswordValid } from "@/lib/passwordValidation";
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       where: { token: hashedToken },
     });
   } catch (err) {
-    console.error("[Reset Password] DB lookup error:", err);
+    console.error("[Reset Password] DB lookup error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }
@@ -94,7 +94,15 @@ export async function POST(request: Request) {
   }
 
   // Find the user
-  const user = await prisma.user.findUnique({ where: { email } });
+  let user;
+  try {
+    user = await prisma.user.findUnique({ where: { email } });
+  } catch {
+    return NextResponse.json(
+      { message: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
   if (!user) {
     return NextResponse.json(
       { message: "This reset link is invalid." },
@@ -115,7 +123,7 @@ export async function POST(request: Request) {
       prisma.passwordResetToken.deleteMany({ where: { email } }),
     ]);
   } catch (err) {
-    console.error("[Reset Password] Failed to update password:", err);
+    console.error("[Reset Password] Failed to update password:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }

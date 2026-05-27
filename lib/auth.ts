@@ -2,10 +2,10 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logAuditEvent } from "@/lib/auditLog";
-import { getNextAuthSecret } from "@/lib/env";
+import { getNextAuthSecret, getGoogleClientId, getGoogleClientSecret, getAdminEmail1, getAdminEmail2 } from "@/lib/env";
 
 export const UserRole = {
   USER: "USER",
@@ -14,9 +14,9 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 export const adminEmails = [
-  process.env.ADMIN_EMAIL_1,
-  process.env.ADMIN_EMAIL_2,
-].filter(Boolean).map((e) => (e as string).toLowerCase());
+  getAdminEmail1(),
+  getAdminEmail2(),
+].filter((e): e is string => Boolean(e)).map((e) => e.toLowerCase());
 
 function isAdminEmail(email: string): boolean {
   return adminEmails.includes(email.toLowerCase());
@@ -28,8 +28,8 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      clientId: getGoogleClientId(),
+      clientSecret: getGoogleClientSecret(),
     }),
 
     CredentialsProvider({

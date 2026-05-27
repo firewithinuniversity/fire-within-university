@@ -47,7 +47,7 @@ export async function GET(request: Request) {
       where: { token: hashedToken },
     });
   } catch (err) {
-    console.error("[Verify Email] DB lookup error:", err);
+    console.error("[Verify Email] DB lookup error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }
@@ -88,7 +88,15 @@ export async function GET(request: Request) {
   }
 
   // Find the user
-  const user = await prisma.user.findUnique({ where: { email } });
+  let user;
+  try {
+    user = await prisma.user.findUnique({ where: { email } });
+  } catch {
+    return NextResponse.json(
+      { message: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
   if (!user) {
     return NextResponse.json(
       { message: "This verification link is invalid." },
@@ -108,7 +116,7 @@ export async function GET(request: Request) {
       }),
     ]);
   } catch (err) {
-    console.error("[Verify Email] Failed to verify:", err);
+    console.error("[Verify Email] Failed to verify:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }

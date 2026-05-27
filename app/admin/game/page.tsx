@@ -230,6 +230,13 @@ type DeathBlock = {
   rot: number; rotSpeed: number; scale: number; alpha: number; shape: BlockShape;
 };
 
+type LightningWave = {
+  row: number;
+  remaining: number;
+  timer: number;
+  delay: number;
+};
+
 interface GameData {
   state: GameState;
   round: number;
@@ -255,6 +262,7 @@ interface GameData {
   ambientParticles: AmbientParticle[];
   ripples: Ripple[];
   deathBlocks: DeathBlock[];
+  lightningWaves: LightningWave[];
   level: number;
   roundsThisLevel: number;
   shakeX: number;
@@ -319,7 +327,7 @@ function createGame(): GameData {
     ballsToLaunch: 0, launchTimer: 0, firstSettledX: null,
     extraBalls: 0, animFrame: 0, speed: 1,
     flashes: [], particles: [], floatingTexts: [], confetti: [],
-    ambientParticles: ambient, ripples: [], deathBlocks: [],
+    ambientParticles: ambient, ripples: [], deathBlocks: [], lightningWaves: [],
     level: 0, roundsThisLevel: 0,
     shakeX: 0, shakeY: 0, levelBanner: null,
     blocksDestroyed: 0, ballsCollected: 0,
@@ -455,13 +463,13 @@ function spawnRow(g: GameData) {
     freeCols.splice(idx, 1);
   }
 
-  if (freeCols.length > 0 && g.level >= 2 && Math.random() < 0.20) {
+  if (freeCols.length > 0 && g.level >= 1 && Math.random() < 0.35) {
     const idx = Math.floor(Math.random() * freeCols.length);
     g.pickups.push({ col: freeCols[idx], row: 0, collected: false, type: "lightning" });
     freeCols.splice(idx, 1);
   }
 
-  if (freeCols.length > 0 && g.level >= 3 && Math.random() < 0.12) {
+  if (freeCols.length > 0 && g.level >= 2 && Math.random() < 0.25) {
     const types: PickupType[] = ["fire", "split", "giant"];
     const type = types[Math.floor(Math.random() * types.length)];
     const idx = Math.floor(Math.random() * freeCols.length);
@@ -586,24 +594,70 @@ function destroyBlock(g: GameData, idx: number) {
 
 // ── Lightning ────────────────────────────────────────────────────────────────
 function triggerLightning(g: GameData, row: number) {
-  const toRemove: number[] = [];
-  for (let i = g.blocks.length - 1; i >= 0; i--) {
-    if (g.blocks[i].row === row) toRemove.push(i);
+  // Count blocks in this row and queue a wave animation
+  let count = 0;
+  for (const b of g.blocks) {
+    if (b.row === row) count++;
   }
-  for (const i of toRemove) {
-    const blk = g.blocks[i];
-    const c = blockCenter(blk);
-    spawnParticles(g, c.x, c.y, hpColor(blk.hp, blk.maxHp), 6);
-    spawnDeathBlock(g, blk, hpColor(blk.hp, blk.maxHp));
-    g.score++;
-    g.blocksDestroyed++;
-    g.roundBlocksDestroyed++;
-    g.blocks.splice(i, 1);
+
+  if (count > 0) {
+    // Queue a wave — blocks destroyed one-by-one every 4 frames (left → right)
+    g.lightningWaves.push({ row, remaining: count, timer: 0, delay: 4 });
   }
+
   g.flashes.push({ row, alpha: 1.0 });
   g.shakeX = (Math.random() - 0.5) * 8;
   g.shakeY = (Math.random() - 0.5) * 8;
   if (g.soundEnabled) playLightningSound();
+}
+
+function tickLightningWaves(g: GameData) {
+  for (let w = g.lightningWaves.length - 1; w >= 0; w--) {
+    const wave = g.lightningWaves[w];
+    wave.timer--;
+
+    if (wave.timer <= 0 && wave.remaining > 0) {
+      wave.timer = wave.delay;
+
+      // Find the leftmost block in this row (gives left → right wave effect)
+      let blockIdx = -1;
+      let minCol = Infinity;
+      for (let i = 0; i < g.blocks.length; i++) {
+        if (g.blocks[i].row === wave.row && g.blocks[i].col < minCol) {
+          minCol = g.blocks[i].col;
+          blockIdx = i;
+        }
+      }
+
+      if (blockIdx >= 0) {
+        const blk = g.blocks[blockIdx];
+        const c = blockCenter(blk);
+        spawnParticles(g, c.x, c.y, hpColor(blk.hp, blk.maxHp), 6);
+        spawnDeathBlock(g, blk, hpColor(blk.hp, blk.maxHp));
+        g.score++;
+        g.blocksDestroyed++;
+        g.roundBlocksDestroyed++;
+        g.blocks.splice(blockIdx, 1);
+
+        // Small screen shake per block
+        g.shakeX += (Math.random() - 0.5) * 3;
+        g.shakeY += (Math.random() - 0.5) * 3;
+
+        if (g.soundEnabled) playDestroySound();
+
+        // Flash pulse refreshes as each block pops
+        const existingFlash = g.flashes.find(f => f.row === wave.row);
+        if (existingFlash) existingFlash.alpha = Math.min(existingFlash.alpha + 0.3, 1.0);
+      }
+
+      wave.remaining--;
+    }
+
+    // Remove completed waves
+    if (wave.remaining <= 0 && wave.timer <= 0) {
+      g.lightningWaves.splice(w, 1);
+    }
+  }
 }
 
 // ── Collision detection ──────────────────────────────────────────────────────
@@ -879,6 +933,9 @@ function tick(g: GameData) {
     if (db.alpha <= 0 || db.scale < 0.05) g.deathBlocks.splice(i, 1);
   }
 
+  // Lightning waves: staggered block destruction
+  tickLightningWaves(g);
+
   // Shake decay
   g.shakeX *= 0.85; g.shakeY *= 0.85;
   if (Math.abs(g.shakeX) < 0.1) g.shakeX = 0;
@@ -971,6 +1028,7 @@ function endTurn(g: GameData) {
   g.slowmoTimer = 0;
   g.combo = 0;
   g.comboTimer = 0;
+  g.lightningWaves = [];
 
   const pct = g.roundBlocksStart > 0 ? g.roundBlocksDestroyed / g.roundBlocksStart : 0;
   g.starRating = pct >= 0.5 ? 3 : pct >= 0.3 ? 2 : pct >= 0.1 ? 1 : 0;

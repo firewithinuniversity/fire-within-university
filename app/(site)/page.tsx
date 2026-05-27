@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
@@ -5,6 +6,23 @@ import SectionReveal from "@/components/SectionReveal";
 import PostCard from "@/components/PostCard";
 import { getAllCourses, getFeaturedPosts, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
+import { canonicalUrl } from "@/lib/metadata";
+
+export const metadata: Metadata = {
+  title: "Fire Within University — Igniting Hearts for Jesus",
+  description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
+  alternates: {
+    canonical: canonicalUrl("/"),
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "Fire Within University RSS Feed" }],
+    },
+  },
+  openGraph: {
+    title: "Fire Within University — Igniting Hearts for Jesus",
+    description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
+    url: canonicalUrl("/"),
+  },
+};
 
 export const revalidate = 3600;
 

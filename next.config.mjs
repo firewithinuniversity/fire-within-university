@@ -4,7 +4,7 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 
 // SECURITY HEADERS NOTE:
 // All security headers (CSP, X-Frame-Options, HSTS, Permissions-Policy, etc.)
-// are now set in middleware.ts instead of here. This allows dynamic per-request
+// are now set in proxy.ts instead of here. This allows dynamic per-request
 // CSP nonce generation, which replaces 'unsafe-inline'/'unsafe-eval' in script-src
 // with a cryptographic nonce for stronger XSS protection.
 
@@ -14,9 +14,6 @@ const analyzer = withBundleAnalyzer({
 
 const nextConfig = {
   reactStrictMode: true,
-
-  // Ensure native/heavy server-only packages are never bundled for the client
-  serverExternalPackages: ["bcrypt"],
 
   turbopack: {
     root: import.meta.dirname,

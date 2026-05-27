@@ -25,10 +25,18 @@ export async function POST(request: Request) {
   const email = session.user.email.toLowerCase().trim();
 
   // Check if already verified
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { emailVerified: true },
-  });
+  let user;
+  try {
+    user = await prisma.user.findUnique({
+      where: { email },
+      select: { emailVerified: true },
+    });
+  } catch {
+    return NextResponse.json(
+      { message: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
 
   if (!user) {
     return NextResponse.json(
@@ -44,7 +52,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const sent = await sendVerificationEmail(email);
+  let sent;
+  try {
+    sent = await sendVerificationEmail(email);
+  } catch {
+    return NextResponse.json(
+      { message: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
   if (!sent) {
     return NextResponse.json(
       { message: "Failed to send verification email. Please try again." },

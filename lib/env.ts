@@ -74,6 +74,34 @@ export function getNextAuthSecret(): string {
   return secret;
 }
 
+// --- Stripe (public) ---
+export function getStripePublishableKey(): string {
+  return requirePublicEnv("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY");
+}
+
+// --- Google OAuth ---
+export function getGoogleClientId(): string {
+  return requireServerEnv("GOOGLE_CLIENT_ID");
+}
+
+export function getGoogleClientSecret(): string {
+  return requireServerEnv("GOOGLE_CLIENT_SECRET");
+}
+
+// --- Database ---
+export function getDatabaseUrl(): string {
+  return requireServerEnv("DATABASE_URL");
+}
+
+// --- Admin emails (optional) ---
+export function getAdminEmail1(): string | undefined {
+  return process.env.ADMIN_EMAIL_1 || undefined;
+}
+
+export function getAdminEmail2(): string | undefined {
+  return process.env.ADMIN_EMAIL_2 || undefined;
+}
+
 // --- Google Analytics ---
 export const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 

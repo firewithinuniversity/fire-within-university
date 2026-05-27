@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
 import { adminEmails } from "@/lib/auth";
@@ -81,12 +81,12 @@ export async function POST(request: Request) {
 
     // Send verification email (fire-and-forget — don't block registration)
     sendVerificationEmail(normalizedEmail).catch((err) => {
-      console.error("[Register] Failed to send verification email:", err);
+      console.error("[Register] Failed to send verification email:", err instanceof Error ? err.message : "Unknown error");
     });
 
     return NextResponse.json({ message: "Account created successfully. Please check your email to verify your address." }, { status: 201 });
   } catch (err) {
-    console.error("[Register] Database error:", err);
+    console.error("[Register] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong. Please try again." }, { status: 500 });
   }
 }

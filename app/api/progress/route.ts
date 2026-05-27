@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ progress });
   } catch (err) {
-    console.error("[Progress GET] Database error:", err);
+    console.error("[Progress GET] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
 }
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ progress: entry }, { status: 200 });
   } catch (err) {
-    console.error("[Progress POST] Database error:", err);
+    console.error("[Progress POST] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
 }
@@ -109,7 +109,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ message: "Progress removed." });
   } catch (err) {
-    console.error("[Progress DELETE] Database error:", err);
+    console.error("[Progress DELETE] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
 }

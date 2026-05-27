@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import type { NextRequest, ProxyConfig } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { checkRateLimit } from "@/lib/rateLimit";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip =
     request.headers.get("x-real-ip") ??
@@ -116,7 +116,7 @@ export async function middleware(request: NextRequest) {
   });
 
   response.headers.set("Content-Security-Policy", csp);
-  // NOTE: nonce is passed to server components via the x-nonce REQUEST header (line 112).
+  // NOTE: nonce is passed to server components via the x-nonce REQUEST header (line above).
   // We intentionally do NOT expose it as a response header to prevent scripts from reading it.
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
@@ -133,7 +133,7 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
-export const config = {
+export const config: ProxyConfig = {
   matcher: [
     "/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|css|js|woff|woff2|ttf|eot)).*)",
   ],

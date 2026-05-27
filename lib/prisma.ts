@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
+import { getDatabaseUrl } from "@/lib/env";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL environment variable is not set");
-}
+// Validates DATABASE_URL is set at startup
+getDatabaseUrl();
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 

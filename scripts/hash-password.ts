@@ -1,5 +1,5 @@
 // Usage: npx tsx scripts/hash-password.ts yourPasswordHere
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const password = process.argv[2];
 if (!password) {

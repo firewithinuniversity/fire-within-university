@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ bookmarks });
   } catch (err) {
-    console.error("[Bookmarks GET] Database error:", err);
+    console.error("[Bookmarks GET] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
 }
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ bookmark });
   } catch (err) {
-    console.error("[Bookmarks POST] Database error:", err);
+    console.error("[Bookmarks POST] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
 }
@@ -134,7 +134,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ message: "Bookmark removed." });
   } catch (err) {
-    console.error("[Bookmarks DELETE] Database error:", err);
+    console.error("[Bookmarks DELETE] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
   }
 }

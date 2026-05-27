@@ -86,7 +86,7 @@ export async function POST(request: Request) {
       data: { name, email, subject, message },
     });
   } catch (err) {
-    console.error("[Contact DB Error]", err);
+    console.error("[Contact DB Error]", err instanceof Error ? err.message : "Unknown error");
   }
 
   try {
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
           : "Your message has been sent. We'll be in touch soon.",
     });
   } catch (error) {
-    console.error("[Contact Form Error]", error);
+    console.error("[Contact Form Error]", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { message: "Something went wrong sending your message. Please try again." },
       { status: 500 }
