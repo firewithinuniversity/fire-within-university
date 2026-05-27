@@ -6,6 +6,7 @@ import { imageUrlFor } from "@/lib/sanity/image";
 import { courseJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/metadata";
 import CourseProgressBar from "@/components/CourseProgressBar";
 import BookmarkButton from "@/components/BookmarkButton";
+import LessonCompletionBadge from "@/components/LessonCompletionBadge";
 
 export const revalidate = 3600;
 
@@ -179,6 +180,10 @@ export default async function CourseDetailPage({ params }: Props) {
                         {lesson.duration && <span>{lesson.duration}</span>}
                       </div>
                     </div>
+                    <LessonCompletionBadge
+                      lessonSlug={lesson.slug.current}
+                      courseSlug={slug}
+                    />
                     <svg className="w-5 h-5 text-cream/50 group-hover:text-gold transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>

@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
 import SectionReveal from "@/components/SectionReveal";
-import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
+import PostCard from "@/components/PostCard";
+import { getAllCourses, getFeaturedPosts, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 
 export const revalidate = 3600;
@@ -49,7 +50,10 @@ function PathwayIcon({ type }: { type: string }) {
 }
 
 export default async function HomePage() {
-  const sanityCourses = await getAllCourses();
+  const [sanityCourses, latestPosts] = await Promise.all([
+    getAllCourses(),
+    getFeaturedPosts(),
+  ]);
   const allCourses = sanityCourses.length > 0 ? sanityCourses : PLACEHOLDER_COURSES;
   const displayCourses = allCourses.slice(0, 4);
   const todayIndex = new Date().getDate() % SCRIPTURES.length;
@@ -200,6 +204,34 @@ export default async function HomePage() {
           </div>
         </section>
       </SectionReveal>
+
+      {/* ── Latest Sermons ──────────────────────────────────────── */}
+      {latestPosts.length > 0 && (
+        <SectionReveal>
+          <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28" aria-label="Latest sermons">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+              <div>
+                <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-2">Fresh From the Fire</p>
+                <h2 className="font-serif text-3xl md:text-[2.5rem] font-bold text-cream leading-tight tracking-[-0.01em]">
+                  Latest Sermons
+                </h2>
+              </div>
+              <Link href="/blog" className="group text-gold/80 hover:text-gold text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 self-start sm:self-auto">
+                View all
+                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {latestPosts.map((post, i) => (
+                <SectionReveal key={post._id} delay={i * 100} distance={20}>
+                  <PostCard post={post} />
+                </SectionReveal>
+              ))}
+            </div>
+          </section>
+        </SectionReveal>
+      )}
 
       {/* ── Content Pathways ─────────────────────────────────────── */}
       <section className="relative py-28 overflow-hidden">
