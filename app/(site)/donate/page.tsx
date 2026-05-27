@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default function DonatePage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
+    <div className="max-w-2xl mx-auto px-4 pt-24 pb-12">
       {/* Page header — spiritual invitation, not transactional */}
       <div className="text-center mb-12 space-y-5">
         {/* Small cross accent */}

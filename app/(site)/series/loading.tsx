@@ -1,6 +1,6 @@
 export default function SeriesLoading() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14 animate-pulse">
+    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12 animate-pulse">
       {/* Header */}
       <div className="text-center mb-12 space-y-3">
         <div className="h-3 w-36 bg-cream/10 rounded-full mx-auto" />

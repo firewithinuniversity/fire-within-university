@@ -2,7 +2,7 @@ import PostCardSkeleton from "@/components/skeletons/PostCardSkeleton";
 
 export default function AuthorLoading() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14 animate-pulse">
+    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12 animate-pulse">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 mb-8">
         <div className="h-3.5 w-14 bg-cream/10 rounded" />

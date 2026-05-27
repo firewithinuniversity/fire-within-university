@@ -1,6 +1,6 @@
 export default function PostLoading() {
   return (
-    <article className="max-w-3xl mx-auto px-4 py-14 animate-pulse">
+    <article className="max-w-3xl mx-auto px-4 pt-24 pb-12 animate-pulse">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 mb-8">
         <div className="h-3.5 w-32 bg-cream/10 rounded" />

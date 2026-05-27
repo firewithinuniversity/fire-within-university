@@ -48,7 +48,7 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="bg-brown-deep min-h-screen flex items-center justify-center px-4 py-16">
-      <div className="bg-[#2a1a0e] rounded-2xl shadow-2xl w-full max-w-md border border-white/[0.06] p-8">
+      <div className="bg-brown-modal rounded-2xl shadow-2xl w-full max-w-md border border-white/[0.06] p-8">
         <h1 className="font-serif text-2xl font-bold text-cream text-center mb-2">
           Email Verification
         </h1>

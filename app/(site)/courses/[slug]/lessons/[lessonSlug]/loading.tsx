@@ -1,7 +1,7 @@
 export default function LessonLoading() {
   return (
     <div className="bg-brown-deep min-h-screen animate-pulse">
-      <div className="max-w-4xl mx-auto px-4 pt-10 pb-24">
+      <div className="max-w-4xl mx-auto px-4 pt-24 pb-24">
         {/* Breadcrumb */}
         <div className="h-4 w-56 bg-cream/[0.06] rounded mb-8" />
 

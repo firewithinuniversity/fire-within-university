@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
+    <div className="max-w-2xl mx-auto px-4 pt-24 pb-12">
       <div className="text-center mb-12 space-y-5">
         <div className="flex justify-center" aria-hidden="true">
           <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">

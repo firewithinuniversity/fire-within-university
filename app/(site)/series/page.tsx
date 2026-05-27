@@ -32,7 +32,7 @@ export default async function SeriesPage() {
   const allSeries = await getAllSeries();
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-20 pb-14">
+    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
       {/* Header */}
       <div className="text-center mb-12 space-y-3">
         <p className="text-gold font-bold text-xs uppercase tracking-widest">

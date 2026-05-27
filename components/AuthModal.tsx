@@ -227,7 +227,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={headingId}
-        className="bg-[#2a1a0e] rounded-2xl shadow-2xl w-full max-w-md relative border border-white/[0.06]"
+        className="bg-brown-modal rounded-2xl shadow-2xl w-full max-w-md relative border border-white/[0.06]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}

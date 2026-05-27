@@ -25,7 +25,7 @@ const SITE_URL = "firewithinuniversity.com";
 
 export default function TermsPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-14">
+    <div className="max-w-3xl mx-auto px-4 pt-24 pb-12">
       {/* Header */}
       <div className="mb-10">
         <p className="text-gold font-bold text-xs uppercase tracking-widest mb-2">Legal</p>

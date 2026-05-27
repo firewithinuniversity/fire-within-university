@@ -258,29 +258,37 @@ export async function getPostsBySeries(seriesId: string): Promise<PostSummary[]>
   );
 }
 
+const getRelatedPostsCached = (currentSlug: string, categoryId?: string) =>
+  unstable_cache(
+    async (): Promise<PostSummary[]> => {
+      if (categoryId) {
+        return safeFetch(
+          () =>
+            client.fetch(
+              `*[_type == "post" && slug.current != $currentSlug] | score(category._ref == $categoryId) | order(_score desc, publishedAt desc) [0...3] { ${POST_SUMMARY_FIELDS} }`,
+              { categoryId, currentSlug }
+            ),
+          []
+        );
+      }
+      return safeFetch(
+        () =>
+          client.fetch(
+            `*[_type == "post" && slug.current != $currentSlug] | order(publishedAt desc) [0...3] { ${POST_SUMMARY_FIELDS} }`,
+            { currentSlug }
+          ),
+        []
+      );
+    },
+    ["related-posts", currentSlug, categoryId ?? "none"],
+    { revalidate: FIVE_MIN }
+  );
+
 export async function getRelatedPosts(
   currentSlug: string,
   categoryId?: string
 ): Promise<PostSummary[]> {
-  if (categoryId) {
-    const results = await safeFetch(
-      () =>
-        client.fetch(
-          `*[_type == "post" && category._ref == $categoryId && slug.current != $currentSlug] | order(publishedAt desc) [0..2] { ${POST_SUMMARY_FIELDS} }`,
-          { categoryId, currentSlug }
-        ),
-      []
-    );
-    if (results.length > 0) return results;
-  }
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "post" && slug.current != $currentSlug] | order(publishedAt desc) [0..2] { ${POST_SUMMARY_FIELDS} }`,
-        { currentSlug }
-      ),
-    []
-  );
+  return getRelatedPostsCached(currentSlug, categoryId)();
 }
 
 export async function getAllAffiliateProducts(): Promise<AffiliateProduct[]> {
@@ -303,37 +311,46 @@ export type SeriesNavigation = {
   next: { title: string; slug: string } | null;
 };
 
+const getSeriesNavigationCached = (seriesId: string, postId: string) =>
+  unstable_cache(
+    async (): Promise<SeriesNavigation | null> => {
+      return safeFetch(async () => {
+        const data: {
+          title: string;
+          posts: { _id: string; title: string; slug: { current: string } }[];
+        } | null = await client.fetch(
+          `*[_type == "series" && _id == $seriesId][0] {
+            title,
+            "posts": *[_type == "post" && series._ref == ^._id] | order(publishedAt asc) {
+              _id, title, slug
+            }
+          }`,
+          { seriesId }
+        );
+
+        if (!data?.posts || data.posts.length === 0) return null;
+
+        const idx = data.posts.findIndex((p) => p._id === postId);
+        if (idx === -1) return null;
+
+        return {
+          seriesTitle: data.title ?? "",
+          totalPosts: data.posts.length,
+          currentIndex: idx + 1,
+          prev: idx > 0 ? { title: data.posts[idx - 1].title, slug: data.posts[idx - 1].slug.current } : null,
+          next: idx < data.posts.length - 1 ? { title: data.posts[idx + 1].title, slug: data.posts[idx + 1].slug.current } : null,
+        };
+      }, null);
+    },
+    ["series-nav", seriesId, postId],
+    { revalidate: FIVE_MIN }
+  );
+
 export async function getSeriesNavigation(
   seriesId: string,
   currentPostId: string
 ): Promise<SeriesNavigation | null> {
-  return safeFetch(async () => {
-    const posts: { _id: string; title: string; slug: { current: string } }[] =
-      await client.fetch(
-        `*[_type == "post" && series._ref == $seriesId] | order(publishedAt asc) {
-          _id, title, slug
-        }`,
-        { seriesId }
-      );
-
-    if (!posts || posts.length === 0) return null;
-
-    const seriesData: { title: string } | null = await client.fetch(
-      `*[_type == "series" && _id == $seriesId][0] { title }`,
-      { seriesId }
-    );
-
-    const idx = posts.findIndex((p) => p._id === currentPostId);
-    if (idx === -1) return null;
-
-    return {
-      seriesTitle: seriesData?.title ?? "",
-      totalPosts: posts.length,
-      currentIndex: idx + 1,
-      prev: idx > 0 ? { title: posts[idx - 1].title, slug: posts[idx - 1].slug.current } : null,
-      next: idx < posts.length - 1 ? { title: posts[idx + 1].title, slug: posts[idx + 1].slug.current } : null,
-    };
-  }, null);
+  return getSeriesNavigationCached(seriesId, currentPostId)();
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
@@ -440,23 +457,31 @@ export const getFeaturedCourses = unstable_cache(
   { revalidate: FIVE_MIN }
 );
 
-export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `*[_type == "course" && slug.current == $slug][0] {
-          _id, title, slug, description, coverImage, instructor, featured,
-          "lessonCount": count(lessons),
-          whatYoullLearn,
-          _updatedAt,
-          "lessons": lessons[]-> {
-            _id, title, slug, lessonNumber, scripture, duration, _updatedAt
-          }
-        }`,
-        { slug }
+const getCourseBySlugCached = (slug: string) =>
+  unstable_cache(
+    async () =>
+      safeFetch(
+        () =>
+          client.fetch(
+            `*[_type == "course" && slug.current == $slug][0] {
+              _id, title, slug, description, coverImage, instructor, featured,
+              "lessonCount": count(lessons),
+              whatYoullLearn,
+              _updatedAt,
+              "lessons": lessons[]-> {
+                _id, title, slug, lessonNumber, scripture, duration, _updatedAt
+              }
+            }`,
+            { slug }
+          ),
+        null
       ),
-    null
+    ["course", slug],
+    { revalidate: FIVE_MIN }
   );
+
+export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
+  return getCourseBySlugCached(slug)();
 }
 
 export async function getAllCourseSlugs(): Promise<{ slug: string; _updatedAt?: string }[]> {
@@ -465,6 +490,33 @@ export async function getAllCourseSlugs(): Promise<{ slug: string; _updatedAt?: 
     []
   );
 }
+
+export type CourseWithLessons = {
+  slug: string;
+  _updatedAt?: string;
+  lessons: { slug: string; _updatedAt?: string }[];
+};
+
+export const getAllCoursesWithLessons = unstable_cache(
+  async (): Promise<CourseWithLessons[]> => {
+    return safeFetch(
+      () =>
+        client.fetch(
+          `*[_type == "course"] {
+            "slug": slug.current,
+            _updatedAt,
+            "lessons": lessons[]-> {
+              "slug": slug.current,
+              _updatedAt
+            }
+          }`
+        ),
+      []
+    );
+  },
+  ["all-courses-with-lessons"],
+  { revalidate: FIVE_MIN }
+);
 
 export async function getLessonBySlug(
   courseSlug: string,

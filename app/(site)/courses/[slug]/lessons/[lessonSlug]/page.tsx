@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getLessonBySlug, getAllCourseSlugs, getCourseBySlug } from "@/lib/sanity/queries";
+import { getLessonBySlug, getAllCoursesWithLessons } from "@/lib/sanity/queries";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import PortableTextRenderer from "@/components/PortableTextRenderer";
 import LessonCompleteButton from "@/components/LessonCompleteButton";
@@ -19,17 +19,13 @@ function sanitizeHref(url: string): string {
 type Props = { params: Promise<{ slug: string; lessonSlug: string }> };
 
 export async function generateStaticParams() {
-  const courseSlugs = await getAllCourseSlugs();
-  const params: { slug: string; lessonSlug: string }[] = [];
-  for (const { slug } of courseSlugs) {
-    const course = await getCourseBySlug(slug);
-    if (course?.lessons) {
-      for (const lesson of course.lessons) {
-        params.push({ slug, lessonSlug: lesson.slug.current });
-      }
-    }
-  }
-  return params;
+  const courses = await getAllCoursesWithLessons();
+  return courses.flatMap((course) =>
+    (course.lessons ?? []).map((lesson) => ({
+      slug: course.slug,
+      lessonSlug: lesson.slug,
+    }))
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -67,7 +63,7 @@ export default async function LessonPage({ params }: Props) {
 
   return (
     <div className="bg-brown-deep min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 pt-10 pb-24">
+      <div className="max-w-4xl mx-auto px-4 pt-24 pb-24">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-cream/50 mb-8 flex-wrap">
           <Link href="/courses" className="hover:text-gold transition-colors">

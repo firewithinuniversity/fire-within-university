@@ -18,6 +18,7 @@ const config: Config = {
           light: "#6B3A1F",
           deep: "#1a0f05",
           card: "#4A2A12",
+          modal: "#2a1a0e",
           50: "#FDF6EC",
           100: "#F5E6CC",
           200: "#E8D1AB",

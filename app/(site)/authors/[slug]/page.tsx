@@ -57,7 +57,7 @@ export default async function AuthorPage({
     : null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14">
+    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
       {/* Breadcrumb */}
       <nav className="text-sm text-cream/50 mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <Link href="/about" className="hover:text-gold transition-colors">

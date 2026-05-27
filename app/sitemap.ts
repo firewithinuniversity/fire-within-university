@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPostSlugs, getAllCourseSlugs, getAllSeries, getAllAuthors, getCourseBySlug } from "@/lib/sanity/queries";
+import { getAllPostSlugs, getAllCourseSlugs, getAllSeries, getAllAuthors, getAllCoursesWithLessons } from "@/lib/sanity/queries";
 
 export const revalidate = 3600;
 
@@ -23,11 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  const [postSlugs, courseSlugs, allSeries, allAuthors] = await Promise.all([
+  const [postSlugs, courseSlugs, allSeries, allAuthors, coursesWithLessons] = await Promise.all([
     getAllPostSlugs(),
     getAllCourseSlugs(),
     getAllSeries(),
     getAllAuthors(),
+    getAllCoursesWithLessons(),
   ]);
 
   const postPages: MetadataRoute.Sitemap = postSlugs.map((post) => ({
@@ -46,21 +47,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Include individual lesson pages
-  const lessonPages: MetadataRoute.Sitemap = [];
-  for (const { slug } of courseSlugs) {
-    const course = await getCourseBySlug(slug);
-    if (course?.lessons) {
-      for (const lesson of course.lessons) {
-        lessonPages.push({
-          url: `${baseUrl}/courses/${slug}/lessons/${lesson.slug.current}`,
-          lastModified: lesson._updatedAt ? new Date(lesson._updatedAt) : now,
-          changeFrequency: "monthly" as const,
-          priority: 0.6,
-        });
-      }
-    }
-  }
+  // Include individual lesson pages (single query, no N+1)
+  const lessonPages: MetadataRoute.Sitemap = coursesWithLessons.flatMap((course) =>
+    (course.lessons ?? []).map((lesson) => ({
+      url: `${baseUrl}/courses/${course.slug}/lessons/${lesson.slug}`,
+      lastModified: lesson._updatedAt ? new Date(lesson._updatedAt) : now,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }))
+  );
 
   const seriesPages: MetadataRoute.Sitemap = allSeries.map((s) => ({
     url: `${baseUrl}/series/${s.slug.current}`,

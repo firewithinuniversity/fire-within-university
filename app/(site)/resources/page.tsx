@@ -27,7 +27,7 @@ export default async function ResourcesPage() {
   const products = await getAllAffiliateProducts();
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-20 pb-12">
+    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
       {/* Header */}
       <div className="text-center mb-10 space-y-4">
         <div className="flex justify-center" aria-hidden="true">

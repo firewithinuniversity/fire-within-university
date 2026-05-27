@@ -101,7 +101,7 @@ export default async function PostPage({
   return (
     <>
     <ReadingProgress />
-    <article className="max-w-3xl mx-auto px-4 py-14">
+    <article className="max-w-3xl mx-auto px-4 pt-24 pb-12">
       {/* Structured data */}
       <script
         type="application/ld+json"

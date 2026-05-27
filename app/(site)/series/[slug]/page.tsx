@@ -63,7 +63,7 @@ export default async function SeriesDetailPage({
     : null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14">
+    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
       {/* Structured data */}
       <script
         type="application/ld+json"
