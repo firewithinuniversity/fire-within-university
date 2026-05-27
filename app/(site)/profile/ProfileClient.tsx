@@ -142,7 +142,11 @@ export default function ProfileClient({
   }
 
   async function handleRemoveBookmark(slug: string, type: string) {
-    const prev = items;
+    // Capture the item being removed for potential rollback
+    const removedItem = items.find(
+      (b) => b.slug === slug && b.type === type
+    );
+    // Optimistic removal
     setItems((cur) => cur.filter((b) => !(b.slug === slug && b.type === type)));
 
     try {
@@ -152,14 +156,15 @@ export default function ProfileClient({
       );
 
       if (!res.ok) {
-        setItems(prev);
+        // Rollback: re-add the specific item using functional updater
+        if (removedItem) setItems((cur) => [...cur, removedItem]);
         toast.error("Failed to remove bookmark.");
         return;
       }
 
       toast.success("Bookmark removed");
     } catch {
-      setItems(prev);
+      if (removedItem) setItems((cur) => [...cur, removedItem]);
       toast.error("Something went wrong.");
     }
   }

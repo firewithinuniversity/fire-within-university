@@ -16,12 +16,10 @@ export default function TableOfContents({ headings }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Don't render if fewer than 3 headings
-  if (headings.length < 3) return null;
-
   // Track which heading is currently in view
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
+    if (headings.length < 3) return;
+
     const elements = headings
       .map((h) => document.getElementById(h.id))
       .filter(Boolean) as HTMLElement[];
@@ -48,6 +46,9 @@ export default function TableOfContents({ headings }: Props) {
 
     return () => observerRef.current?.disconnect();
   }, [headings]);
+
+  // Don't render if fewer than 3 headings
+  if (headings.length < 3) return null;
 
   const indentClass: Record<number, string> = {
     2: "",

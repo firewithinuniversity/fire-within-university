@@ -41,7 +41,7 @@ export async function GET() {
       <guid isPermaLink="true">${postUrl}</guid>
       <pubDate>${pubDate}</pubDate>
       <description>${escapeXml(post.excerpt ?? "")}</description>
-      <author>${escapeXml(post.author?.name ?? SITE_TITLE)}</author>
+      <author>noreply@firewithinuniversity.com (${escapeXml(post.author?.name ?? SITE_TITLE)})</author>
       ${category}
     </item>`;
     })

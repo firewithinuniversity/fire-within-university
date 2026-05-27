@@ -139,7 +139,9 @@ function SearchModalContent({ onClose }: { onClose: () => void }) {
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((i) => Math.min(i + 1, filteredResults.length - 1));
+      if (filteredResults.length > 0) {
+        setSelectedIndex((i) => Math.min(i + 1, filteredResults.length - 1));
+      }
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((i) => Math.max(i - 1, 0));
