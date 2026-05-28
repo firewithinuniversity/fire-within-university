@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Resend } from "resend";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
-import {
-  getMailchimpApiKey,
-  getMailchimpAudienceId,
-  getMailchimpServerPrefix,
-} from "@/lib/env";
-import crypto from "crypto";
+import { getResendApiKey } from "@/lib/env";
 
 const NewsletterSchema = z.object({
   email: z.string().email().max(254).toLowerCase().trim(),
@@ -51,64 +47,36 @@ export async function POST(request: Request) {
   const { email } = result.data;
 
   try {
-    const apiKey = getMailchimpApiKey();
-    const audienceId = getMailchimpAudienceId();
-    const server = getMailchimpServerPrefix();
+    const resend = new Resend(getResendApiKey());
 
-    const emailHash = crypto
-      .createHash("md5")
-      .update(email.toLowerCase())
-      .digest("hex");
+    const { error } = await resend.contacts.create({
+      email,
+      unsubscribed: false,
+    });
 
-    // PUT is idempotent — works for both new and re-subscribing members
-    const response = await fetch(
-      `https://${server}.api.mailchimp.com/3.0/lists/${audienceId}/members/${emailHash}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Basic ${Buffer.from(`anystring:${apiKey}`).toString("base64")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email_address: email,
-          status_if_new: "pending", // triggers double opt-in (GDPR)
-        }),
-        signal: AbortSignal.timeout(10_000), // 10s timeout to prevent hung requests
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      if (data.title === "Member In Compliance State") {
-        return NextResponse.json(
-          {
-            message:
-              "This email has been unsubscribed. Please contact us directly to re-subscribe.",
-          },
-          { status: 400 }
-        );
+    if (error) {
+      // Resend returns a specific error if the contact already exists
+      if (error.message?.includes("already exists")) {
+        return NextResponse.json({
+          message: "You're already subscribed — thanks for being here!",
+        });
       }
 
-      console.error("[Mailchimp Error]", data);
+      console.error("[Resend Contacts Error]", error.message);
       return NextResponse.json(
         { message: "Something went wrong. Please try again." },
         { status: 500 }
       );
     }
 
-    if (data.status === "subscribed") {
-      return NextResponse.json({
-        message: "You're already subscribed — thanks for being here!",
-      });
-    }
-
     return NextResponse.json({
-      message:
-        "Almost there! Check your inbox for a confirmation email to complete your signup.",
+      message: "You're subscribed! Welcome to the Fire Within community.",
     });
   } catch (error) {
-    console.error("[Newsletter Signup Error]", error);
+    console.error(
+      "[Newsletter Signup Error]",
+      error instanceof Error ? error.message : "Unknown error"
+    );
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }

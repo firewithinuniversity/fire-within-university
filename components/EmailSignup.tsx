@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type Props = { variant?: "hero" | "inline" };
@@ -10,7 +9,6 @@ export default function EmailSignup({ variant = "hero" }: Props) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,8 +27,8 @@ export default function EmailSignup({ variant = "hero" }: Props) {
       const data = await res.json();
       if (res.ok) {
         setEmail("");
-        toast.success("Check your inbox to confirm your subscription!");
-        router.push("/confirm-email");
+        toast.success(data.message ?? "You're subscribed!");
+        setStatus("idle");
       } else {
         setStatus("error");
         setMessage(data.message ?? "Something went wrong. Please try again.");

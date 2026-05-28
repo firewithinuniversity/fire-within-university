@@ -94,12 +94,12 @@ export async function proxy(request: NextRequest) {
 
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${unsafeEval} https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://static.mailchimp.com https://chimpstatic.com https://accounts.google.com`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${unsafeEval} https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://accounts.google.com`,
     `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com`,
     `font-src 'self' https://fonts.gstatic.com`,
     `img-src 'self' data: blob: https://cdn.sanity.io https://www.google-analytics.com https://i.ytimg.com https://lh3.googleusercontent.com`,
     `frame-src https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://accounts.google.com`,
-    `connect-src 'self' https://api.sanity.io https://*.sanity.io https://www.google-analytics.com https://analytics.google.com https://api.mailchimp.com https://*.mailchimp.com https://api.stripe.com https://bible-api.com https://accounts.google.com https://apis.google.com`,
+    `connect-src 'self' https://api.sanity.io https://*.sanity.io https://www.google-analytics.com https://analytics.google.com https://api.stripe.com https://bible-api.com https://accounts.google.com https://apis.google.com`,
     `media-src 'self' https://cdn.sanity.io`,
     `object-src 'none'`,
     `base-uri 'self'`,

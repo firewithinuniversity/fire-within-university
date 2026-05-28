@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
-const CONTACT_EMAIL = "firewithinuniversity@gmail.com";
-const LAST_UPDATED = "April 10, 2026";
+const CONTACT_EMAIL = "hello@firewithinuniversity.com";
+const LAST_UPDATED = "May 28, 2026";
 const SITE_URL = "firewithinuniversity.com";
 
 export default function TermsPage() {

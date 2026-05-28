@@ -2,7 +2,7 @@
  * app/(site)/privacy-policy/page.tsx — Privacy Policy
  *
  * Covers GDPR, CCPA, COPPA, CAN-SPAM, Google Analytics ToS,
- * Mailchimp ToS, and Stripe requirements.
+ * Resend ToS, and Stripe requirements.
  */
 import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/metadata";
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
-const CONTACT_EMAIL = "firewithinuniversity@gmail.com";
-const LAST_UPDATED = "May 21, 2026";
+const CONTACT_EMAIL = "hello@firewithinuniversity.com";
+const LAST_UPDATED = "May 28, 2026";
 const SITE_URL = "firewithinuniversity.com";
 
 export default function PrivacyPolicyPage() {
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
           <ul className="list-disc list-inside space-y-2 text-sm text-cream/70">
             <li>
               <strong>Newsletter signup:</strong> Your email address, collected when you subscribe.
-              Stored by Mailchimp on our behalf.
+              Stored by Resend on our behalf.
             </li>
             <li>
               <strong>Contact form:</strong> Your name, email address, and message. Stored securely
@@ -145,18 +145,13 @@ export default function PrivacyPolicyPage() {
           <ul className="space-y-3 text-sm">
             {[
               {
-                name: "Mailchimp (Intuit)",
-                purpose: "Email newsletter delivery and list management",
-                url: "https://mailchimp.com/legal/privacy/",
-              },
-              {
                 name: "Stripe",
                 purpose: "Secure donation payment processing",
                 url: "https://stripe.com/privacy",
               },
               {
                 name: "Resend",
-                purpose: "Transactional emails (contact form delivery)",
+                purpose: "Email delivery — newsletter, contact form, and transactional emails",
                 url: "https://resend.com/legal/privacy-policy",
               },
               {

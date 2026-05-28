@@ -49,19 +49,6 @@ export function getStripeWebhookSecret(): string {
   return requireServerEnv("STRIPE_WEBHOOK_SECRET");
 }
 
-// --- Mailchimp ---
-export function getMailchimpApiKey(): string {
-  return requireServerEnv("MAILCHIMP_API_KEY");
-}
-
-export function getMailchimpAudienceId(): string {
-  return requireServerEnv("MAILCHIMP_AUDIENCE_ID");
-}
-
-export function getMailchimpServerPrefix(): string {
-  return requireServerEnv("MAILCHIMP_SERVER_PREFIX");
-}
-
 // --- NextAuth ---
 export function getNextAuthSecret(): string {
   const secret = requireServerEnv("NEXTAUTH_SECRET");
