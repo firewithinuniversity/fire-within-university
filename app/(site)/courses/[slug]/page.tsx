@@ -76,18 +76,19 @@ export default async function CourseDetailPage({ params }: Props) {
         }}
       />
 
-      {/* Breadcrumb */}
-      <nav className="max-w-4xl mx-auto px-4 pt-8 text-sm text-cream/50 flex items-center gap-2" aria-label="Breadcrumb">
-        <Link href="/courses" className="hover:text-gold transition-colors">
-          Courses
-        </Link>
-        <span aria-hidden="true">/</span>
-        <span className="text-cream/60">{course.title}</span>
-      </nav>
-
       {/* Hero */}
-      <section className="relative pt-6 pb-12 px-4">
+      <section className="relative pt-24 pb-12 px-4">
         <div className="max-w-4xl mx-auto">
+
+          {/* Breadcrumb */}
+          <nav className="text-sm text-cream/50 flex items-center justify-center gap-2 mb-6" aria-label="Breadcrumb">
+            <Link href="/courses" className="hover:text-gold transition-colors">
+              Courses
+            </Link>
+            <span aria-hidden="true">/</span>
+            <span className="text-cream/60">{course.title}</span>
+          </nav>
+
           {course.coverImage && (
             <div className="relative aspect-video sm:aspect-[21/9] rounded-2xl overflow-hidden mb-8">
               <Image
@@ -102,35 +103,37 @@ export default async function CourseDetailPage({ params }: Props) {
             </div>
           )}
 
-          <div className="flex items-start justify-between gap-4">
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-4">
-              {course.title}
-            </h1>
-            <BookmarkButton slug={slug} type="course" className="mt-2 flex-shrink-0" />
-          </div>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-cream">
+                {course.title}
+              </h1>
+              <BookmarkButton slug={slug} type="course" className="flex-shrink-0" />
+            </div>
 
-          {course.instructor && (
-            <p className="text-cream/60 text-sm mb-2">
-              Taught by <span className="text-gold">{course.instructor}</span>
+            {course.instructor && (
+              <p className="text-cream/60 text-sm mb-4">
+                Taught by <span className="text-gold">{course.instructor}</span>
+              </p>
+            )}
+
+            {course.description && (
+              <p className="text-cream/70 text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+                {course.description}
+              </p>
+            )}
+
+            <p className="text-sm text-cream/50 mb-6">
+              {course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}
             </p>
-          )}
 
-          {course.description && (
-            <p className="text-cream/70 text-lg leading-relaxed max-w-2xl mb-8">
-              {course.description}
-            </p>
-          )}
-
-          <div className="flex items-center gap-4 text-sm text-cream/50">
-            <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
-          </div>
-
-          {/* Progress bar — only visible to signed-in users */}
-          <div className="mt-6 max-w-sm">
-            <CourseProgressBar
-              courseSlug={slug}
-              totalLessons={course.lessons?.length ?? 0}
-            />
+            {/* Progress bar — only visible to signed-in users */}
+            <div className="max-w-sm mx-auto">
+              <CourseProgressBar
+                courseSlug={slug}
+                totalLessons={course.lessons?.length ?? 0}
+              />
+            </div>
           </div>
         </div>
       </section>

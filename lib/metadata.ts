@@ -20,7 +20,13 @@ export function organizationJsonLd() {
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
-    sameAs: [] as string[], // Add social URLs when ready
+    sameAs: [
+      "https://www.youtube.com/@FireWithinUnv",
+      "https://www.instagram.com/firewithinunv/",
+      "https://www.tiktok.com/@firewithinunv",
+      "https://x.com/TheFireWithinUn",
+      "https://open.spotify.com/user/315dlj4ma4gvra6jhbsjjkmjrp7y",
+    ],
   };
 }
 
