@@ -91,7 +91,7 @@ function ModalContent({ onClose }: { onClose: () => void }) {
       // Restore focus to the element that was focused before the modal opened
       previousFocusRef.current?.focus();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   function resetForm() {
     setName("");

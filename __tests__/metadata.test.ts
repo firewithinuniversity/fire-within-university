@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock env before importing the module
 vi.stubEnv("NEXT_PUBLIC_BASE_URL", "https://test.example.com");

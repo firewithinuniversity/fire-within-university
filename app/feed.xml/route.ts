@@ -23,7 +23,6 @@ export async function GET() {
   const { posts } = await getFilteredPosts({ page: 1, limit: 50 });
 
   const feedUrl = canonicalUrl("/feed.xml");
-  const siteUrl = canonicalUrl();
   const blogUrl = canonicalUrl("/blog");
 
   const items = posts
