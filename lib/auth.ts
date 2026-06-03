@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logAuditEvent } from "@/lib/auditLog";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getNextAuthSecret, getGoogleClientId, getGoogleClientSecret, getAdminEmail1, getAdminEmail2 } from "@/lib/env";
 
 export const UserRole = {
@@ -23,6 +24,12 @@ function isAdminEmail(email: string): boolean {
 }
 
 const ADMIN_SESSION_MAX_SECONDS = 4 * 60 * 60; // 4 hours
+
+// Pre-computed bcrypt hash used to keep failed-login timing constant, so an
+// attacker cannot distinguish "no such user" (fast) from "wrong password"
+// (slow bcrypt). The plaintext is irrelevant — it will never match.
+const DUMMY_PASSWORD_HASH =
+  "$2b$12$LCKFyiViMNZe6hhXCfiho.QAXT956Ygz1cQhTVe2XAl1NfpI0QOae";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -44,32 +51,51 @@ export const authOptions: NextAuthOptions = {
 
         const email = credentials.email.toLowerCase().trim();
 
-        const user = await prisma.user.findUnique({
-          where: { email },
+        // Per-account brute-force protection that survives IP rotation and
+        // serverless cold starts (audit H2): max 10 attempts / 15 min per email.
+        const allowed = await checkRateLimitDb(`login:${email}`, {
+          maxRequests: 10,
+          windowMs: 15 * 60 * 1000,
         });
-
-        if (!user || !user.password) {
+        if (!allowed) {
           if (isAdminEmail(email)) {
             logAuditEvent({
-              event: "ADMIN_LOGIN_FAILURE",
+              event: "LOGIN_RATE_LIMITED",
               email,
-              metadata: { reason: "user_not_found" },
+              metadata: { reason: "too_many_attempts" },
             });
           }
           return null;
         }
 
-        const valid = await bcrypt.compare(credentials.password, user.password);
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
 
-        if (!valid) {
+        // Always run a bcrypt comparison (against a dummy hash when the user or
+        // password is absent) so login response time is constant and cannot be
+        // used to enumerate which emails have accounts.
+        const hashToCompare = user?.password ?? DUMMY_PASSWORD_HASH;
+        const passwordMatches = await bcrypt.compare(
+          credentials.password,
+          hashToCompare
+        );
+
+        if (!user || !user.password || !passwordMatches) {
           if (isAdminEmail(email)) {
             logAuditEvent({
               event: "ADMIN_LOGIN_FAILURE",
               email,
-              userId: user.id,
-              metadata: { reason: "invalid_password" },
+              userId: user?.id,
+              metadata: { reason: !user || !user.password ? "user_not_found" : "invalid_password" },
             });
           }
+          return null;
+        }
+
+        // Require a verified email for credentials login (admins are exempt —
+        // they're provisioned out-of-band and trusted).
+        if (!user.emailVerified && !isAdminEmail(email)) {
           return null;
         }
 
@@ -112,6 +138,10 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user, account }) {
+      // `user`/`account` are only present at sign-in. Treat that as the moment
+      // of authentication and stamp an immutable admin-login timestamp.
+      const isSignIn = Boolean(user || account);
+
       if (user) {
         token.id = user.id;
         token.role = (user as { role?: UserRole }).role ?? UserRole.USER;
@@ -134,9 +164,17 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      if (token.role === UserRole.ADMIN && typeof token.iat === "number") {
-        const elapsed = Math.floor(Date.now() / 1000) - token.iat;
-        if (elapsed > ADMIN_SESSION_MAX_SECONDS) {
+      if (isSignIn && token.role === UserRole.ADMIN) {
+        token.adminSince = Math.floor(Date.now() / 1000);
+      }
+
+      // Downgrade admin privileges after the max admin session age. Uses an
+      // immutable login timestamp (NextAuth re-stamps `iat` on every request,
+      // so `iat` would never expire — see audit H1).
+      if (token.role === UserRole.ADMIN) {
+        const adminSince = typeof token.adminSince === "number" ? token.adminSince : 0;
+        const elapsed = Math.floor(Date.now() / 1000) - adminSince;
+        if (!adminSince || elapsed > ADMIN_SESSION_MAX_SECONDS) {
           token.role = UserRole.USER;
         }
       }

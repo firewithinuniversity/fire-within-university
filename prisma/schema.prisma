@@ -116,6 +116,14 @@ model AuditLog {
   @@index([createdAt])
 }
 
+model RateLimit {
+  key       String   @id
+  count     Int      @default(0)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
 model Bookmark {
   id        String   @id @default(cuid())
   userId    String

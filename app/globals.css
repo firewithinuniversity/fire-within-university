@@ -10,8 +10,10 @@
 }
 
 body {
-  background-color: #fdf6ec;
-  color: #3d1f0a;
+  /* Match the dark theme (Tailwind bg-brown-deep/text-cream on <body>) so there
+     is no cream flash before Tailwind styles apply on slow connections. */
+  background-color: #1a0f05;
+  color: #fdf6ec;
   font-family: var(--font-sans);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;

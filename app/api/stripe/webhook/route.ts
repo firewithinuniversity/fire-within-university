@@ -141,17 +141,54 @@ export async function POST(request: Request) {
 
       case "customer.subscription.deleted": {
         const sub = event.data.object as Stripe.Subscription;
-        console.log(
-          `[Stripe Webhook] Subscription cancelled: ${sub.id}`
-        );
+        console.log(`[Stripe Webhook] Subscription cancelled: ${sub.id}`);
+        try {
+          const resend = new Resend(getResendApiKey());
+          await resend.emails.send({
+            from: `Fire Within University <${getContactFormEmail()}>`,
+            to: getContactFormEmail(),
+            subject: `Monthly donation cancelled`,
+            html: `
+              <div style="font-family: system-ui, sans-serif; padding: 16px;">
+                <h2 style="color: #1a1a1a;">A Recurring Donation Was Cancelled</h2>
+                <p style="font-size: 14px; color: #444;">A monthly supporter's subscription has ended. Consider a follow-up.</p>
+                <p style="font-size: 12px; color: #888;">Subscription ID: ${sub.id}<br/>Customer ID: ${String(sub.customer)}</p>
+              </div>
+            `,
+          });
+        } catch (notifyErr) {
+          console.error(
+            "[Stripe Webhook] Failed to send cancellation notice:",
+            notifyErr instanceof Error ? notifyErr.message : "Unknown error"
+          );
+        }
         break;
       }
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        console.log(
-          `[Stripe Webhook] Payment failed for invoice ${invoice.id}`
-        );
+        console.log(`[Stripe Webhook] Payment failed for invoice ${invoice.id}`);
+        try {
+          const amountDue = ((invoice.amount_due ?? 0) / 100).toFixed(2);
+          const resend = new Resend(getResendApiKey());
+          await resend.emails.send({
+            from: `Fire Within University <${getContactFormEmail()}>`,
+            to: getContactFormEmail(),
+            subject: `Recurring donation payment failed`,
+            html: `
+              <div style="font-family: system-ui, sans-serif; padding: 16px;">
+                <h2 style="color: #1a1a1a;">A Recurring Payment Failed</h2>
+                <p style="font-size: 14px; color: #444;">A monthly donor's payment did not go through (often an expired card).</p>
+                <p style="font-size: 12px; color: #888;">Invoice ID: ${invoice.id}<br/>Amount due: $${amountDue}<br/>Donor email: ${invoice.customer_email ?? "Not provided"}</p>
+              </div>
+            `,
+          });
+        } catch (notifyErr) {
+          console.error(
+            "[Stripe Webhook] Failed to send payment-failed notice:",
+            notifyErr instanceof Error ? notifyErr.message : "Unknown error"
+          );
+        }
         break;
       }
 

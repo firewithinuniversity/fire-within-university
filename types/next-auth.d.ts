@@ -21,5 +21,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     role?: "USER" | "ADMIN";
     id?: string;
+    /** Unix seconds when the admin session was established (immutable login time). */
+    adminSince?: number;
   }
 }

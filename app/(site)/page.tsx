@@ -102,7 +102,7 @@ export default async function HomePage() {
           className="md:hidden object-cover"
           priority
           sizes="100vw"
-          quality={85}
+          quality={60}
         />
         {/* Cinematic multi-layer gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-brown-deep/95 via-brown-deep/70 to-brown-deep/20" />
@@ -189,7 +189,7 @@ export default async function HomePage() {
                     youtubeUrl={video.youtubeUrl}
                     thumbnailUrl={
                       video.thumbnail
-                        ? imageUrlFor(video.thumbnail).width(640).height(360).url()
+                        ? imageUrlFor(video.thumbnail).width(640).height(360).auto("format").quality(75).url()
                         : undefined
                     }
                     category={video.category}
@@ -230,7 +230,7 @@ export default async function HomePage() {
                   <div className="relative aspect-[16/10] bg-brown overflow-hidden">
                     {course.coverImage ? (
                       <Image
-                        src={imageUrlFor(course.coverImage).width(400).height(250).url()}
+                        src={imageUrlFor(course.coverImage).width(400).height(250).auto("format").quality(75).url()}
                         alt={course.title}
                         fill
                         className="object-cover transition-transform duration-400 group-hover:scale-[1.04]"

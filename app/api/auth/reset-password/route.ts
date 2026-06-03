@@ -3,7 +3,8 @@ import { z } from "zod";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getIpFromRequest } from "@/lib/rateLimit";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { isPasswordValid } from "@/lib/passwordValidation";
 
 const ResetPasswordSchema = z.object({
@@ -15,7 +16,7 @@ const ResetPasswordSchema = z.object({
 export async function POST(request: Request) {
   // Rate limit: 5 attempts per 15 minutes per IP
   const ip = getIpFromRequest(request);
-  if (!checkRateLimit(ip, { maxRequests: 5, windowMs: 15 * 60 * 1000 })) {
+  if (!(await checkRateLimitDb(ip, { maxRequests: 5, windowMs: 15 * 60 * 1000 }))) {
     return NextResponse.json(
       { message: "Too many attempts. Please try again later." },
       { status: 429 }

@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
-import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getIpFromRequest } from "@/lib/rateLimit";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getContactFormEmail, getResendApiKey } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 
 const ContactSchema = z.object({
   name: z.string().min(1).max(100).trim(),
-  email: z.string().email().max(254),
+  email: z.string().email().max(254).toLowerCase().trim(),
   subject: z.enum(["general", "prayer", "other"]),
   message: z.string().min(10).max(2000).trim(),
   website: z.string().max(0, "Bot detected"), // honeypot — must be empty
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
   }
 
   const ip = getIpFromRequest(request);
-  const allowed = checkRateLimit(ip, {
+  const allowed = await checkRateLimitDb(ip, {
     maxRequests: 3,
     windowMs: 60 * 60 * 1000, // 3 per hour
   });
@@ -101,7 +102,7 @@ export async function POST(request: Request) {
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #3D1F0A;">${subjectLabels[subject]}</h2>
           <p><strong>Name:</strong> ${safeName}</p>
-          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Email:</strong> ${escapeHtml(email)}</p>
           <p><strong>Type:</strong> ${subjectLabels[subject]}</p>
           <hr style="border-color: #C45E1A; margin: 16px 0;" />
           <p><strong>Message:</strong></p>

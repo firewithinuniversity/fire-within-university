@@ -8,9 +8,11 @@ type Props = { post: PostSummary; readingTimeMinutes?: number };
 export default function PostCard({ post, readingTimeMinutes }: Props) {
   const { title, slug, excerpt, publishedAt, author, category, mainImage } = post;
 
-  const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
-    year: "numeric", month: "long", day: "numeric",
-  });
+  const formattedDate = publishedAt
+    ? new Date(publishedAt).toLocaleDateString("en-US", {
+        year: "numeric", month: "long", day: "numeric",
+      })
+    : null;
 
   const imageUrl = mainImage
     ? imageUrlFor(mainImage).width(600).height(340).fit("crop").auto("format").url()
@@ -71,9 +73,9 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
           <div className="text-xs text-cream/60 leading-snug">
             <span className="block font-semibold text-cream/80">{author.name}</span>
             <span className="text-cream/60">
-              <time dateTime={publishedAt}>{formattedDate}</time>
+              {formattedDate && <time dateTime={publishedAt}>{formattedDate}</time>}
               {readingTimeMinutes && (
-                <> &middot; {readingTimeMinutes} min read</>
+                <>{formattedDate && " "}&middot; {readingTimeMinutes} min read</>
               )}
             </span>
           </div>

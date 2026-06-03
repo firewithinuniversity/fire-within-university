@@ -36,7 +36,7 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent notice"
-      className="fixed bottom-0 left-0 right-0 z-50 bg-brown/95 backdrop-blur-md text-cream shadow-xl border-t border-gold/20 px-4 py-4 md:py-3"
+      className="fixed bottom-0 left-0 right-0 z-50 bg-brown/95 text-cream shadow-xl border-t border-gold/20 px-4 py-4 md:py-3"
     >
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center gap-4 justify-between">
         <p className="text-sm text-cream/80 max-w-2xl">

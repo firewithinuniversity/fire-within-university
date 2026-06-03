@@ -16,8 +16,10 @@ export async function GET(request: Request) {
   const where = search
     ? {
         OR: [
-          { name: { contains: search } },
-          { email: { contains: search } },
+          // case-insensitive: Postgres `contains` is case-sensitive by default
+          // (unlike the old SQLite LIKE) — audit H8
+          { name: { contains: search, mode: "insensitive" as const } },
+          { email: { contains: search, mode: "insensitive" as const } },
         ],
       }
     : {};

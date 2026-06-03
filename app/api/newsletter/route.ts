@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
-import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getIpFromRequest } from "@/lib/rateLimit";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getResendApiKey } from "@/lib/env";
 
 const NewsletterSchema = z.object({
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
   }
 
   const ip = getIpFromRequest(request);
-  const allowed = checkRateLimit(ip, {
+  const allowed = await checkRateLimitDb(ip, {
     maxRequests: 5,
     windowMs: 60 * 60 * 1000, // 5 per hour
   });

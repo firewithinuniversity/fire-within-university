@@ -2,6 +2,21 @@ import { NextResponse } from "next/server";
 import type { NextRequest, ProxyConfig } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { getNextAuthSecret } from "@/lib/env";
+
+// Genuine NextAuth handler paths (the [...nextauth] route). These carry their
+// own CSRF-token protection, so they're exempt from the Origin check. Custom
+// routes under /api/auth/* (register, reset-password, delete-account, etc.) are
+// intentionally NOT in this list — they must pass the Origin check (audit H3).
+const NEXTAUTH_HANDLER_PREFIXES = [
+  "/api/auth/callback",
+  "/api/auth/signin",
+  "/api/auth/signout",
+  "/api/auth/session",
+  "/api/auth/csrf",
+  "/api/auth/providers",
+  "/api/auth/_log",
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -36,7 +51,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api/admin/")
   ) {
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+    const token = await getToken({ req: request, secret: getNextAuthSecret() });
 
     if (token?.role !== "ADMIN") {
       if (pathname.startsWith("/api/admin/")) {
@@ -67,7 +82,7 @@ export async function proxy(request: NextRequest) {
       origin?.startsWith("http://127.0.0.1:");
 
     const isStripeWebhook = pathname === "/api/stripe/webhook";
-    const isNextAuth = pathname.startsWith("/api/auth/");
+    const isNextAuth = NEXTAUTH_HANDLER_PREFIXES.some((p) => pathname.startsWith(p));
 
     if (!isStripeWebhook && !isNextAuth) {
       if (!origin) {

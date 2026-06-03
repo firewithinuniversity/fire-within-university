@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getIpFromRequest } from "@/lib/rateLimit";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { adminEmails } from "@/lib/auth";
 import { isPasswordValid, getPasswordErrors } from "@/lib/passwordValidation";
 import { logAuditEvent } from "@/lib/auditLog";
@@ -11,7 +13,7 @@ const MAX_BODY_SIZE = 2 * 1024; // 2 KB
 
 export async function POST(request: Request) {
   const ip = getIpFromRequest(request);
-  if (!checkRateLimit(ip, { maxRequests: 5, windowMs: 60 * 60 * 1000 })) {
+  if (!(await checkRateLimitDb(ip, { maxRequests: 5, windowMs: 60 * 60 * 1000 }))) {
     return NextResponse.json({ message: "Too many requests. Try again later." }, { status: 429 });
   }
 
@@ -86,6 +88,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "Account created successfully. Please check your email to verify your address." }, { status: 201 });
   } catch (err) {
+    // Unique-constraint violation = a concurrent request already created this
+    // account (check-then-create race). Treat it as "already exists", not 500.
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+      return NextResponse.json({ message: "An account with this email already exists." }, { status: 409 });
+    }
     console.error("[Register] Database error:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json({ message: "Something went wrong. Please try again." }, { status: 500 });
   }

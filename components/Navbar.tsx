@@ -97,7 +97,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 text-cream will-change-[background-color,border-color] transition-colors duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 text-cream transition-colors duration-300 ${
         scrolled
           ? "bg-brown-deep/95 border-b border-cream/[0.06] shadow-[0_4px_24px_rgba(26,15,5,0.6)]"
           : "bg-transparent border-b border-transparent"

@@ -34,10 +34,6 @@ export const SANITY_DATASET = requirePublicEnv(
 );
 
 // --- Sanity (server-only — lazy so static builds don't throw) ---
-export function getSanityReadToken(): string {
-  return requireServerEnv("SANITY_API_READ_TOKEN");
-}
-
 export function getSanityWriteToken(): string {
   return requireServerEnv("SANITY_API_WRITE_TOKEN");
 }
@@ -61,11 +57,6 @@ export function getNextAuthSecret(): string {
     );
   }
   return secret;
-}
-
-// --- Stripe (public) ---
-export function getStripePublishableKey(): string {
-  return requirePublicEnv("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY");
 }
 
 // --- Google OAuth ---

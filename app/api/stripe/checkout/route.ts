@@ -8,6 +8,7 @@ import {
   CUSTOM_AMOUNT_MAX_CENTS,
 } from "@/lib/stripe";
 import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getBaseUrl } from "@/lib/constants";
 
 const CheckoutSchema = z.object({
   amountCents: z.number().int().positive(),
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
 
   try {
     const stripe = getStripe();
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+    const baseUrl = getBaseUrl();
 
     let session;
 

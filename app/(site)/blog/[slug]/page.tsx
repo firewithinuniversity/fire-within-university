@@ -90,11 +90,13 @@ export default async function PostPage({
   const readTime = body ? readingTimeLabel(body as unknown[]) : null;
   const headings = body ? extractHeadings(body as unknown[]) : [];
 
-  const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formattedDate = publishedAt
+    ? new Date(publishedAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
 
   const heroImageUrl = mainImage
     ? imageUrlFor(mainImage).width(1200).height(500).fit("crop").auto("format").url()
@@ -189,8 +191,8 @@ export default async function PostPage({
               <span className="text-cream/50"> · {author.role}</span>
             )}
             <br />
-            <time dateTime={publishedAt}>{formattedDate}</time>
-            {readTime && <span className="text-cream/50"> · {readTime}</span>}
+            {formattedDate && <time dateTime={publishedAt}>{formattedDate}</time>}
+            {readTime && <span className="text-cream/50">{formattedDate ? " · " : ""}{readTime}</span>}
           </div>
         </div>
       </header>

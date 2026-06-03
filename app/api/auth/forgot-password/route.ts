@@ -3,11 +3,12 @@ import { z } from "zod";
 import crypto from "crypto";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
-import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getIpFromRequest } from "@/lib/rateLimit";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getResendApiKey } from "@/lib/env";
+import { getBaseUrl } from "@/lib/constants";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.firewithinuniversity.com";
+const BASE_URL = getBaseUrl();
 
 const TOKEN_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
 
@@ -22,7 +23,7 @@ const SUCCESS_MSG =
 export async function POST(request: Request) {
   // Rate limit: 3 requests per hour per IP
   const ip = getIpFromRequest(request);
-  if (!checkRateLimit(ip, { maxRequests: 3, windowMs: 60 * 60 * 1000 })) {
+  if (!(await checkRateLimitDb(ip, { maxRequests: 3, windowMs: 60 * 60 * 1000 }))) {
     return NextResponse.json(
       { message: "Too many requests. Please try again later." },
       { status: 429 }

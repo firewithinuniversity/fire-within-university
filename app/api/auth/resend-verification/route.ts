@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { checkRateLimit, getIpFromRequest } from "@/lib/rateLimit";
+import { getIpFromRequest } from "@/lib/rateLimit";
+import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { sendVerificationEmail } from "@/lib/emailVerification";
 
 export async function POST(request: Request) {
   const ip = getIpFromRequest(request);
-  if (!checkRateLimit(ip, { maxRequests: 3, windowMs: 15 * 60 * 1000 })) {
+  if (!(await checkRateLimitDb(ip, { maxRequests: 3, windowMs: 15 * 60 * 1000 }))) {
     return NextResponse.json(
       { message: "Too many requests. Please try again later." },
       { status: 429 }

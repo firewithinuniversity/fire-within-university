@@ -64,14 +64,3 @@ export function trackSignIn(method: string) {
 export function trackContactSubmit() {
   trackEvent("contact_form_submit");
 }
-
-export function trackCourseView(courseSlug: string) {
-  trackEvent("course_view", { course_slug: courseSlug });
-}
-
-export function trackLessonView(courseSlug: string, lessonSlug: string) {
-  trackEvent("lesson_view", {
-    course_slug: courseSlug,
-    lesson_slug: lessonSlug,
-  });
-}
