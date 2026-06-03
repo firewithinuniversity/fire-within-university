@@ -20,8 +20,11 @@ export const metadata: Metadata = {
 };
 
 const CONTACT_EMAIL = "hello@firewithinuniversity.com";
-const LAST_UPDATED = "May 28, 2026";
+const LAST_UPDATED = "June 3, 2026";
 const SITE_URL = "firewithinuniversity.com";
+// TODO: replace with a real postal address (a P.O. box is fine) — required in
+// marketing emails under CAN-SPAM and referenced in the Contact Us section.
+const MAILING_ADDRESS = "[Mailing address — to be added]";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -74,6 +77,16 @@ export default function PrivacyPolicyPage() {
           <h3 className="font-semibold text-cream/90 mb-2 mt-4">Information You Give Us</h3>
           <ul className="list-disc list-inside space-y-2 text-sm text-cream/70">
             <li>
+              <strong>Account information:</strong> If you create an account, we store your name
+              (optional), email address, and a securely hashed version of your password. We never
+              store your password in plain text. If you sign in with Google, we receive your name,
+              email, and profile image from Google instead of a password.
+            </li>
+            <li>
+              <strong>Learning activity:</strong> If you are signed in, we record which course
+              lessons you mark complete and any content you bookmark, so we can show your progress.
+            </li>
+            <li>
               <strong>Newsletter signup:</strong> Your email address, collected when you subscribe.
               Stored by Resend on our behalf.
             </li>
@@ -94,8 +107,15 @@ export default function PrivacyPolicyPage() {
             <li>
               <strong>Analytics:</strong> We use Google Analytics 4 to understand how visitors use
               our site (pages visited, time on site, general location by country, device type).
-              This data is anonymous and aggregated. <em>Google Analytics only activates after
+              We do not use it to identify you personally. <em>Google Analytics only activates after
               you accept cookies via our consent banner.</em>
+            </li>
+            <li>
+              <strong>Security &amp; audit logs:</strong> For fraud and abuse prevention, we record
+              security-relevant events (such as failed sign-in attempts) along with the IP address,
+              browser/user-agent, email (where relevant), and a timestamp. These logs are kept for
+              up to 12 months and may be retained after account deletion where needed for security
+              or legal reasons.
             </li>
             <li>
               <strong>Server logs:</strong> Like all websites, our hosting provider (Vercel) may
@@ -114,9 +134,10 @@ export default function PrivacyPolicyPage() {
             retargeting pixels, or social media tracking cookies.
           </p>
           <p className="mt-3">
-            You can withdraw cookie consent at any time by clearing your browser&apos;s cookies
-            or clicking &ldquo;Decline&rdquo; in our cookie banner. The site functions fully
-            without analytics cookies.
+            You can decline analytics at any time by clicking &ldquo;Decline&rdquo; in our cookie
+            banner. Your choice is saved in your browser&apos;s local storage, so to reset it you
+            can clear this site&apos;s browsing/site data. The site functions fully without
+            analytics cookies.
           </p>
         </section>
 
@@ -163,6 +184,11 @@ export default function PrivacyPolicyPage() {
                 name: "Sanity",
                 purpose: "Content management — stores our published sermons and articles",
                 url: "https://www.sanity.io/legal/privacy",
+              },
+              {
+                name: "Neon",
+                purpose: "Database hosting — stores accounts, learning activity, contact messages, and security logs",
+                url: "https://neon.tech/privacy-policy",
               },
               {
                 name: "Vercel",
@@ -239,17 +265,25 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="font-serif text-xl font-bold text-cream mb-3">9. Data Retention</h2>
           <ul className="list-disc list-inside space-y-2 text-sm text-cream/70">
+            <li>Account data, learning activity, and bookmarks: retained until you delete your account.</li>
             <li>Newsletter subscribers: retained until you unsubscribe.</li>
             <li>Contact form messages: stored in our database and email inbox until deleted upon your request.</li>
             <li>Donation records: retained as required by financial record-keeping practices.</li>
+            <li>Security &amp; audit logs: up to 12 months.</li>
             <li>Analytics data: retained per Google Analytics default settings (up to 14 months).</li>
           </ul>
           <p className="mt-3 text-sm">
-            We will delete your data upon a verifiable written request to{" "}
+            <strong className="text-cream/90">Account deletion.</strong> When you delete your
+            account from your profile, we immediately remove your account, learning activity, saved
+            bookmarks, and sign-in sessions. For security, legal, and financial-record reasons,
+            some information is <em>not</em> automatically removed by account deletion — including
+            past contact-form messages, donation records, and security/audit logs. To request
+            deletion of that information as well, email us at{" "}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-gold underline">
               {CONTACT_EMAIL}
             </a>
-            .
+            , and we will delete it where we are not legally required to keep it. Unsubscribing from
+            the newsletter is separate from deleting your account.
           </p>
         </section>
 
@@ -272,6 +306,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <div className="mt-3 bg-brown-card/70 border border-white/[0.06] rounded-xl px-5 py-4 text-sm">
             <p className="font-semibold text-cream">Fire Within University</p>
+            <p>{MAILING_ADDRESS}</p>
             <p>
               Email:{" "}
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-gold underline">

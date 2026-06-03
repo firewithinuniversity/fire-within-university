@@ -52,14 +52,22 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Prisma cascade deletes will remove:
-    // - Account (OAuth links)
-    // - Session (active sessions)
-    // - LessonProgress (course progress)
-    // - Bookmark (saved items)
-    await prisma.user.delete({
-      where: { id: session.user.id },
-    });
+    const email = session.user.email ?? undefined;
+
+    // Prisma cascade deletes (via onDelete: Cascade) remove:
+    // - Account (OAuth links), Session, LessonProgress, Bookmark
+    // We also clear email-keyed auth tokens that aren't linked by a foreign key.
+    // (Contact submissions, donation records, and audit logs are intentionally
+    // retained — see the Privacy Policy retention section.)
+    await prisma.$transaction([
+      prisma.user.delete({ where: { id: session.user.id } }),
+      ...(email
+        ? [
+            prisma.passwordResetToken.deleteMany({ where: { email } }),
+            prisma.verificationToken.deleteMany({ where: { identifier: email } }),
+          ]
+        : []),
+    ]);
 
     return NextResponse.json({
       message: "Your account has been deleted.",
