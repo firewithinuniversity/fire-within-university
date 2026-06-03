@@ -23,8 +23,6 @@ function isAdminEmail(email: string): boolean {
   return adminEmails.includes(email.toLowerCase());
 }
 
-const ADMIN_SESSION_MAX_SECONDS = 4 * 60 * 60; // 4 hours
-
 // Pre-computed bcrypt hash used to keep failed-login timing constant, so an
 // attacker cannot distinguish "no such user" (fast) from "wrong password"
 // (slow bcrypt). The plaintext is irrelevant — it will never match.
@@ -164,19 +162,19 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      if (isSignIn && token.role === UserRole.ADMIN) {
-        token.adminSince = Math.floor(Date.now() / 1000);
+      // Admin status is determined by the server-side email allowlist and
+      // re-derived on EVERY request from the signed token. This keeps
+      // allowlisted admins reliably admin (and reflects allowlist changes)
+      // without logging them out on deploys. The signed JWT + allowlist is the
+      // security boundary; a non-allowlisted email can never be ADMIN.
+      if (token.email) {
+        token.role = isAdminEmail(token.email)
+          ? UserRole.ADMIN
+          : (token.role as UserRole) ?? UserRole.USER;
       }
 
-      // Downgrade admin privileges after the max admin session age. Uses an
-      // immutable login timestamp (NextAuth re-stamps `iat` on every request,
-      // so `iat` would never expire — see audit H1).
-      if (token.role === UserRole.ADMIN) {
-        const adminSince = typeof token.adminSince === "number" ? token.adminSince : 0;
-        const elapsed = Math.floor(Date.now() / 1000) - adminSince;
-        if (!adminSince || elapsed > ADMIN_SESSION_MAX_SECONDS) {
-          token.role = UserRole.USER;
-        }
+      if (isSignIn && token.role === UserRole.ADMIN) {
+        token.adminSince = Math.floor(Date.now() / 1000);
       }
 
       return token;
