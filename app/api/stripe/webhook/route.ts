@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { Resend } from "resend";
 import { getStripe } from "@/lib/stripe";
-import { getStripeWebhookSecret } from "@/lib/env";
+import { getStripeWebhookSecret, getResendApiKey, getContactFormEmail } from "@/lib/env";
 
 const MAX_BODY_SIZE = 64 * 1024; // 64KB — webhook payloads are moderate JSON
 
@@ -48,17 +49,109 @@ export async function POST(request: Request) {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        console.log(`[Stripe Webhook] checkout.session.completed`);
+        const session = event.data.object as Stripe.Checkout.Session;
+        const email = session.customer_details?.email;
+        const name = session.customer_details?.name ?? "Someone";
+        const amountTotal = session.amount_total ?? 0;
+        const dollars = (amountTotal / 100).toFixed(2);
+        const frequency = session.metadata?.frequency ?? "once";
+        const isMonthly = frequency === "monthly";
+
+        console.log(
+          `[Stripe Webhook] Donation received: $${dollars} (${frequency}) from ${email ?? "unknown"}`
+        );
+
+        // Send thank-you email to donor
+        if (email) {
+          try {
+            const resend = new Resend(getResendApiKey());
+            await resend.emails.send({
+              from: `Fire Within University <${getContactFormEmail()}>`,
+              to: email,
+              subject: isMonthly
+                ? "Thank you for your monthly support!"
+                : "Thank you for your generous donation!",
+              html: `
+                <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 16px;">
+                  <h1 style="font-size: 24px; color: #1a1a1a; margin-bottom: 16px;">
+                    Thank you, ${name}!
+                  </h1>
+                  <p style="font-size: 16px; color: #444; line-height: 1.6;">
+                    Your ${isMonthly ? "monthly" : "one-time"} donation of <strong>$${dollars}</strong> to
+                    Fire Within University has been received. Your generosity fuels this ministry and helps
+                    us continue sharing God's Word.
+                  </p>
+                  ${isMonthly ? `
+                  <p style="font-size: 14px; color: #666; line-height: 1.6;">
+                    Your card will be charged $${dollars} each month. You can manage or cancel your
+                    subscription anytime through the link in your Stripe receipt.
+                  </p>
+                  ` : ""}
+                  <p style="font-size: 16px; color: #444; line-height: 1.6;">
+                    &ldquo;Each of you should give what you have decided in your heart to give, not
+                    reluctantly or under compulsion, for God loves a cheerful giver.&rdquo;
+                    <br><em style="color: #888;">&mdash; 2 Corinthians 9:7</em>
+                  </p>
+                  <p style="font-size: 14px; color: #888; margin-top: 24px;">
+                    With gratitude,<br>
+                    Brett &amp; Jude<br>
+                    Fire Within University
+                  </p>
+                </div>
+              `,
+            });
+          } catch (emailErr) {
+            // Don't fail the webhook if the email fails
+            console.error(
+              "[Stripe Webhook] Failed to send thank-you email:",
+              emailErr instanceof Error ? emailErr.message : "Unknown error"
+            );
+          }
+        }
+
+        // Notify the team
+        try {
+          const resend = new Resend(getResendApiKey());
+          await resend.emails.send({
+            from: `Fire Within University <${getContactFormEmail()}>`,
+            to: getContactFormEmail(),
+            subject: `New donation: $${dollars} (${frequency})`,
+            html: `
+              <div style="font-family: system-ui, sans-serif; padding: 16px;">
+                <h2 style="color: #1a1a1a;">New Donation Received</h2>
+                <table style="font-size: 14px; color: #444; border-collapse: collapse;">
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Amount:</td><td>$${dollars}</td></tr>
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Frequency:</td><td>${isMonthly ? "Monthly" : "One-time"}</td></tr>
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Donor:</td><td>${name}</td></tr>
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Email:</td><td>${email ?? "Not provided"}</td></tr>
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Session ID:</td><td style="font-size: 12px; color: #888;">${session.id}</td></tr>
+                </table>
+              </div>
+            `,
+          });
+        } catch (notifyErr) {
+          console.error(
+            "[Stripe Webhook] Failed to send team notification:",
+            notifyErr instanceof Error ? notifyErr.message : "Unknown error"
+          );
+        }
+
         break;
       }
 
       case "customer.subscription.deleted": {
-        console.log(`[Stripe Webhook] customer.subscription.deleted`);
+        const sub = event.data.object as Stripe.Subscription;
+        console.log(
+          `[Stripe Webhook] Subscription cancelled: ${sub.id}`
+        );
         break;
       }
 
       case "invoice.payment_failed": {
-        console.log(`[Stripe Webhook] invoice.payment_failed`);
+        const invoice = event.data.object as Stripe.Invoice;
+        console.log(
+          `[Stripe Webhook] Payment failed for invoice ${invoice.id}`
+        );
         break;
       }
 
@@ -68,7 +161,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("[Stripe Webhook] Error processing event:", error);
+    console.error(
+      "[Stripe Webhook] Error processing event:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
     // Return 200 so Stripe doesn't retry an event we already received
     return NextResponse.json({ received: true });
   }
