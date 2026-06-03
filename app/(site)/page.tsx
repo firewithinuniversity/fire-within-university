@@ -4,7 +4,7 @@ import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
 import SectionReveal from "@/components/SectionReveal";
 import PostCard from "@/components/PostCard";
-import { getAllCourses, getFeaturedPosts, type CourseSummary } from "@/lib/sanity/queries";
+import { getAllCourses, getFeaturedPosts, getLatestVideoLessons, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
 
@@ -68,9 +68,10 @@ function PathwayIcon({ type }: { type: string }) {
 }
 
 export default async function HomePage() {
-  const [sanityCourses, latestPosts] = await Promise.all([
+  const [sanityCourses, latestPosts, videoLessons] = await Promise.all([
     getAllCourses(),
     getFeaturedPosts(),
+    getLatestVideoLessons(),
   ]);
   const allCourses = sanityCourses.length > 0 ? sanityCourses : PLACEHOLDER_COURSES;
   const displayCourses = allCourses.slice(0, 4);
@@ -165,6 +166,89 @@ export default async function HomePage() {
           </div>
         </section>
       </SectionReveal>
+
+      {/* ── Latest Videos ──────────────────────────────────────── */}
+      {videoLessons.length > 0 && (
+        <SectionReveal>
+          <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28" aria-label="Latest videos">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+              <div>
+                <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-2">New Videos</p>
+                <h2 className="font-serif text-3xl md:text-[2.5rem] font-bold text-cream leading-tight tracking-[-0.01em]">
+                  Latest Lessons
+                </h2>
+              </div>
+              <Link href="/courses" className="group text-gold/80 hover:text-gold text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 self-start sm:self-auto">
+                All courses
+                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {videoLessons.map((lesson, i) => {
+                // Extract YouTube video ID for thumbnail
+                const videoId = lesson.youtubeUrl?.match(/(?:youtu\.be\/|v=|\/embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+                const thumbnail = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
+
+                return (
+                  <SectionReveal key={lesson._id} delay={i * 100} distance={20}>
+                    <Link
+                      href={lesson.courseSlug ? `/courses/${lesson.courseSlug}/lessons/${lesson.slug}` : "/courses"}
+                      className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
+                    >
+                      <div className="relative aspect-video bg-brown overflow-hidden">
+                        {thumbnail ? (
+                          <Image
+                            src={thumbnail}
+                            alt={lesson.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-brown-card">
+                            <svg className="w-12 h-12 text-gold/20" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
+                            </svg>
+                          </div>
+                        )}
+                        {/* Play button overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="w-14 h-14 rounded-full bg-gold/90 flex items-center justify-center shadow-lg">
+                            <svg className="w-6 h-6 text-brown ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-brown/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      </div>
+                      <div className="p-5">
+                        <h3 className="font-serif text-[17px] font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-1.5 leading-snug">
+                          {lesson.title}
+                        </h3>
+                        {lesson.courseTitle && (
+                          <p className="text-cream/40 text-[13px] mb-2">{lesson.courseTitle}</p>
+                        )}
+                        <div className="flex items-center gap-3 text-[11px] text-cream/50 uppercase tracking-wider font-medium">
+                          {lesson.scripture && <span>{lesson.scripture}</span>}
+                          {lesson.duration && lesson.duration !== "Coming soon" && (
+                            <>
+                              <span className="w-1 h-1 rounded-full bg-cream/20" aria-hidden="true" />
+                              <span>{lesson.duration}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  </SectionReveal>
+                );
+              })}
+            </div>
+          </section>
+        </SectionReveal>
+      )}
 
       {/* ── Featured Courses ─────────────────────────────────────── */}
       <SectionReveal>
