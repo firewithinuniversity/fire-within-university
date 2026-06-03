@@ -91,12 +91,13 @@ export default function DonateForm() {
       className="bg-brown-card/70 rounded-2xl border border-white/[0.06] overflow-hidden"
     >
       {/* ── Frequency tabs ─────────────────────────────────────────── */}
-      <div className="flex border-b border-cream/[0.06]">
+      <div className="flex border-b border-cream/[0.06]" role="group" aria-label="Donation frequency">
         {(["once", "monthly"] as Frequency[]).map((freq) => (
           <button
             key={freq}
             type="button"
             onClick={() => setFrequency(freq)}
+            aria-pressed={frequency === freq}
             className={`flex-1 py-4 text-sm font-semibold transition-colors ${
               frequency === freq
                 ? "bg-orange text-cream"

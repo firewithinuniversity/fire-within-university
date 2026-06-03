@@ -2,10 +2,17 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { trackNewsletterSignup } from "@/lib/analytics";
 
-type Props = { variant?: "hero" | "inline" };
+type Props = {
+  variant?: "hero" | "inline";
+  /** Hide the built-in intro paragraph when the surrounding section already provides one. */
+  showIntro?: boolean;
+  /** Label for analytics, e.g. "footer", "homepage", "blog". */
+  location?: string;
+};
 
-export default function EmailSignup({ variant = "hero" }: Props) {
+export default function EmailSignup({ variant = "hero", showIntro = true, location = "unknown" }: Props) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -27,6 +34,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
       const data = await res.json();
       if (res.ok) {
         setEmail("");
+        trackNewsletterSignup(location);
         toast.success(data.message ?? "You're subscribed!");
         setStatus("idle");
       } else {
@@ -43,9 +51,9 @@ export default function EmailSignup({ variant = "hero" }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className={isHero ? "max-w-md mx-auto" : "w-full"} aria-label="Newsletter signup" noValidate>
-      {isHero && (
-        <p className={`text-sm mb-3 text-center ${isHero ? "text-cream/70" : "text-cream/50"}`}>
-          Get new sermons and articles delivered to your inbox.
+      {isHero && showIntro && (
+        <p className="text-sm mb-3 text-center text-cream/70">
+          One email a week — a new sermon, a short devotional, and first access to new courses. No spam.
         </p>
       )}
 
@@ -62,7 +70,7 @@ export default function EmailSignup({ variant = "hero" }: Props) {
           className={`flex-grow px-4 py-3 rounded-full border-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:opacity-60 transition-colors duration-150 ${
             isHero
               ? "border-[#D4B896]/40 bg-cream text-brown focus:border-orange focus:ring-orange/30 placeholder:text-[#B07040]"
-              : "border-cream/[0.1] bg-brown-card/60 text-cream focus:border-gold focus:ring-gold/30 placeholder:text-cream/40"
+              : "border-cream/[0.1] bg-brown-card/60 text-cream focus:border-gold focus:ring-gold/30 placeholder:text-cream/55"
           }`}
           aria-label="Email address"
           aria-invalid={status === "error" ? "true" : undefined}

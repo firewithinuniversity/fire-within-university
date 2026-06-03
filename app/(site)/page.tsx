@@ -4,6 +4,7 @@ import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
 import SectionReveal from "@/components/SectionReveal";
 import PostCard from "@/components/PostCard";
+import HeroBackground from "@/components/HeroBackground";
 import { getAllCourses, getFeaturedPosts, getLatestVideos, type CourseSummary } from "@/lib/sanity/queries";
 import VideoCard from "@/components/VideoCard";
 import { imageUrlFor } from "@/lib/sanity/image";
@@ -82,28 +83,8 @@ export default async function HomePage() {
   return (
     <div className="bg-brown-deep">
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative min-h-[100vh] flex items-center overflow-hidden" aria-label="Hero">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="hidden md:block absolute inset-0 w-full h-full object-cover"
-          poster="/hero-door.png"
-        >
-          <source src="/hero-door.mp4" type="video/mp4" />
-        </video>
-        <Image
-          src="/hero-door.png"
-          alt=""
-          role="presentation"
-          fill
-          className="md:hidden object-cover"
-          priority
-          sizes="100vw"
-          quality={60}
-        />
+      <section className="relative min-h-[100vh] min-h-[100svh] flex items-center overflow-hidden" aria-label="Hero">
+        <HeroBackground />
         {/* Cinematic multi-layer gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-brown-deep/95 via-brown-deep/70 to-brown-deep/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-brown-deep via-transparent to-brown-deep/40" />
@@ -316,7 +297,7 @@ export default async function HomePage() {
                     {p.title}
                   </h3>
                   <p className="text-cream/50 text-[13px] leading-relaxed mb-4 flex-grow">{p.description}</p>
-                  <span className="text-gold/50 text-xs font-semibold uppercase tracking-wider transition-all duration-300 group-hover:text-gold/80 flex items-center gap-1">
+                  <span className="text-gold/80 text-xs font-semibold uppercase tracking-wider transition-all duration-300 group-hover:text-gold flex items-center gap-1">
                     Explore
                     <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
                   </span>
@@ -412,7 +393,7 @@ export default async function HomePage() {
               Get new sermons, articles, and course updates delivered to your inbox.
             </p>
             <div className="pt-3">
-              <EmailSignup variant="hero" />
+              <EmailSignup variant="hero" showIntro={false} location="homepage" />
             </div>
           </div>
         </section>

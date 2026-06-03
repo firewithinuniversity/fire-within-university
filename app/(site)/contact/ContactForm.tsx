@@ -148,7 +148,7 @@ export default function ContactForm() {
           value={form.subject}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/35"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/55"
         >
           <option value="general">General question</option>
           <option value="prayer">Prayer request</option>
@@ -173,7 +173,7 @@ export default function ContactForm() {
           required
           maxLength={100}
           autoComplete="name"
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/35"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/55"
         />
       </div>
 
@@ -194,7 +194,7 @@ export default function ContactForm() {
           required
           maxLength={254}
           autoComplete="email"
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/35"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 transition-colors duration-150 placeholder:text-cream/55"
         />
       </div>
 
@@ -215,7 +215,7 @@ export default function ContactForm() {
           minLength={10}
           maxLength={2000}
           rows={5}
-          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 resize-none transition-colors duration-150 placeholder:text-cream/35"
+          className="w-full px-4 py-3 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 focus:ring-offset-0 resize-none transition-colors duration-150 placeholder:text-cream/55"
           placeholder={
             form.subject === "prayer"
               ? "Share your prayer request. We will pray for you personally."

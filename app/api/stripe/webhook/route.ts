@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { Resend } from "resend";
 import { getStripe } from "@/lib/stripe";
 import { getStripeWebhookSecret, getResendApiKey, getContactFormEmail } from "@/lib/env";
+import { EMAIL_FROM_NOREPLY } from "@/lib/constants";
 
 const MAX_BODY_SIZE = 64 * 1024; // 64KB — webhook payloads are moderate JSON
 
@@ -66,11 +67,12 @@ export async function POST(request: Request) {
           try {
             const resend = new Resend(getResendApiKey());
             await resend.emails.send({
-              from: `Fire Within University <${getContactFormEmail()}>`,
+              from: `Fire Within University <${EMAIL_FROM_NOREPLY}>`,
               to: email,
               subject: isMonthly
                 ? "Thank you for your monthly support!"
                 : "Thank you for your generous donation!",
+              text: `Thank you, ${name}!\n\nYour ${isMonthly ? "monthly" : "one-time"} donation of $${dollars} to Fire Within University has been received. Your generosity fuels this ministry.\n\n"Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver." — 2 Corinthians 9:7\n\nWith gratitude,\nBrett & Jude\nFire Within University`,
               html: `
                 <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 16px;">
                   <h1 style="font-size: 24px; color: #1a1a1a; margin-bottom: 16px;">
@@ -113,7 +115,7 @@ export async function POST(request: Request) {
         try {
           const resend = new Resend(getResendApiKey());
           await resend.emails.send({
-            from: `Fire Within University <${getContactFormEmail()}>`,
+            from: `Fire Within University <${EMAIL_FROM_NOREPLY}>`,
             to: getContactFormEmail(),
             subject: `New donation: $${dollars} (${frequency})`,
             html: `
@@ -145,7 +147,7 @@ export async function POST(request: Request) {
         try {
           const resend = new Resend(getResendApiKey());
           await resend.emails.send({
-            from: `Fire Within University <${getContactFormEmail()}>`,
+            from: `Fire Within University <${EMAIL_FROM_NOREPLY}>`,
             to: getContactFormEmail(),
             subject: `Monthly donation cancelled`,
             html: `
@@ -172,7 +174,7 @@ export async function POST(request: Request) {
           const amountDue = ((invoice.amount_due ?? 0) / 100).toFixed(2);
           const resend = new Resend(getResendApiKey());
           await resend.emails.send({
-            from: `Fire Within University <${getContactFormEmail()}>`,
+            from: `Fire Within University <${EMAIL_FROM_NOREPLY}>`,
             to: getContactFormEmail(),
             subject: `Recurring donation payment failed`,
             html: `

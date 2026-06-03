@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { GA_ID } from "@/lib/env";
 
 const CONSENT_KEY = "fwu_cookie_consent";
@@ -17,6 +18,10 @@ type Props = {
 };
 
 export default function GoogleAnalytics({ nonce }: Props) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
     if (localStorage.getItem(CONSENT_KEY) === "true") {
       initGA(nonce);
@@ -30,6 +35,24 @@ export default function GoogleAnalytics({ nonce }: Props) {
     return () =>
       window.removeEventListener("cookie-consent-accepted", handleConsent);
   }, [nonce]);
+
+  // Track client-side route changes as pageviews. The initial pageview is sent
+  // automatically by gtag("config"), so skip the first run to avoid a double
+  // count, then fire on every subsequent App Router navigation (audit H1).
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (!gaInitialized || typeof window.gtag !== "function") return;
+    const query = searchParams?.toString();
+    const url = pathname + (query ? `?${query}` : "");
+    window.gtag("event", "page_view", {
+      page_path: url,
+      page_location: window.location.href,
+      page_title: typeof document !== "undefined" ? document.title : undefined,
+    });
+  }, [pathname, searchParams]);
 
   return null;
 }

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { validatePassword, isPasswordValid } from "@/lib/passwordValidation";
 
 const INPUT_CLASS =
-  "w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/35";
+  "w-full px-4 py-2.5 rounded-xl border border-cream/[0.1] bg-brown-deep text-cream focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-0 focus:border-gold placeholder:text-cream/55";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();

@@ -53,6 +53,19 @@ export function trackDonationStart(amount: number, frequency: string) {
   });
 }
 
+export function trackDonationComplete(transactionId: string, amount?: number) {
+  // GA4 standard ecommerce "purchase" event for completed donations.
+  trackEvent("purchase", {
+    transaction_id: transactionId,
+    currency: "USD",
+    value: amount ?? 0,
+  });
+}
+
+export function trackNewsletterSignup(location: string) {
+  trackEvent("newsletter_signup", { location });
+}
+
 export function trackSignUp(method: string) {
   trackEvent("sign_up", { method });
 }

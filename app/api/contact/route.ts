@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { getIpFromRequest } from "@/lib/rateLimit";
 import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getContactFormEmail, getResendApiKey } from "@/lib/env";
+import { EMAIL_CONTACT } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 
 const ContactSchema = z.object({
@@ -94,10 +95,11 @@ export async function POST(request: Request) {
     const resend = new Resend(getResendApiKey());
 
     await resend.emails.send({
-      from: "Fire Within University <contact@firewithinuniversity.com>",
+      from: `Fire Within University <${EMAIL_CONTACT}>`,
       to: getContactFormEmail(),
       replyTo: email,
       subject: `[${subjectLabels[subject]}] from ${safeName}`,
+      text: `${subjectLabels[subject]}\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       html: `
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #3D1F0A;">${subjectLabels[subject]}</h2>

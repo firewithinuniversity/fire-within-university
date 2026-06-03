@@ -2,9 +2,9 @@ import crypto from "crypto";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { getResendApiKey } from "@/lib/env";
+import { getBaseUrl, EMAIL_FROM_NOREPLY } from "@/lib/constants";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.firewithinuniversity.com";
+const BASE_URL = getBaseUrl();
 
 const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -47,9 +47,10 @@ export async function sendVerificationEmail(email: string): Promise<boolean> {
     const resend = new Resend(getResendApiKey());
 
     await resend.emails.send({
-      from: "Fire Within University <noreply@firewithinuniversity.com>",
+      from: `Fire Within University <${EMAIL_FROM_NOREPLY}>`,
       to: email,
       subject: "Verify Your Email — Fire Within University",
+      text: `Welcome to Fire Within University!\n\nPlease verify your email address by opening this link:\n${verifyUrl}\n\nThis link expires in 24 hours. If you didn't create an account, you can safely ignore this email.`,
       html: `
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #3D1F0A;">
           <h2 style="color: #3D1F0A; margin-bottom: 8px;">Welcome to Fire Within University!</h2>

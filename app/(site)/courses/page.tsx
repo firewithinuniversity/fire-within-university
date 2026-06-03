@@ -84,7 +84,7 @@ export default async function CoursesPage() {
               We&apos;re building out our course library. Drop your email below to be the first to know when new courses launch.
             </p>
             <p className="text-cream/50 text-sm italic">
-              &ldquo;Study to shew thyself approved unto God, a workman that needeth not to be ashamed.&rdquo; — 2 Timothy 2:15
+              &ldquo;Do your best to present yourself to God as one approved, a worker who does not need to be ashamed and who correctly handles the word of truth.&rdquo; — 2 Timothy 2:15
             </p>
             <div className="pt-2">
               <EmailSignup variant="inline" />

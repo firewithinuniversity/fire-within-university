@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { getIpFromRequest } from "@/lib/rateLimit";
 import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getResendApiKey } from "@/lib/env";
-import { getBaseUrl } from "@/lib/constants";
+import { getBaseUrl, EMAIL_FROM_NOREPLY } from "@/lib/constants";
 
 const BASE_URL = getBaseUrl();
 
@@ -99,9 +99,10 @@ export async function POST(request: Request) {
     const resend = new Resend(getResendApiKey());
 
     await resend.emails.send({
-      from: "Fire Within University <noreply@firewithinuniversity.com>",
+      from: `Fire Within University <${EMAIL_FROM_NOREPLY}>`,
       to: email,
       subject: "Reset Your Password — Fire Within University",
+      text: `Reset your Fire Within University password by opening this link (expires in 1 hour):\n${resetUrl}\n\nIf you didn't request this, you can safely ignore this email — your password will not change.`,
       html: `
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #3D1F0A;">
           <h2 style="color: #3D1F0A; margin-bottom: 8px;">Reset Your Password</h2>

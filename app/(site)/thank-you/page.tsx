@@ -9,7 +9,10 @@
  * Server Component — no interactivity needed.
  */
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
+import DonationTracker from "@/components/DonationTracker";
+import EmailSignup from "@/components/EmailSignup";
 
 export const metadata: Metadata = {
   title: "Thank You",
@@ -21,6 +24,9 @@ export const metadata: Metadata = {
 export default function ThankYouPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-6">
+      <Suspense fallback={null}>
+        <DonationTracker />
+      </Suspense>
       {/* Warm icon with gold glow */}
       <div className="relative inline-block mb-4" aria-hidden="true" role="img">
         <div className="absolute inset-0 blur-2xl bg-gold/30 rounded-full scale-150" />
@@ -73,6 +79,15 @@ export default function ThankYouPage() {
         >
           Return Home
         </Link>
+      </div>
+
+      {/* Stay connected — capture the warmest possible newsletter lead */}
+      <div className="bg-brown-card/40 border border-white/[0.06] rounded-2xl p-6 my-6 text-left">
+        <p className="font-serif text-lg font-bold text-cream text-center mb-1">Stay connected</p>
+        <p className="text-cream/55 text-sm text-center mb-4">
+          Get updates on what your gift makes possible.
+        </p>
+        <EmailSignup variant="inline" location="thank-you" />
       </div>
 
       {/* Donation disclaimer — reiterate after the transaction */}

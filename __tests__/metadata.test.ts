@@ -38,7 +38,7 @@ describe("organizationJsonLd", () => {
     expect(result["@type"]).toBe("Organization");
     expect(result.name).toBe("Fire Within University");
     expect(result.url).toBe("https://test.example.com");
-    expect(result.logo).toContain("favicon.ico");
+    expect(result.logo).toContain("pwa-icon-512");
   });
 });
 
@@ -98,8 +98,9 @@ describe("courseJsonLd", () => {
     });
     expect(result["@type"]).toBe("Course");
     expect(result.name).toBe("My Course");
-    expect(result.instructor!.name).toBe("Dr. Smith");
+    expect(result.hasCourseInstance.instructor!.name).toBe("Dr. Smith");
     expect(result.provider.name).toBe("Fire Within University");
+    expect(result.offers.price).toBe("0");
   });
 
   it("omits instructor when not provided", () => {
@@ -107,7 +108,7 @@ describe("courseJsonLd", () => {
       title: "My Course",
       url: "https://test.example.com/courses/my-course",
     });
-    expect(result).not.toHaveProperty("instructor");
+    expect(result.hasCourseInstance).not.toHaveProperty("instructor");
   });
 });
 

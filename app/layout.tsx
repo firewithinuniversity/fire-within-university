@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Lora, Inter } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
@@ -46,6 +47,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@TheFireWithinUn",
+    creator: "@TheFireWithinUn",
     title: "Fire Within University",
     description:
       "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
@@ -96,7 +99,9 @@ export default async function RootLayout({
             },
           }}
         />
-        <GoogleAnalytics nonce={nonce} />
+        <Suspense fallback={null}>
+          <GoogleAnalytics nonce={nonce} />
+        </Suspense>
         <Analytics />
         <SpeedInsights />
         <CookieBanner />

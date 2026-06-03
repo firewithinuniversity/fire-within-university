@@ -18,7 +18,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: "Fire Within University",
     url: BASE_URL,
-    logo: `${BASE_URL}/logo.png`,
+    logo: `${BASE_URL}/pwa-icon-512`,
     description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
     sameAs: [
       "https://www.youtube.com/@FireWithinUnv",
@@ -54,6 +54,7 @@ export function articleJsonLd(opts: {
   description?: string;
   url: string;
   publishedAt: string;
+  updatedAt?: string;
   authorName: string;
   imageUrl?: string;
 }) {
@@ -63,7 +64,9 @@ export function articleJsonLd(opts: {
     headline: opts.title,
     description: opts.description,
     url: opts.url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": opts.url },
     datePublished: opts.publishedAt,
+    ...(opts.updatedAt ? { dateModified: opts.updatedAt } : {}),
     author: {
       "@type": "Person",
       name: opts.authorName,
@@ -71,7 +74,7 @@ export function articleJsonLd(opts: {
     publisher: {
       "@type": "Organization",
       name: "Fire Within University",
-      logo: { "@type": "ImageObject", url: `${BASE_URL}/logo.png` },
+      logo: { "@type": "ImageObject", url: `${BASE_URL}/pwa-icon-512` },
     },
     ...(opts.imageUrl ? { image: opts.imageUrl } : {}),
   };
@@ -84,20 +87,34 @@ export function courseJsonLd(opts: {
   url: string;
   instructor?: string;
 }) {
+  const provider = {
+    "@type": "Organization",
+    name: "Fire Within University",
+    url: BASE_URL,
+  };
   return {
     "@context": "https://schema.org",
     "@type": "Course",
     name: opts.title,
     description: opts.description,
     url: opts.url,
-    provider: {
-      "@type": "Organization",
-      name: "Fire Within University",
-      url: BASE_URL,
+    provider,
+    // Free, online, self-paced — required/recommended for Google Course rich results
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "online",
+      courseWorkload: "PT1H",
+      ...(opts.instructor
+        ? { instructor: { "@type": "Person", name: opts.instructor } }
+        : {}),
     },
-    ...(opts.instructor
-      ? { instructor: { "@type": "Person", name: opts.instructor } }
-      : {}),
+    offers: {
+      "@type": "Offer",
+      category: "Free",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
   };
 }
 

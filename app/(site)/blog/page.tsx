@@ -10,20 +10,6 @@ import { canonicalUrl } from "@/lib/metadata";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: "Sermons & Articles",
-  description:
-    "Browse all sermons, articles, and devotionals from Fire Within University.",
-  alternates: {
-    canonical: canonicalUrl("/blog"),
-  },
-  openGraph: {
-    title: "Sermons & Articles",
-    description: "Browse all sermons, articles, and devotionals from Fire Within University.",
-    url: canonicalUrl("/blog"),
-  },
-};
-
 const POSTS_PER_PAGE = 9;
 
 interface BlogIndexPageProps {
@@ -32,6 +18,28 @@ interface BlogIndexPageProps {
     category?: string;
     page?: string;
   }>;
+}
+
+const BLOG_DESCRIPTION =
+  "Browse all sermons, articles, and devotionals from Fire Within University.";
+
+export async function generateMetadata({ searchParams }: BlogIndexPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+  const isFiltered = Boolean(params.q?.trim()) || Boolean(params.category);
+
+  const title = page > 1 ? `Sermons & Articles — Page ${page}` : "Sermons & Articles";
+  // Paginated views self-canonicalize so page 2+ stays crawlable; search/filter
+  // views are kept out of the index to avoid thin/duplicate content (audit SEO #3).
+  const canonical = page > 1 ? canonicalUrl(`/blog?page=${page}`) : canonicalUrl("/blog");
+
+  return {
+    title,
+    description: BLOG_DESCRIPTION,
+    alternates: { canonical },
+    ...(isFiltered ? { robots: { index: false, follow: true } } : {}),
+    openGraph: { title, description: BLOG_DESCRIPTION, url: canonical },
+  };
 }
 
 export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps) {
@@ -114,7 +122,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
               name="q"
               defaultValue={searchQuery}
               placeholder="Search sermons and articles…"
-              className="w-full rounded-full border border-cream/10 bg-cream/[0.03] pl-11 pr-4 py-3 text-cream placeholder-cream/30 text-sm focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-colors"
+              className="w-full rounded-full border border-cream/10 bg-cream/[0.03] pl-11 pr-4 py-3 text-cream placeholder-cream/60 text-sm focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-colors"
             />
             {searchQuery && (
               <Link
@@ -198,36 +206,41 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
             ))}
           </div>
 
-          {/* Pagination */}
+          {/* Pagination — disabled controls render as non-focusable spans so
+              keyboard users can't activate them (audit a11y #5). */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-12">
-              <Link
-                href={buildHref({ page: currentPage - 1 })}
-                aria-disabled={currentPage <= 1}
-                className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
-                  currentPage <= 1
-                    ? "border-cream/[0.06] text-cream/20 pointer-events-none select-none"
-                    : "border-cream/10 text-cream/60 hover:bg-cream/[0.04] hover:border-cream/20"
-                }`}
-              >
-                ← Previous
-              </Link>
+              {currentPage <= 1 ? (
+                <span aria-disabled="true" className="px-4 py-2 text-sm rounded-lg border border-cream/[0.06] text-cream/40 select-none">
+                  ← Previous
+                </span>
+              ) : (
+                <Link
+                  href={buildHref({ page: currentPage - 1 })}
+                  rel="prev"
+                  className="px-4 py-2 text-sm rounded-lg border border-cream/10 text-cream/60 hover:bg-cream/[0.04] hover:border-cream/20 transition-colors"
+                >
+                  ← Previous
+                </Link>
+              )}
 
               <span className="text-sm text-cream/50 px-2">
                 Page {currentPage} of {totalPages}
               </span>
 
-              <Link
-                href={buildHref({ page: currentPage + 1 })}
-                aria-disabled={currentPage >= totalPages}
-                className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
-                  currentPage >= totalPages
-                    ? "border-cream/[0.06] text-cream/20 pointer-events-none select-none"
-                    : "border-cream/10 text-cream/60 hover:bg-cream/[0.04] hover:border-cream/20"
-                }`}
-              >
-                Next →
-              </Link>
+              {currentPage >= totalPages ? (
+                <span aria-disabled="true" className="px-4 py-2 text-sm rounded-lg border border-cream/[0.06] text-cream/40 select-none">
+                  Next →
+                </span>
+              ) : (
+                <Link
+                  href={buildHref({ page: currentPage + 1 })}
+                  rel="next"
+                  className="px-4 py-2 text-sm rounded-lg border border-cream/10 text-cream/60 hover:bg-cream/[0.04] hover:border-cream/20 transition-colors"
+                >
+                  Next →
+                </Link>
+              )}
             </div>
           )}
         </>

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import EmailSignup from "@/components/EmailSignup";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -78,6 +80,14 @@ export default function Footer() {
                 </a>
               ))}
             </div>
+
+            {/* Newsletter signup */}
+            <div className="pt-4">
+              <p className="text-xs font-semibold text-cream/80 mb-2 uppercase tracking-wider">
+                Get sermons in your inbox
+              </p>
+              <EmailSignup variant="inline" location="footer" />
+            </div>
           </div>
 
           {/* Quick links */}
@@ -138,7 +148,7 @@ export default function Footer() {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/70 pt-6 border-t border-cream/10">
           <p>&copy; {currentYear} Fire Within University. All rights reserved.</p>
-          <p className="text-gold/60 font-medium italic">Built for the Kingdom.</p>
+          <p className="text-gold/90 font-medium italic">Built for the Kingdom.</p>
         </div>
       </div>
     </footer>
