@@ -92,10 +92,10 @@ export default function EmailSignup({ variant = "hero", showIntro = true, locati
       </div>
 
       {status === "error" && (
-        <p className="text-red-600 text-xs mt-2 text-center" role="alert" aria-live="polite">{message}</p>
+        <p className={`text-red-400 text-xs mt-2 ${isHero ? "text-center" : "text-left"}`} role="alert" aria-live="polite">{message}</p>
       )}
 
-      <p id="email-signup-hint" className={`text-xs mt-2.5 text-center ${isHero ? "text-cream/60" : "text-cream/60"}`}>
+      <p id="email-signup-hint" className={`text-xs mt-2.5 text-cream/60 ${isHero ? "text-center" : "text-left"}`}>
         No spam, ever. Unsubscribe anytime.
       </p>
     </form>
