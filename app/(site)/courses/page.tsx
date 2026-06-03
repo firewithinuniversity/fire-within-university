@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import SectionReveal from "@/components/SectionReveal";
+import PageHeader from "@/components/PageHeader";
 import CourseProgressMini from "@/components/CourseProgressMini";
 import EmailSignup from "@/components/EmailSignup";
 import { getAllCourses, type CourseSummary } from "@/lib/sanity/queries";
@@ -53,20 +54,11 @@ export default async function CoursesPage() {
 
   return (
     <div className="bg-brown-deep min-h-screen">
-      {/* Header */}
-      <section className="pt-32 pb-16 text-center px-4 sm:px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-brown-card/20 to-transparent" />
-        <div className="relative">
-          <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-4">Learn at Your Own Pace</p>
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-cream mb-6 tracking-[-0.02em] leading-[0.95]">
-            Courses
-          </h1>
-          <p className="text-cream/70 max-w-lg mx-auto text-lg leading-[1.7]">
-            Structured Bible study to deepen your walk with Christ. Each course
-            includes video lessons, Scripture readings, and downloadable resources.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Learn at Your Own Pace"
+        title="Courses"
+        subtitle="Structured Bible study to deepen your walk with Christ. Each course includes video lessons, Scripture readings, and downloadable resources."
+      />
 
       {/* Empty state */}
       {sanityCourses.length === 0 && (
@@ -120,8 +112,12 @@ export default async function CoursesPage() {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <svg className="w-14 h-14 text-gold/15 transition-colors duration-300 group-hover:text-gold/25" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                    <div className="absolute inset-0 bg-gradient-to-br from-brown-card via-brown to-[#2a1508] flex items-center justify-center overflow-hidden">
+                      {/* warm glow */}
+                      <div aria-hidden="true" className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-gold/[0.10] blur-3xl transition-all duration-500 group-hover:bg-gold/[0.16]" />
+                      {/* dotted texture */}
+                      <div aria-hidden="true" className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(232,160,32,0.5) 1px, transparent 0)", backgroundSize: "22px 22px" }} />
+                      <svg className="relative w-12 h-12 text-gold/40 transition-all duration-300 group-hover:text-gold/60 group-hover:scale-110" fill="none" viewBox="0 0 24 24" strokeWidth={1.25} stroke="currentColor" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                       </svg>
                     </div>

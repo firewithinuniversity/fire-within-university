@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
+import PageHeader from "@/components/PageHeader";
 import { getAllSeries } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
@@ -32,20 +33,13 @@ export default async function SeriesPage() {
   const allSeries = await getAllSeries();
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
-      {/* Header */}
-      <div className="text-center mb-12 space-y-3">
-        <p className="text-gold font-bold text-xs uppercase tracking-widest">
-          Structured Teaching
-        </p>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream leading-tight">
-          Teaching Series
-        </h1>
-        <p className="text-cream/55 text-lg max-w-xl mx-auto">
-          Multi-part studies to go deep into scripture. Start at part one and
-          let the Spirit lead you through.
-        </p>
-      </div>
+    <div className="pb-12">
+      <PageHeader
+        eyebrow="Structured Teaching"
+        title="Teaching Series"
+        subtitle="Multi-part studies to go deep into scripture. Start at part one and let the Spirit lead you through."
+      />
+      <div className="max-w-6xl mx-auto px-4">
 
       {allSeries.length === 0 ? (
         <div className="max-w-lg mx-auto text-center py-14 space-y-6">
@@ -143,6 +137,7 @@ export default async function SeriesPage() {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }

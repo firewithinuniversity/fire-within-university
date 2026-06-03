@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
+import PageHeader from "@/components/PageHeader";
 import VideoCard from "@/components/VideoCard";
 import EmailSignup from "@/components/EmailSignup";
 import SectionReveal from "@/components/SectionReveal";
@@ -80,23 +81,13 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
-      {/* Page header */}
-      <div className="text-center mb-10 space-y-4">
-        <div className="flex justify-center" aria-hidden="true">
-          <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
-            <rect x="6" y="0" width="4" height="24" rx="2" />
-            <rect x="0" y="7" width="16" height="4" rx="2" />
-          </svg>
-        </div>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
-          Sermons &amp; Articles
-        </h1>
-        <p className="text-cream/50 max-w-xl mx-auto text-lg">
-          Biblical teaching, devotionals, and resources to strengthen your faith
-          and deepen your walk with Jesus.
-        </p>
-      </div>
+    <div className="pb-12">
+      <PageHeader
+        eyebrow="Teaching Library"
+        title="Sermons & Articles"
+        subtitle="Biblical teaching, devotionals, and resources to strengthen your faith and deepen your walk with Jesus."
+      />
+      <div className="max-w-6xl mx-auto px-4">
 
       {/* ── Search + Category filters ── */}
       <div className="mb-10 space-y-5">
@@ -304,6 +295,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
           </Link>
         </div>
       )}
+      </div>
     </div>
   );
 }

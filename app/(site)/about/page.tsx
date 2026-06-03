@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import EmailSignup from "@/components/EmailSignup";
+import PageHeader from "@/components/PageHeader";
 import { getAllAuthors } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
@@ -22,31 +23,18 @@ export default async function AboutPage() {
   const authors = await getAllAuthors();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
-      {/* Mission section */}
-      <section className="text-center mb-20 space-y-6">
-        <div className="flex justify-center" aria-hidden="true">
-          <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
-            <rect x="6" y="0" width="4" height="24" rx="2" />
-            <rect x="0" y="7" width="16" height="4" rx="2" />
-          </svg>
-        </div>
-
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
-          About Fire Within University
-        </h1>
-        <p className="text-cream/60 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
-          Fire Within University exists to equip believers with sound biblical
-          teaching, practical discipleship resources, and a community that stirs
-          one another toward love and good deeds.
-        </p>
-        <p className="text-cream/50 max-w-2xl mx-auto leading-relaxed">
+    <div className="pb-12">
+      <PageHeader
+        title="About Fire Within University"
+        subtitle="Fire Within University exists to equip believers with sound biblical teaching, practical discipleship resources, and a community that stirs one another toward love and good deeds."
+      >
+        <p className="text-cream/50 max-w-2xl mx-auto leading-relaxed pt-1">
           We believe the Word of God is living and active — capable of setting
           hearts on fire for Jesus. Our goal is simple: produce content that
           drives people into Scripture and deeper relationship with Christ.
         </p>
 
-        <div className="bg-brown-card/60 border border-white/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto">
+        <div className="bg-brown-card/60 border border-white/[0.06] rounded-2xl px-6 py-5 max-w-lg mx-auto mt-2">
           <p className="text-cream/60 text-sm italic leading-relaxed">
             &ldquo;For the word of God is alive and active. Sharper than any double-edged sword, it penetrates even to dividing soul and spirit.&rdquo;
           </p>
@@ -59,9 +47,10 @@ export default async function AboutPage() {
             — Hebrews 4:12
           </a>
         </div>
-      </section>
+      </PageHeader>
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div className="max-w-4xl mx-auto px-4">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 mt-4">
         {[
           {
             icon: (
@@ -201,6 +190,7 @@ export default async function AboutPage() {
           </div>
         </section>
       )}
+      </div>
     </div>
   );
 }

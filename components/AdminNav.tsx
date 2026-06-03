@@ -36,12 +36,15 @@ export default function AdminNav() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+              className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
                 active
-                  ? "bg-cream/[0.12] text-gold"
+                  ? "bg-gradient-to-r from-gold/[0.14] to-transparent text-gold"
                   : "text-cream/60 hover:text-cream hover:bg-cream/[0.06]"
               }`}
             >
+              {active && (
+                <span aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-full bg-gold" />
+              )}
               <svg className="w-[18px] h-[18px] shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
               </svg>
@@ -100,7 +103,7 @@ export default function AdminNav() {
 
       {/* Mobile sidebar (slide in) */}
       <aside
-        className={`md:hidden fixed inset-y-0 left-0 w-56 bg-brown text-cream flex flex-col z-50 transform transition-transform duration-200 ${
+        className={`md:hidden fixed inset-y-0 left-0 w-56 bg-gradient-to-b from-brown to-brown-deep text-cream flex flex-col z-50 transform transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -118,7 +121,7 @@ export default function AdminNav() {
       </aside>
 
       {/* Desktop sidebar (always visible) */}
-      <aside className="hidden md:flex fixed inset-y-0 left-0 w-56 bg-brown text-cream flex-col z-30">
+      <aside className="hidden md:flex fixed inset-y-0 left-0 w-56 bg-gradient-to-b from-brown to-brown-deep text-cream flex-col z-30">
         {sidebarContent}
       </aside>
     </>

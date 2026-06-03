@@ -12,6 +12,7 @@
  */
 import type { Metadata } from "next";
 import DonateForm from "./DonateForm";
+import PageHeader from "@/components/PageHeader";
 import { canonicalUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -28,28 +29,15 @@ export const metadata: Metadata = {
 
 export default function DonatePage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 pt-24 pb-12">
-      {/* Page header — spiritual invitation, not transactional */}
-      <div className="text-center mb-12 space-y-5">
-        {/* Small cross accent */}
-        <div className="flex justify-center" aria-hidden="true">
-          <svg width="16" height="24" viewBox="0 0 16 24" fill="currentColor" className="text-gold/40">
-            <rect x="6" y="0" width="4" height="24" rx="2" />
-            <rect x="0" y="7" width="16" height="4" rx="2" />
-          </svg>
-        </div>
-
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-cream">
-          Sow Into the Kingdom
-        </h1>
-        <p className="text-cream/60 max-w-lg mx-auto leading-relaxed text-lg">
-          Your generosity directly funds sermons, articles, and resources
-          that reach people for Christ. Every seed sown bears fruit.
-        </p>
-
+    <div className="pb-12">
+      <PageHeader
+        eyebrow="Partner With the Ministry"
+        title="Sow Into the Kingdom"
+        subtitle="Your generosity directly funds sermons, articles, and resources that reach people for Christ. Every seed sown bears fruit."
+      >
         {/* Scripture — links to BibleGateway */}
-        <div className="bg-brown-card/60 rounded-2xl px-6 py-5 max-w-lg mx-auto border border-gold/15">
-          <p className="text-cream/50 text-sm italic leading-relaxed">
+        <div className="bg-brown-card/60 rounded-2xl px-6 py-5 max-w-lg mx-auto border border-gold/15 mt-2">
+          <p className="text-cream/55 text-sm italic leading-relaxed">
             &ldquo;Each of you should give what you have decided in your heart to
             give, not reluctantly or under compulsion, for God loves a cheerful
             giver.&rdquo;
@@ -63,6 +51,23 @@ export default function DonatePage() {
             — 2 Corinthians 9:7
           </a>
         </div>
+      </PageHeader>
+
+      <div className="max-w-2xl mx-auto px-4">
+      {/* What your gift funds — concrete impact near the form */}
+      <div className="grid grid-cols-3 gap-3 mb-8">
+        {[
+          { label: "Sermons & teaching", icon: "M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" },
+          { label: "Free courses", icon: "M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493a59.903 59.903 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0112 13.489a50.702 50.702 0 017.74-3.342" },
+          { label: "Reaching the lost", icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+        ].map((item) => (
+          <div key={item.label} className="bg-brown-card/40 border border-white/[0.06] rounded-xl px-3 py-4 text-center">
+            <svg className="w-5 h-5 text-gold/70 mx-auto mb-2" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+            </svg>
+            <p className="text-[11px] text-cream/60 leading-tight">{item.label}</p>
+          </div>
+        ))}
       </div>
 
       {/* Interactive donation form */}
@@ -94,6 +99,7 @@ export default function DonatePage() {
           understanding. You will be redirected to Stripe&apos;s secure checkout
           to complete your gift.
         </p>
+      </div>
       </div>
     </div>
   );

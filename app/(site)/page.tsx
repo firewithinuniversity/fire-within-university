@@ -288,9 +288,9 @@ export default async function HomePage() {
               <SectionReveal key={p.href} delay={i * 80} distance={20}>
                 <Link
                   href={p.href}
-                  className="group flex flex-col h-full bg-brown-card/50 border border-white/[0.06] rounded-2xl p-6 transition-[border-color,background-color,transform] duration-300 hover:bg-brown-card/80 hover:border-gold/15 hover:-translate-y-1"
+                  className="group relative flex flex-col h-full bg-brown-card/50 border border-white/[0.06] rounded-2xl p-6 transition-[border-color,background-color,transform,box-shadow] duration-300 hover:bg-brown-card/80 hover:border-gold/20 hover:-translate-y-1 hover:shadow-[0_10px_40px_-12px_rgba(232,160,32,0.18)]"
                 >
-                  <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-colors duration-300 group-hover:bg-gold/[0.12]">
+                  <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-all duration-300 group-hover:bg-gold/[0.12] group-hover:scale-105 group-hover:shadow-[0_0_20px_-4px_rgba(232,160,32,0.3)]">
                     <PathwayIcon type={p.icon} />
                   </div>
                   <h3 className="font-serif text-lg font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-2 leading-snug">
