@@ -10,15 +10,10 @@ function requireServerEnv(name: string): string {
   return value;
 }
 
-function requirePublicEnv(name: string): string {
+function requirePublicEnv(name: string, fallback?: string): string {
   const value = process.env[name];
   if (!value) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error(
-        `Missing required public environment variable: ${name}\n` +
-          `Set it in the Vercel dashboard or your deployment environment.`
-      );
-    }
+    if (fallback) return fallback;
     console.warn(`[env] Missing ${name} — add it to .env.local (see .env.example). Pages will show empty state.`);
     return "";
   }
@@ -26,10 +21,17 @@ function requirePublicEnv(name: string): string {
 }
 
 // --- Sanity (public) ---
+// Fallbacks provided because NEXT_PUBLIC_ vars must be inlined at build time;
+// Vercel can occasionally fail to inject them into the client bundle.
+// These are non-secret public identifiers visible in every browser request.
 export const SANITY_PROJECT_ID = requirePublicEnv(
-  "NEXT_PUBLIC_SANITY_PROJECT_ID"
+  "NEXT_PUBLIC_SANITY_PROJECT_ID",
+  "2tgoc0c5"
 );
-export const SANITY_DATASET = requirePublicEnv("NEXT_PUBLIC_SANITY_DATASET");
+export const SANITY_DATASET = requirePublicEnv(
+  "NEXT_PUBLIC_SANITY_DATASET",
+  "production"
+);
 
 // --- Sanity (server-only — lazy so static builds don't throw) ---
 export function getSanityReadToken(): string {
