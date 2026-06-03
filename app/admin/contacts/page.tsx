@@ -64,8 +64,8 @@ export default function AdminContactsPage() {
   const totalPages = Math.ceil(total / 20);
 
   return (
-    <div className="px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-4 sm:px-6 md:px-8 py-6 md:py-8 pt-16 md:pt-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
         <div>
           <h1 className="font-serif text-2xl font-bold text-brown">Messages</h1>
           {unreadCount > 0 && (
@@ -115,9 +115,9 @@ export default function AdminContactsPage() {
                     <span className="w-2 h-2 rounded-full bg-orange shrink-0" />
                   )}
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-brown">{s.name}</span>
-                      <span className="text-xs text-brown/30">{s.email}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-sm font-medium text-brown truncate">{s.name}</span>
+                      <span className="text-xs text-brown/30 truncate">{s.email}</span>
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-xs px-1.5 py-0.5 rounded bg-brown/5 text-brown/40">
@@ -142,13 +142,13 @@ export default function AdminContactsPage() {
                   <div className="mt-3 flex items-center gap-3">
                     <a
                       href={`mailto:${s.email}`}
-                      className="text-xs font-medium text-orange hover:text-orange-hover transition-colors"
+                      className="text-xs font-medium text-orange hover:text-orange-hover transition-colors py-2 px-2 min-h-[44px] inline-flex items-center"
                     >
                       Reply via Email →
                     </a>
                     <button
                       onClick={() => toggleRead(s.id, !s.read)}
-                      className="text-xs text-brown/40 hover:text-brown/60 transition-colors"
+                      className="text-xs text-brown/40 hover:text-brown/60 transition-colors py-2 px-2 min-h-[44px] inline-flex items-center"
                     >
                       Mark as {s.read ? "unread" : "read"}
                     </button>
@@ -165,7 +165,7 @@ export default function AdminContactsPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
+            className="px-3 py-2.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
           >
             Previous
           </button>
@@ -175,7 +175,7 @@ export default function AdminContactsPage() {
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-3 py-1.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
+            className="px-3 py-2.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
           >
             Next
           </button>

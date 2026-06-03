@@ -40,7 +40,7 @@ export default function AdminAnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="px-8 py-8">
+      <div className="px-4 sm:px-6 md:px-8 py-6 md:py-8 pt-16 md:pt-8">
         <h1 className="font-serif text-2xl font-bold text-brown mb-6">Analytics</h1>
         <p className="text-brown/30">Loading...</p>
       </div>
@@ -49,7 +49,7 @@ export default function AdminAnalyticsPage() {
 
   if (error) {
     return (
-      <div className="px-8 py-8">
+      <div className="px-4 sm:px-6 md:px-8 py-6 md:py-8 pt-16 md:pt-8">
         <h1 className="font-serif text-2xl font-bold text-brown mb-6">Analytics</h1>
         <p className="text-red-600">{error}</p>
       </div>
@@ -66,10 +66,10 @@ export default function AdminAnalyticsPage() {
   ];
 
   return (
-    <div className="px-8 py-8">
+    <div className="px-4 sm:px-6 md:px-8 py-6 md:py-8 pt-16 md:pt-8">
       <h1 className="font-serif text-2xl font-bold text-brown mb-6">Analytics</h1>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((s) => (
           <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-brown/[0.06]">
             <p className="text-xs text-brown/40 font-medium uppercase tracking-wide">{s.label}</p>
@@ -114,8 +114,8 @@ export default function AdminAnalyticsPage() {
           ) : (
             <ul className="space-y-3 max-h-80 overflow-y-auto">
               {data.recentCompletions.slice(0, 20).map((c, i) => (
-                <li key={i} className="flex items-start justify-between text-sm">
-                  <div>
+                <li key={i} className="flex items-start justify-between text-sm gap-2">
+                  <div className="min-w-0">
                     <span className="text-brown font-medium">
                       {c.user.name ?? c.user.email}
                     </span>

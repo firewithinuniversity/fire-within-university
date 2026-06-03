@@ -86,6 +86,7 @@ export default async function HomePage() {
           muted
           loop
           playsInline
+          preload="auto"
           className="hidden md:block absolute inset-0 w-full h-full object-cover"
           poster="/hero-door.png"
         >

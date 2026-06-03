@@ -51,8 +51,8 @@ export default function AdminAuditLogsPage() {
   };
 
   return (
-    <div className="px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-4 sm:px-6 md:px-8 py-6 md:py-8 pt-16 md:pt-8">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
         <h1 className="font-serif text-2xl font-bold text-brown">Audit Logs</h1>
         <span className="text-sm text-brown/40">{total} entries</span>
       </div>
@@ -64,7 +64,7 @@ export default function AdminAuditLogsPage() {
             setEventFilter(e.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 rounded-lg border border-brown/10 bg-white text-brown text-sm focus:outline-none focus:ring-2 focus:ring-orange/30"
+          className="px-3 py-2.5 rounded-lg border border-brown/10 bg-white text-brown text-sm focus:outline-none focus:ring-2 focus:ring-orange/30"
         >
           <option value="">All events</option>
           <option value="ADMIN_LOGIN_SUCCESS">Admin Login Success</option>
@@ -75,8 +75,8 @@ export default function AdminAuditLogsPage() {
         </select>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-brown/[0.06] overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-xl shadow-sm border border-brown/[0.06] overflow-x-auto">
+        <table className="w-full text-sm min-w-[650px]">
           <thead>
             <tr className="border-b border-brown/[0.06] bg-brown/[0.02]">
               <th className="text-left px-4 py-3 font-medium text-brown/60">Event</th>
@@ -143,7 +143,7 @@ export default function AdminAuditLogsPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
+            className="px-3 py-2.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
           >
             Previous
           </button>
@@ -153,7 +153,7 @@ export default function AdminAuditLogsPage() {
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-3 py-1.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
+            className="px-3 py-2.5 text-sm rounded-lg border border-brown/10 text-brown/60 hover:bg-brown/5 disabled:opacity-30 transition-colors"
           >
             Next
           </button>

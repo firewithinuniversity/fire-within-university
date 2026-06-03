@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,9 +17,10 @@ const navItems = [
 export default function AdminNav() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
-  return (
-    <aside className="fixed inset-y-0 left-0 w-56 bg-brown text-cream flex flex-col z-30">
+  const sidebarContent = (
+    <>
       <div className="px-4 py-5 flex items-center gap-2.5 border-b border-cream/[0.08]">
         <FlameIcon size={24} className="text-gold" />
         <span className="font-serif font-bold text-sm tracking-wide">FWU Admin</span>
@@ -33,7 +35,8 @@ export default function AdminNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
                 active
                   ? "bg-cream/[0.12] text-gold"
                   : "text-cream/60 hover:text-cream hover:bg-cream/[0.06]"
@@ -51,7 +54,8 @@ export default function AdminNav() {
       <div className="px-3 py-4 border-t border-cream/[0.08] space-y-2">
         <Link
           href="/"
-          className="flex items-center gap-2 px-3 py-1.5 text-xs text-cream/50 hover:text-cream/70 transition-colors"
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-2 px-3 py-2.5 text-xs text-cream/50 hover:text-cream/70 transition-colors min-h-[44px]"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
@@ -59,17 +63,64 @@ export default function AdminNav() {
           Back to Site
         </Link>
         {session?.user && (
-          <div className="px-3 flex items-center justify-between">
-            <span className="text-xs text-cream/50 truncate max-w-[120px]">{session.user.email}</span>
+          <div className="px-3 flex items-center justify-between gap-2">
+            <span className="text-xs text-cream/50 truncate">{session.user.email}</span>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="text-xs text-cream/50 hover:text-gold transition-colors"
+              className="text-xs text-cream/50 hover:text-gold transition-colors py-2 px-2 min-h-[44px] flex items-center"
             >
               Sign Out
             </button>
           </div>
         )}
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile hamburger */}
+      <button
+        onClick={() => setOpen(true)}
+        className="md:hidden fixed top-3 left-3 z-40 bg-brown/90 backdrop-blur text-cream p-2.5 rounded-lg shadow-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+        aria-label="Open admin menu"
+      >
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Mobile sidebar (slide in) */}
+      <aside
+        className={`md:hidden fixed inset-y-0 left-0 w-56 bg-brown text-cream flex flex-col z-50 transform transition-transform duration-200 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Close button */}
+        <button
+          onClick={() => setOpen(false)}
+          className="absolute top-3 right-3 text-cream/50 hover:text-cream p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          aria-label="Close admin menu"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        {sidebarContent}
+      </aside>
+
+      {/* Desktop sidebar (always visible) */}
+      <aside className="hidden md:flex fixed inset-y-0 left-0 w-56 bg-brown text-cream flex-col z-30">
+        {sidebarContent}
+      </aside>
+    </>
   );
 }

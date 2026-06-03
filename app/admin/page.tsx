@@ -35,7 +35,7 @@ export default async function AdminOverviewPage() {
   ];
 
   return (
-    <div className="px-8 py-8">
+    <div className="px-4 sm:px-6 md:px-8 py-6 md:py-8 pt-16 md:pt-8">
       <div className="mb-8">
         <h1 className="font-serif text-2xl font-bold text-brown">Dashboard</h1>
         <p className="text-sm text-brown/50 mt-1">
@@ -66,12 +66,12 @@ export default async function AdminOverviewPage() {
           ) : (
             <ul className="space-y-3">
               {recentUsers.map((u) => (
-                <li key={u.email} className="flex items-center justify-between text-sm">
-                  <div>
+                <li key={u.email} className="flex items-center justify-between text-sm gap-2 min-w-0">
+                  <div className="min-w-0 truncate">
                     <span className="text-brown font-medium">{u.name ?? "—"}</span>
                     <span className="text-brown/40 ml-2">{u.email}</span>
                   </div>
-                  <span className="text-brown/30 text-xs">
+                  <span className="text-brown/30 text-xs shrink-0">
                     {new Date(u.createdAt).toLocaleDateString()}
                   </span>
                 </li>
