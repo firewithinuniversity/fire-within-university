@@ -192,37 +192,45 @@ export const getFeaturedPosts = unstable_cache(
   { revalidate: FIVE_MIN }
 );
 
-export type VideoLesson = {
+export type VideoSummary = {
   _id: string;
   title: string;
   slug: string;
   youtubeUrl: string;
+  description?: string;
+  category?: string;
+  speaker?: string;
   scripture?: string;
   duration?: string;
-  courseTitle: string;
-  courseSlug: string;
+  featured?: boolean;
+  publishedAt?: string;
+  thumbnail?: SanityImage;
 };
 
-export const getLatestVideoLessons = unstable_cache(
-  async (): Promise<VideoLesson[]> => {
+export const getLatestVideos = unstable_cache(
+  async (): Promise<VideoSummary[]> => {
     return safeFetch(
       () =>
         client.fetch(`
-          *[_type == "lesson" && defined(youtubeUrl) && youtubeUrl != ""] | order(_createdAt desc) [0..5] {
+          *[_type == "video" && featured == true] | order(publishedAt desc) [0..5] {
             _id,
             title,
             "slug": slug.current,
             youtubeUrl,
+            description,
+            category,
+            speaker,
             scripture,
             duration,
-            "courseTitle": *[_type == "course" && references(^._id)][0].title,
-            "courseSlug": *[_type == "course" && references(^._id)][0].slug.current
+            featured,
+            publishedAt,
+            thumbnail { asset, alt, hotspot }
           }
         `),
       []
     );
   },
-  ["latest-video-lessons"],
+  ["latest-videos"],
   { revalidate: FIVE_MIN }
 );
 

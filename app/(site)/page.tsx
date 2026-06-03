@@ -4,7 +4,7 @@ import Image from "next/image";
 import EmailSignup from "@/components/EmailSignup";
 import SectionReveal from "@/components/SectionReveal";
 import PostCard from "@/components/PostCard";
-import { getAllCourses, getFeaturedPosts, getLatestVideoLessons, type CourseSummary } from "@/lib/sanity/queries";
+import { getAllCourses, getFeaturedPosts, getLatestVideos, type CourseSummary } from "@/lib/sanity/queries";
 import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
 
@@ -68,10 +68,10 @@ function PathwayIcon({ type }: { type: string }) {
 }
 
 export default async function HomePage() {
-  const [sanityCourses, latestPosts, videoLessons] = await Promise.all([
+  const [sanityCourses, latestPosts, latestVideos] = await Promise.all([
     getAllCourses(),
     getFeaturedPosts(),
-    getLatestVideoLessons(),
+    getLatestVideos(),
   ]);
   const allCourses = sanityCourses.length > 0 ? sanityCourses : PLACEHOLDER_COURSES;
   const displayCourses = allCourses.slice(0, 4);
@@ -168,39 +168,47 @@ export default async function HomePage() {
       </SectionReveal>
 
       {/* ── Latest Videos ──────────────────────────────────────── */}
-      {videoLessons.length > 0 && (
+      {latestVideos.length > 0 && (
         <SectionReveal>
           <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-28" aria-label="Latest videos">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
               <div>
                 <p className="text-gold/70 font-bold text-[10px] uppercase tracking-[0.3em] mb-2">New Videos</p>
                 <h2 className="font-serif text-3xl md:text-[2.5rem] font-bold text-cream leading-tight tracking-[-0.01em]">
-                  Latest Lessons
+                  Latest Videos
                 </h2>
               </div>
-              <Link href="/courses" className="group text-gold/80 hover:text-gold text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 self-start sm:self-auto">
-                All courses
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
-              </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {videoLessons.map((lesson, i) => {
+              {latestVideos.map((video, i) => {
                 // Extract YouTube video ID for thumbnail
-                const videoId = lesson.youtubeUrl?.match(/(?:youtu\.be\/|v=|\/embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
-                const thumbnail = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
+                const videoId = video.youtubeUrl?.match(/(?:youtu\.be\/|v=|\/embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+                const ytThumbnail = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
+                const hasCustomThumb = !!video.thumbnail;
 
                 return (
-                  <SectionReveal key={lesson._id} delay={i * 100} distance={20}>
-                    <Link
-                      href={lesson.courseSlug ? `/courses/${lesson.courseSlug}/lessons/${lesson.slug}` : "/courses"}
+                  <SectionReveal key={video._id} delay={i * 100} distance={20}>
+                    <a
+                      href={video.youtubeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
                     >
                       <div className="relative aspect-video bg-brown overflow-hidden">
-                        {thumbnail ? (
+                        {hasCustomThumb ? (
                           <Image
-                            src={thumbnail}
-                            alt={lesson.title}
+                            src={imageUrlFor(video.thumbnail!).width(640).height(360).url()}
+                            alt={video.thumbnail?.alt || video.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            loading="lazy"
+                          />
+                        ) : ytThumbnail ? (
+                          <Image
+                            src={ytThumbnail}
+                            alt={video.title}
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -223,25 +231,31 @@ export default async function HomePage() {
                           </div>
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-brown/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        {/* Category badge */}
+                        {video.category && (
+                          <span className="absolute top-3 left-3 bg-brown/80 backdrop-blur-sm text-gold text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                            {video.category}
+                          </span>
+                        )}
                       </div>
                       <div className="p-5">
                         <h3 className="font-serif text-[17px] font-bold text-cream group-hover:text-gold transition-colors duration-300 mb-1.5 leading-snug">
-                          {lesson.title}
+                          {video.title}
                         </h3>
-                        {lesson.courseTitle && (
-                          <p className="text-cream/40 text-[13px] mb-2">{lesson.courseTitle}</p>
+                        {video.speaker && (
+                          <p className="text-cream/40 text-[13px] mb-2">{video.speaker}</p>
                         )}
                         <div className="flex items-center gap-3 text-[11px] text-cream/50 uppercase tracking-wider font-medium">
-                          {lesson.scripture && <span>{lesson.scripture}</span>}
-                          {lesson.duration && lesson.duration !== "Coming soon" && (
+                          {video.scripture && <span>{video.scripture}</span>}
+                          {video.duration && (
                             <>
-                              <span className="w-1 h-1 rounded-full bg-cream/20" aria-hidden="true" />
-                              <span>{lesson.duration}</span>
+                              {video.scripture && <span className="w-1 h-1 rounded-full bg-cream/20" aria-hidden="true" />}
+                              <span>{video.duration}</span>
                             </>
                           )}
                         </div>
                       </div>
-                    </Link>
+                    </a>
                   </SectionReveal>
                 );
               })}
