@@ -142,12 +142,12 @@ export default function Footer() {
         <div className="border border-cream/10 rounded-xl px-5 py-4 mb-8 bg-cream/5">
           <p className="text-xs text-cream/70 max-w-2xl leading-relaxed">
             <strong className="text-cream/80">Donation Disclaimer:</strong>{" "}
-            Fire Within University is not a registered 501(c)(3) nonprofit organization. Donations are not tax-deductible. We are grateful for every contribution.
+            Fire Within University is operated by The Fire Within LLC, which is not a registered 501(c)(3) nonprofit organization. Donations are not tax-deductible. We are grateful for every contribution.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/70 pt-6 border-t border-cream/10">
-          <p>&copy; {currentYear} Fire Within University. All rights reserved.</p>
+          <p>&copy; {currentYear} The Fire Within LLC. All rights reserved.</p>
           <p className="text-gold/90 font-medium italic">Built for the Kingdom.</p>
         </div>
       </div>

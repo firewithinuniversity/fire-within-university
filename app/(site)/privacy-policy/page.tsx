@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="font-serif text-xl font-bold text-cream mb-3">1. Who We Are</h2>
           <p>
             Fire Within University (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
-            is a Christian ministry operating the website at{" "}
+            is a Christian ministry operated by <strong>The Fire Within LLC</strong> at{" "}
             <strong>{SITE_URL}</strong>. We are not a registered 501(c)(3) nonprofit organization.
             You can reach us at{" "}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-gold underline">
@@ -305,7 +305,8 @@ export default function PrivacyPolicyPage() {
             For any privacy-related questions, data requests, or concerns, please reach us at:
           </p>
           <div className="mt-3 bg-brown-card/70 border border-white/[0.06] rounded-xl px-5 py-4 text-sm">
-            <p className="font-semibold text-cream">Fire Within University</p>
+            <p className="font-semibold text-cream">The Fire Within LLC</p>
+            <p className="text-cream/60">operating as Fire Within University</p>
             <p>{MAILING_ADDRESS}</p>
             <p>
               Email:{" "}

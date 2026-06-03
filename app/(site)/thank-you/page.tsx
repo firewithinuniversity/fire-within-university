@@ -92,9 +92,9 @@ export default function ThankYouPage() {
 
       {/* Donation disclaimer — reiterate after the transaction */}
       <p className="text-xs text-cream/50 max-w-sm mx-auto mt-8">
-        As a reminder, Fire Within University is not a 501(c)(3) nonprofit.
-        Your donation is not tax-deductible. A receipt from Stripe has been
-        sent to your email.
+        As a reminder, Fire Within University (operated by The Fire Within LLC)
+        is not a 501(c)(3) nonprofit. Your donation is not tax-deductible. A
+        receipt from Stripe has been sent to your email.
       </p>
     </div>
   );

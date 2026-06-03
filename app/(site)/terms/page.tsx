@@ -55,9 +55,10 @@ export default function TermsPage() {
           <h2 className="font-serif text-xl font-bold text-cream mb-3">1. Who We Are</h2>
           <p>
             Fire Within University (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
-            is a Christian ministry operating at <strong>{SITE_URL}</strong>. We are not a
-            registered 501(c)(3) nonprofit organization. These Terms of Service constitute a
-            legally binding agreement between you and Fire Within University.
+            is a Christian ministry operated by <strong>The Fire Within LLC</strong> at{" "}
+            <strong>{SITE_URL}</strong>. We are not a registered 501(c)(3) nonprofit organization.
+            These Terms of Service constitute a legally binding agreement between you and
+            The Fire Within LLC.
           </p>
         </section>
 

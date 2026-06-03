@@ -88,10 +88,11 @@ export default function DonatePage() {
       <div className="p-5 bg-brown-card/40 rounded-2xl border border-white/[0.06]">
         <p className="text-xs text-cream/50 leading-relaxed text-center">
           <strong className="text-cream/55">Important:</strong> Fire Within
-          University is not a registered 501(c)(3) nonprofit organization.
-          Donations are not tax-deductible under U.S. federal or state law. By
-          donating, you acknowledge this understanding. You will be redirected
-          to Stripe&apos;s secure checkout to complete your gift.
+          University is operated by The Fire Within LLC, which is not a registered
+          501(c)(3) nonprofit organization. Donations are not tax-deductible under
+          U.S. federal or state law. By donating, you acknowledge this
+          understanding. You will be redirected to Stripe&apos;s secure checkout
+          to complete your gift.
         </p>
       </div>
     </div>
