@@ -94,7 +94,7 @@ export async function proxy(request: NextRequest) {
 
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${unsafeEval} https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://accounts.google.com`,
+    `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' 'strict-dynamic'${unsafeEval} https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://accounts.google.com`,
     `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com`,
     `font-src 'self' https://fonts.gstatic.com`,
     `img-src 'self' data: blob: https://cdn.sanity.io https://www.google-analytics.com https://i.ytimg.com https://lh3.googleusercontent.com`,
