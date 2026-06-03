@@ -54,27 +54,32 @@ export default function AdminNav() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-cream/[0.08] space-y-2">
+      <div className="px-2 py-3 border-t border-cream/[0.08] space-y-0.5">
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="flex items-center gap-2 px-3 py-2.5 text-xs text-cream/50 hover:text-cream/70 transition-colors min-h-[44px]"
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-cream/60 hover:text-cream hover:bg-cream/[0.06] transition-colors min-h-[44px]"
         >
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <svg className="w-[18px] h-[18px] shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
           </svg>
           Back to Site
         </Link>
         {session?.user && (
-          <div className="px-3 flex items-center justify-between gap-2">
-            <span className="text-xs text-cream/50 truncate">{session.user.email}</span>
+          <>
+            <p className="px-3 pt-2 pb-1 text-[11px] text-cream/40 truncate" title={session.user.email ?? undefined}>
+              {session.user.email}
+            </p>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="text-xs text-cream/50 hover:text-gold transition-colors py-2 px-2 min-h-[44px] flex items-center"
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-cream/60 hover:text-gold hover:bg-cream/[0.06] transition-colors min-h-[44px]"
             >
+              <svg className="w-[18px] h-[18px] shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
               Sign Out
             </button>
-          </div>
+          </>
         )}
       </div>
     </>
