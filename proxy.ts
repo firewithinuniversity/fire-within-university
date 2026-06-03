@@ -89,7 +89,25 @@ export async function proxy(request: NextRequest) {
         return NextResponse.json({ message: "Missing Origin header." }, { status: 403 });
       }
 
-      const originAllowed = origin === expectedOrigin || (isDev && isLocalhostOrigin);
+      // Same-origin check: accept the request when its Origin host matches the
+      // host the app is actually served on (the Vercel deployment URL, a custom
+      // domain, or a preview URL) — not only the configured NEXT_PUBLIC_BASE_URL.
+      // This is the real CSRF guard (cross-site origins still get rejected) and
+      // avoids blocking legitimate forms when the access URL differs from the
+      // configured production URL.
+      const forwardedHost = request.headers.get("x-forwarded-host");
+      const host = forwardedHost ?? request.headers.get("host");
+      let originHost = "";
+      try {
+        originHost = new URL(origin).host;
+      } catch {
+        originHost = "";
+      }
+
+      const originAllowed =
+        origin === expectedOrigin ||
+        (originHost !== "" && originHost === host) ||
+        (isDev && isLocalhostOrigin);
 
       if (!originAllowed) {
         return NextResponse.json({ message: "Forbidden: origin not allowed." }, { status: 403 });
