@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthDropdown from "./AuthDropdown";
@@ -23,15 +23,25 @@ export default function Navbar() {
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const rafRef = useRef<number | null>(null);
+
+  // Throttled scroll handler — one RAF at a time
+  const handleScroll = useCallback(() => {
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      setScrolled(window.scrollY > 20);
+      rafRef.current = null;
+    });
+  }, []);
 
   useEffect(() => {
-    function onScroll() {
-      setScrolled(window.scrollY > 20);
-    }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    handleScroll(); // initial check
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [handleScroll]);
 
   // Close mobile search when navigating
   useEffect(() => {
@@ -87,10 +97,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 text-cream transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 text-cream will-change-[background-color,border-color] transition-colors duration-300 ${
         scrolled
-          ? "bg-brown-deep/92 backdrop-blur-xl border-b border-cream/[0.06] shadow-[0_4px_24px_rgba(26,15,5,0.6)]"
-          : "bg-transparent"
+          ? "bg-brown-deep/95 border-b border-cream/[0.06] shadow-[0_4px_24px_rgba(26,15,5,0.6)]"
+          : "bg-transparent border-b border-transparent"
       }`}
     >
       <nav
@@ -100,7 +110,7 @@ export default function Navbar() {
         {/* Logo — left */}
         <Link
           href="/"
-          className="font-serif text-lg sm:text-xl font-bold text-cream hover:text-gold transition-colors duration-300 tracking-tight shrink-0"
+          className="font-serif text-lg sm:text-xl font-bold text-cream hover:text-gold transition-colors duration-200 tracking-tight shrink-0"
           aria-label="Fire Within University — Home"
         >
           Fire Within University
@@ -112,9 +122,9 @@ export default function Navbar() {
             <li key={href}>
               <Link
                 href={href}
-                className={`text-[13px] font-medium transition-all duration-300 relative
+                className={`text-[13px] font-medium transition-colors duration-200 relative
                   after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1.5px]
-                  after:bg-gold after:transition-transform after:duration-300 after:origin-left
+                  after:bg-gold after:transition-transform after:duration-200 after:origin-left
                   hover:text-gold hover:after:scale-x-100
                   ${pathname === href ? "text-gold after:scale-x-100" : "text-cream/70 after:scale-x-0"}`}
                 aria-current={pathname === href ? "page" : undefined}
@@ -130,7 +140,7 @@ export default function Navbar() {
           <SearchBar />
           <Link
             href="/donate"
-            className="bg-orange hover:bg-orange-hover text-cream text-[13px] font-semibold px-5 py-2 rounded-full transition-all duration-300 shadow-[0_2px_12px_rgba(196,94,26,0.25)] hover:shadow-[0_4px_20px_rgba(196,94,26,0.4)] hover:-translate-y-0.5"
+            className="bg-orange hover:bg-orange-hover text-cream text-[13px] font-semibold px-5 py-2 rounded-full transition-colors duration-200 shadow-[0_2px_12px_rgba(196,94,26,0.25)] hover:shadow-[0_4px_20px_rgba(196,94,26,0.4)] hover:-translate-y-0.5"
           >
             Give
           </Link>
@@ -165,16 +175,16 @@ export default function Navbar() {
           aria-controls="mobile-menu"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
-          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "translate-y-2 rotate-45" : ""}`} aria-hidden="true" />
-          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "opacity-0 scale-x-0" : ""}`} aria-hidden="true" />
-          <span className={`block w-5 h-0.5 bg-cream transition-all duration-200 ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`} aria-hidden="true" />
+          <span className={`block w-5 h-0.5 bg-cream transition-transform duration-200 ${mobileOpen ? "translate-y-2 rotate-45" : ""}`} aria-hidden="true" />
+          <span className={`block w-5 h-0.5 bg-cream transition-opacity duration-200 ${mobileOpen ? "opacity-0" : ""}`} aria-hidden="true" />
+          <span className={`block w-5 h-0.5 bg-cream transition-transform duration-200 ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`} aria-hidden="true" />
         </button>
       </nav>
 
       {/* Mobile search bar — slides down */}
       <div
         id="mobile-search-panel"
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
           mobileSearchOpen ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -189,14 +199,14 @@ export default function Navbar() {
         id="mobile-menu"
         aria-hidden={!mobileOpen}
         inert={!mobileOpen ? true : undefined}
-        className={`md:hidden bg-brown-deep/95 backdrop-blur-xl border-t border-cream/[0.06] overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? "max-h-[24rem] opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden bg-brown-deep/95 border-t border-cream/[0.06] overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${mobileOpen ? "max-h-[24rem] opacity-100" : "max-h-0 opacity-0"}`}
       >
         <ul className="flex flex-col px-6 py-4 gap-1 list-none">
           {navLinks.map(({ href, label }) => (
             <li key={href}>
               <Link
                 href={href}
-                className={`block py-3.5 text-[15px] font-medium border-b border-cream/[0.06] transition-all duration-200 hover:text-gold ${pathname === href ? "text-gold" : "text-cream/80"}`}
+                className={`block py-3.5 text-[15px] font-medium border-b border-cream/[0.06] transition-colors duration-200 hover:text-gold ${pathname === href ? "text-gold" : "text-cream/80"}`}
                 onClick={() => { setMobileOpen(false); hamburgerRef.current?.focus(); }}
                 aria-current={pathname === href ? "page" : undefined}
               >

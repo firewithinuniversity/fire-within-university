@@ -9,10 +9,6 @@
   --transition-medium: 250ms ease;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background-color: #fdf6ec;
   color: #3d1f0a;

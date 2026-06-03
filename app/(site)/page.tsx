@@ -88,7 +88,7 @@ export default async function HomePage() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           className="hidden md:block absolute inset-0 w-full h-full object-cover"
           poster="/hero-door.png"
         >
@@ -225,7 +225,7 @@ export default async function HomePage() {
               <SectionReveal key={course._id} delay={i * 100} distance={20}>
                 <Link
                   href={`/courses/${course.slug.current}`}
-                  className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
+                  className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-[border-color,box-shadow,transform] duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
                 >
                   <div className="relative aspect-[16/10] bg-brown overflow-hidden">
                     {course.coverImage ? (
@@ -233,7 +233,7 @@ export default async function HomePage() {
                         src={imageUrlFor(course.coverImage).width(400).height(250).url()}
                         alt={course.title}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                        className="object-cover transition-transform duration-400 group-hover:scale-[1.04]"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         loading="lazy"
                       />
@@ -307,7 +307,7 @@ export default async function HomePage() {
               <SectionReveal key={p.href} delay={i * 80} distance={20}>
                 <Link
                   href={p.href}
-                  className="group flex flex-col h-full bg-brown-card/50 border border-white/[0.06] rounded-2xl p-6 transition-all duration-300 hover:bg-brown-card/80 hover:border-gold/15 hover:-translate-y-1"
+                  className="group flex flex-col h-full bg-brown-card/50 border border-white/[0.06] rounded-2xl p-6 transition-[border-color,background-color,transform] duration-300 hover:bg-brown-card/80 hover:border-gold/15 hover:-translate-y-1"
                 >
                   <div className="mb-5 p-3 rounded-xl bg-gold/[0.06] w-fit transition-colors duration-300 group-hover:bg-gold/[0.12]">
                     <PathwayIcon type={p.icon} />

@@ -17,7 +17,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
     : null;
 
   return (
-    <article className="bg-brown-card/70 rounded-2xl overflow-hidden border border-white/[0.06] hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+    <article className="bg-brown-card/70 rounded-2xl overflow-hidden border border-white/[0.06] hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1 transition-[border-color,box-shadow,transform] duration-300 flex flex-col group">
       {imageUrl ? (
         <Link href={`/blog/${slug.current}`} className="block overflow-hidden aspect-video">
           <Image
@@ -27,7 +27,7 @@ export default function PostCard({ post, readingTimeMinutes }: Props) {
             height={340}
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-700"
+            className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-400"
           />
         </Link>
       ) : (
