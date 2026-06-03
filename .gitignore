@@ -60,3 +60,6 @@ next-env.d.ts
 /prisma/dev.db
 /prisma/dev.db-journal
 /prisma/prisma/
+
+# Local asset backups (keep uncompressed originals out of the repo)
+/public/*-original.*
