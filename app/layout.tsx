@@ -5,6 +5,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import CookieBanner from "@/components/CookieBanner";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { organizationJsonLd, websiteJsonLd, canonicalUrl } from "@/lib/metadata";
 
 const lora = Lora({
@@ -95,6 +97,8 @@ export default async function RootLayout({
           }}
         />
         <GoogleAnalytics nonce={nonce} />
+        <Analytics />
+        <SpeedInsights />
         <CookieBanner />
       </body>
     </html>
