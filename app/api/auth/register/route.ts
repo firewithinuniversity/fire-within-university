@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { getIpFromRequest } from "@/lib/rateLimit";
 import { checkRateLimitDb } from "@/lib/rateLimitDb";
-import { adminEmails } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/adminEmails";
 import { isPasswordValid, getPasswordErrors } from "@/lib/passwordValidation";
 import { logAuditEvent } from "@/lib/auditLog";
 import { sendVerificationEmail } from "@/lib/emailVerification";
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (adminEmails.includes(normalizedEmail)) {
+  if (isAdminEmail(normalizedEmail)) {
     logAuditEvent({
       event: "ADMIN_REGISTER_BLOCKED",
       email: normalizedEmail,

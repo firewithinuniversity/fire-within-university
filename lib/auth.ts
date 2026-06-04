@@ -6,22 +6,14 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logAuditEvent } from "@/lib/auditLog";
 import { checkRateLimitDb } from "@/lib/rateLimitDb";
-import { getNextAuthSecret, getGoogleClientId, getGoogleClientSecret, getAdminEmail1, getAdminEmail2 } from "@/lib/env";
+import { isAdminEmail } from "@/lib/adminEmails";
+import { getNextAuthSecret, getGoogleClientId, getGoogleClientSecret } from "@/lib/env";
 
 export const UserRole = {
   USER: "USER",
   ADMIN: "ADMIN",
 } as const;
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
-
-export const adminEmails = [
-  getAdminEmail1(),
-  getAdminEmail2(),
-].filter((e): e is string => Boolean(e)).map((e) => e.toLowerCase());
-
-function isAdminEmail(email: string): boolean {
-  return adminEmails.includes(email.toLowerCase());
-}
 
 // Pre-computed bcrypt hash used to keep failed-login timing constant, so an
 // attacker cannot distinguish "no such user" (fast) from "wrong password"
