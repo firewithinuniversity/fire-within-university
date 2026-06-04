@@ -10,27 +10,24 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#1a0f05",
     theme_color: "#1a0f05",
     icons: [
+      // Full brand logo (heart + flame + wordmark) for the home-screen install
+      // icon, shown un-cropped where the wordmark is legible.
       {
-        src: "/icon",
-        sizes: "32x32",
-        type: "image/png",
-      },
-      {
-        src: "/apple-icon",
-        sizes: "180x180",
-        type: "image/png",
-      },
-      {
-        // Full brand logo for the home-screen / install icon (shown un-cropped).
-        src: "/logo.png",
-        sizes: "512x512",
+        src: "/icon-192.png",
+        sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        // Maskable variant uses the icon-only mark so the wordmark isn't cropped
-        // when the platform applies a circle/squircle mask.
-        src: "/pwa-icon-512",
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      // Maskable uses the heart-and-flame mark (no wordmark) centered in the safe
+      // zone, so nothing is clipped when the platform applies a circle/squircle mask.
+      {
+        src: "/maskable-512.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
