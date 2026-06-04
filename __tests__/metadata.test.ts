@@ -38,7 +38,7 @@ describe("organizationJsonLd", () => {
     expect(result["@type"]).toBe("Organization");
     expect(result.name).toBe("Fire Within University");
     expect(result.url).toBe("https://test.example.com");
-    expect(result.logo).toContain("pwa-icon-512");
+    expect(result.logo).toContain("logo.png");
   });
 });
 

@@ -21,17 +21,15 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
       {
-        src: "/pwa-icon-192",
-        sizes: "192x192",
-        type: "image/png",
-      },
-      {
-        src: "/pwa-icon-512",
+        // Full brand logo for the home-screen / install icon (shown un-cropped).
+        src: "/logo.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
+        // Maskable variant uses the icon-only mark so the wordmark isn't cropped
+        // when the platform applies a circle/squircle mask.
         src: "/pwa-icon-512",
         sizes: "512x512",
         type: "image/png",

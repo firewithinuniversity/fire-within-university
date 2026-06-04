@@ -18,7 +18,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: "Fire Within University",
     url: BASE_URL,
-    logo: `${BASE_URL}/pwa-icon-512`,
+    logo: `${BASE_URL}/logo.png`,
     description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
     sameAs: [
       "https://www.youtube.com/@FireWithinUnv",
@@ -74,7 +74,7 @@ export function articleJsonLd(opts: {
     publisher: {
       "@type": "Organization",
       name: "Fire Within University",
-      logo: { "@type": "ImageObject", url: `${BASE_URL}/pwa-icon-512` },
+      logo: { "@type": "ImageObject", url: `${BASE_URL}/logo.png` },
     },
     ...(opts.imageUrl ? { image: opts.imageUrl } : {}),
   };

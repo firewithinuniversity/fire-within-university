@@ -50,6 +50,18 @@ export default async function AboutPage() {
       </PageHeader>
 
       <div className="max-w-4xl mx-auto px-4">
+      {/* Brand logo */}
+      <div className="flex justify-center mb-14 -mt-2">
+        <Image
+          src="/logo.png"
+          alt="The Fire Within"
+          width={260}
+          height={260}
+          priority
+          className="rounded-3xl border border-gold/15 shadow-[0_8px_40px_-12px_rgba(232,160,32,0.25)]"
+        />
+      </div>
+
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 mt-4">
         {[
           {
