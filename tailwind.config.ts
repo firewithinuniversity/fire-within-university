@@ -44,6 +44,9 @@ const config: Config = {
         "card-hover": "0 20px 40px -12px rgba(61,31,10,0.4)",
         glow: "0 0 24px 4px rgba(232,160,32,0.18)",
         "glow-lg": "0 0 48px 8px rgba(232,160,32,0.22)",
+        // Kindled hover for cards on dark ground: elevation as light, not shadow
+        // (dark drop shadows are invisible on the near-black page ground)
+        kindle: "0 10px 40px -10px rgba(232,160,32,0.22)",
       },
       keyframes: {
         "pulse-glow": {

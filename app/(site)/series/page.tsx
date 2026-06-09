@@ -89,7 +89,7 @@ export default async function SeriesPage() {
               <Link
                 key={series._id}
                 href={`/series/${series.slug.current}`}
-                className="group bg-brown-card/70 rounded-2xl overflow-hidden hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 border border-white/[0.06] flex flex-col"
+                className="group bg-brown-card/70 rounded-2xl overflow-hidden hover:shadow-kindle hover:-translate-y-1 transition-all duration-300 border border-white/[0.06] flex flex-col"
               >
                 {/* Cover image */}
                 {imageUrl ? (

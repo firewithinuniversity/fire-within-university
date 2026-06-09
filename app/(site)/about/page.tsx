@@ -95,7 +95,7 @@ export default async function AboutPage() {
         ].map(({ icon, title, description }) => (
           <div
             key={title}
-            className="bg-brown-card/70 border border-white/[0.06] rounded-2xl p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 text-center space-y-3"
+            className="bg-brown-card/70 border border-white/[0.06] rounded-2xl p-6 hover:shadow-kindle hover:-translate-y-1 transition-all duration-300 text-center space-y-3"
           >
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold/[0.08] text-gold mx-auto">
               {icon}
@@ -151,7 +151,7 @@ export default async function AboutPage() {
               return (
                 <div
                   key={author._id}
-                  className="flex gap-5 items-start p-6 bg-brown-card/70 border border-white/[0.06] rounded-2xl hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
+                  className="flex gap-5 items-start p-6 bg-brown-card/70 border border-white/[0.06] rounded-2xl hover:shadow-kindle hover:-translate-y-1 transition-all duration-300"
                 >
                   {photoUrl ? (
                     <Image

@@ -64,28 +64,28 @@ export default function PageHeader({
 
       <div className="relative max-w-3xl mx-auto space-y-5">
         {mark !== "none" && (
-          <div className="flex justify-center">
+          <div className="anim-rise flex justify-center">
             {mark === "flame" ? <FlameMark /> : <CrossMark />}
           </div>
         )}
 
         {eyebrow && (
-          <p className="text-gold/80 font-bold text-[10px] uppercase tracking-[0.3em]">
+          <p className="anim-rise anim-d1 text-gold/80 font-bold text-[10px] uppercase tracking-[0.3em]">
             {eyebrow}
           </p>
         )}
 
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.25rem] font-bold text-cream leading-[1.02] tracking-[-0.02em]">
+        <h1 className="anim-rise anim-d2 font-serif text-4xl sm:text-5xl md:text-[3.25rem] font-bold text-cream leading-[1.02] tracking-[-0.02em]">
           {title}
         </h1>
 
         {subtitle && (
-          <p className="text-cream/65 max-w-xl mx-auto text-lg leading-[1.7]">
+          <p className="anim-rise anim-d3 text-cream/65 max-w-xl mx-auto text-lg leading-[1.7]">
             {subtitle}
           </p>
         )}
 
-        {children}
+        {children && <div className="anim-rise anim-d4">{children}</div>}
       </div>
     </header>
   );

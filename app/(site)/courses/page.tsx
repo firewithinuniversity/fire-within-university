@@ -99,7 +99,7 @@ export default async function CoursesPage() {
             <SectionReveal key={course._id} delay={i * 100} distance={20}>
               <Link
                 href={`/courses/${course.slug.current}`}
-                className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
+                className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-300 hover:border-gold/15 hover:shadow-kindle hover:-translate-y-1"
               >
                 <div className="relative aspect-[16/9] bg-brown overflow-hidden">
                   {course.coverImage ? (

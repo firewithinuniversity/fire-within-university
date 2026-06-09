@@ -92,17 +92,17 @@ export default async function HomePage() {
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full flex items-center justify-center">
           <div className="max-w-2xl space-y-8 text-center">
-            <p className="inline-block text-gold/90 font-semibold text-[11px] uppercase tracking-[0.25em] border border-gold/30 rounded-full px-5 py-2 bg-gold/[0.06] backdrop-blur-sm">
+            <p className="anim-rise inline-block text-gold/90 font-semibold text-[11px] uppercase tracking-[0.25em] border border-gold/30 rounded-full px-5 py-2 bg-gold/[0.06] backdrop-blur-sm">
               Ministry · Teaching · Discipleship
             </p>
-            <h1 className="font-serif text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[0.92] text-cream tracking-[-0.02em]">
+            <h1 className="anim-rise anim-d1 font-serif text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[0.92] text-cream tracking-[-0.02em]">
               Set Your Heart{" "}
               <span className="text-gold">On Fire</span>
             </h1>
-            <p className="text-cream/70 text-lg md:text-xl leading-[1.7] font-light max-w-lg mx-auto">
+            <p className="anim-rise anim-d2 text-cream/70 text-lg md:text-xl leading-[1.7] font-light max-w-lg mx-auto">
               Sermons, articles, and resources to deepen your faith and ignite your walk with Jesus.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
+            <div className="anim-rise anim-d3 flex flex-col sm:flex-row gap-4 pt-4 justify-center">
               <Link
                 href="/blog"
                 className="group bg-orange hover:bg-orange-hover text-cream font-semibold px-10 py-4 rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(196,94,26,0.35)] hover:shadow-[0_8px_32px_rgba(196,94,26,0.5)] hover:-translate-y-0.5 text-[15px] text-center"
@@ -121,10 +121,12 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-          <span className="text-cream/60 text-[10px] uppercase tracking-[0.3em] font-medium">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-cream/40 to-transparent" />
+        {/* Scroll indicator — arrives last, breathes like an ember */}
+        <div className="anim-rise anim-d5 absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="flex flex-col items-center gap-2 opacity-50">
+            <span className="text-cream/60 text-[10px] uppercase tracking-[0.3em] font-medium">Scroll</span>
+            <div className="w-px h-8 bg-gradient-to-b from-cream/40 to-transparent animate-pulse-glow" />
+          </div>
         </div>
       </section>
 
@@ -206,7 +208,7 @@ export default async function HomePage() {
               <SectionReveal key={course._id} delay={i * 100} distance={20}>
                 <Link
                   href={`/courses/${course.slug.current}`}
-                  className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-[border-color,box-shadow,transform] duration-300 hover:border-gold/15 hover:shadow-card-hover hover:-translate-y-1"
+                  className="group block bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-[border-color,box-shadow,transform] duration-300 hover:border-gold/15 hover:shadow-kindle hover:-translate-y-1"
                 >
                   <div className="relative aspect-[16/10] bg-brown overflow-hidden">
                     {course.coverImage ? (

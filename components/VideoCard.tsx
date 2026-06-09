@@ -35,7 +35,7 @@ export default function VideoCard({
   const thumb = thumbnailUrl || ytThumbnail;
 
   return (
-    <div className="group bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-gold/15 hover:shadow-card-hover">
+    <div className="group bg-brown-card/70 border border-white/[0.06] rounded-2xl overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-gold/15 hover:shadow-kindle">
       <div className="relative aspect-video bg-brown overflow-hidden">
         {playing && videoId ? (
           <iframe

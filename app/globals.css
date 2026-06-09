@@ -25,11 +25,36 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.015em;
 }
 
-/* Selection color — gold on brown */
+/* Selection color — readable on both dark pages and the light admin:
+   dark walnut text on a committed gold wash */
 ::selection {
-  background-color: rgba(232, 160, 32, 0.25);
-  color: #3d1f0a;
+  background-color: rgba(232, 160, 32, 0.45);
+  color: #1a0f05;
 }
+
+/* ── Entrance choreography ─────────────────────────────────────────
+   "Kindled" rise-in for the hero and page headers. CSS-only (runs
+   without JS, server components welcome). The prefers-reduced-motion
+   block below collapses these to an instant final state. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-rise {
+  animation: rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.anim-d1 { animation-delay: 120ms; }
+.anim-d2 { animation-delay: 240ms; }
+.anim-d3 { animation-delay: 380ms; }
+.anim-d4 { animation-delay: 540ms; }
+.anim-d5 { animation-delay: 760ms; }
 
 /* Portable Text article styles */
 .prose-ministry {
