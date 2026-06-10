@@ -470,7 +470,9 @@ export const getAllCourses = unstable_cache(
     return safeFetch(
       () =>
         client.fetch(
-          `*[_type == "course"] | order(publishedAt desc) {
+          // featured first (booleans sort false<true, so desc puts true first),
+          // then most recent within each tier
+          `*[_type == "course"] | order(featured desc, publishedAt desc) {
             _id, title, slug, description, coverImage, instructor, featured,
             "lessonCount": count(lessons)
           }`
