@@ -245,8 +245,8 @@ export default async function HomePage() {
                     {course.description && (
                       <p className="text-cream/50 text-[13px] line-clamp-2 mb-3 leading-relaxed">{course.description}</p>
                     )}
-                    <span className={`text-[11px] uppercase tracking-wider font-medium ${course.lessonCount === 0 ? "text-gold/70" : "text-cream/50"}`}>
-                      {course.lessonCount === 0
+                    <span className={`text-[11px] uppercase tracking-wider font-medium ${!course.lessonCount ? "text-gold/70" : "text-cream/50"}`}>
+                      {!course.lessonCount
                         ? "Coming soon"
                         : `${course.lessonCount} lesson${course.lessonCount !== 1 ? "s" : ""}`}
                     </span>

@@ -133,8 +133,8 @@ export default async function CoursesPage() {
                   )}
                   <div className="flex items-center justify-between text-[11px] text-cream/60 uppercase tracking-wider font-medium">
                     {course.instructor && <span>{course.instructor}</span>}
-                    <span className={course.lessonCount === 0 ? "text-gold/70" : undefined}>
-                      {course.lessonCount === 0
+                    <span className={!course.lessonCount ? "text-gold/70" : undefined}>
+                      {!course.lessonCount
                         ? "Coming soon"
                         : `${course.lessonCount} lesson${course.lessonCount !== 1 ? "s" : ""}`}
                     </span>
