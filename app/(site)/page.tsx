@@ -48,9 +48,18 @@ const PATHWAYS = [
   { title: "Resources", description: "Curated tools and materials for your daily walk with God.", href: "/resources", icon: "tool" },
 ];
 
+// Shown only if Sanity returns no published courses. We launch with Song of
+// Solomon and release lessons one at a time.
 const PLACEHOLDER_COURSES: CourseSummary[] = [
-  { _id: "p1", title: "Knowing Jesus", slug: { current: "knowing-jesus" }, description: "A foundational course exploring who Jesus is through Scripture.", instructor: "Fire Within Team", lessonCount: 8, featured: true },
-  { _id: "p2", title: "Foundations of Faith", slug: { current: "foundations-of-faith" }, description: "Build a strong biblical foundation covering core doctrines.", instructor: "Fire Within Team", lessonCount: 6, featured: false },
+  {
+    _id: "p-song-of-solomon",
+    title: "Song of Solomon",
+    slug: { current: "song-of-solomon" },
+    description: "A verse-by-verse walk through Song of Solomon. New lessons release one at a time.",
+    instructor: "Brett & Jude",
+    lessonCount: 0,
+    featured: true,
+  },
 ];
 
 function PathwayIcon({ type }: { type: string }) {
@@ -236,7 +245,11 @@ export default async function HomePage() {
                     {course.description && (
                       <p className="text-cream/50 text-[13px] line-clamp-2 mb-3 leading-relaxed">{course.description}</p>
                     )}
-                    <span className="text-[11px] text-cream/50 uppercase tracking-wider font-medium">{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+                    <span className={`text-[11px] uppercase tracking-wider font-medium ${course.lessonCount === 0 ? "text-gold/70" : "text-cream/50"}`}>
+                      {course.lessonCount === 0
+                        ? "Coming soon"
+                        : `${course.lessonCount} lesson${course.lessonCount !== 1 ? "s" : ""}`}
+                    </span>
                   </div>
                 </Link>
               </SectionReveal>

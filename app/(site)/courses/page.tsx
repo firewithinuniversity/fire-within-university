@@ -25,26 +25,18 @@ export const metadata: Metadata = {
   },
 };
 
+// Shown when Sanity returns no published courses yet. Song of Solomon is our
+// launch course; new lessons are released one at a time.
 const PLACEHOLDER_COURSES: CourseSummary[] = [
   {
-    _id: "placeholder-1",
-    title: "Knowing Jesus",
-    slug: { current: "knowing-jesus" },
+    _id: "placeholder-song-of-solomon",
+    title: "Song of Solomon",
+    slug: { current: "song-of-solomon" },
     description:
-      "A foundational course exploring who Jesus is through Scripture, His teachings, and His mission for your life.",
-    instructor: "Fire Within Team",
-    lessonCount: 8,
+      "A verse-by-verse walk through Song of Solomon. New lessons release one at a time — subscribe to be notified when the next drops.",
+    instructor: "Brett & Jude",
+    lessonCount: 0,
     featured: true,
-  },
-  {
-    _id: "placeholder-2",
-    title: "Foundations of Faith",
-    slug: { current: "foundations-of-faith" },
-    description:
-      "Build a strong biblical foundation covering the core doctrines every believer should understand.",
-    instructor: "Fire Within Team",
-    lessonCount: 6,
-    featured: false,
   },
 ];
 
@@ -141,7 +133,11 @@ export default async function CoursesPage() {
                   )}
                   <div className="flex items-center justify-between text-[11px] text-cream/60 uppercase tracking-wider font-medium">
                     {course.instructor && <span>{course.instructor}</span>}
-                    <span>{course.lessonCount} lesson{course.lessonCount !== 1 ? "s" : ""}</span>
+                    <span className={course.lessonCount === 0 ? "text-gold/70" : undefined}>
+                      {course.lessonCount === 0
+                        ? "Coming soon"
+                        : `${course.lessonCount} lesson${course.lessonCount !== 1 ? "s" : ""}`}
+                    </span>
                   </div>
                   <CourseProgressMini courseSlug={course.slug.current} totalLessons={course.lessonCount} />
                 </div>
