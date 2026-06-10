@@ -21,6 +21,7 @@ export function organizationJsonLd() {
     logo: `${BASE_URL}/logo.png`,
     description: "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
     sameAs: [
+      "https://www.facebook.com/profile.php?id=61590441583251",
       "https://www.youtube.com/@FireWithinUnv",
       "https://www.instagram.com/firewithinunv/",
       "https://www.tiktok.com/@firewithinunv",
