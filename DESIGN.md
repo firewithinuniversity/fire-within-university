@@ -213,6 +213,6 @@ Interactive elements are **kindled**: hover breathes light into them (a gold bor
 ### Don't:
 - **Don't** build anything that could pass for a "dated church website": no clip-art doves, no rainbow gradients, no 2010 template energy. This is PRODUCT.md's named enemy, verbatim.
 - **Don't** drift into tech-product territory: no pastel SaaS gradients, no floating glass cards, no hero-metric blocks.
-- **Don't** use black drop shadows on dark pages (The Light-Not-Shadow Rule), gradient text, side-stripe borders, or decorative glassmorphism (backdrop-blur was deliberately removed for scroll performance; do not reintroduce it).
+- **Don't** use black drop shadows on dark pages (The Light-Not-Shadow Rule), gradient text, side-stripe borders, or decorative glassmorphism. The site uses a small amount of `backdrop-blur` deliberately (hero pill, hero ghost CTA, scripture cards, card category badges, the AuthModal overlay, AdminNav mobile toggle) — it was specifically removed from the **fixed Navbar and CookieBanner** for scroll-perf. Don't extend backdrop-blur to other fixed/scroll-coupled elements.
 - **Don't** animate layout properties, and never bounce or overshoot; motion is breath, not spring.
 - **Don't** let the site go cold: a page with no gold anywhere has lost the doorway. The audit test: if a screenshot could pass for a whiskey brand or a generic dashboard, add the light back.

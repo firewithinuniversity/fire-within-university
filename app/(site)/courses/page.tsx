@@ -79,7 +79,7 @@ export default async function CoursesPage() {
               &ldquo;Do your best to present yourself to God as one approved, a worker who does not need to be ashamed and who correctly handles the word of truth.&rdquo; — 2 Timothy 2:15
             </p>
             <div className="pt-2">
-              <EmailSignup variant="inline" />
+              <EmailSignup variant="inline" location="courses" />
             </div>
             <Link
               href="/blog"

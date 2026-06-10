@@ -306,7 +306,7 @@ export default async function PostPage({
         <p className="text-cream/50 text-sm text-center mb-5">
           Get new sermons and articles delivered to your inbox.
         </p>
-        <EmailSignup variant="inline" />
+        <EmailSignup variant="inline" location="blog-post" />
       </section>
 
       {/* ── Related posts (streamed via Suspense) ────────────────────── */}

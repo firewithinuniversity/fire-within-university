@@ -44,7 +44,10 @@ export const metadata: Metadata = {
     title: "Fire Within University",
     description:
       "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
-    images: [{ url: "/logo.png", width: 1109, height: 1109, alt: "Fire Within University" }],
+    // images intentionally omitted: app/opengraph-image.tsx provides a properly
+    // sized 1200x630 share card automatically, and Next.js does NOT deep-merge
+    // openGraph on per-page metadata, so a literal image here would be dropped
+    // by every page that defines its own openGraph block.
   },
   twitter: {
     card: "summary_large_image",
@@ -53,7 +56,8 @@ export const metadata: Metadata = {
     title: "Fire Within University",
     description:
       "Sermons, articles, and resources to fuel your faith. A ministry committed to igniting hearts for Jesus.",
-    images: ["/logo.png"],
+    // images intentionally omitted: file-based opengraph-image.tsx is used as
+    // the Twitter image too. See openGraph comment above.
   },
   alternates: {
     canonical: canonicalUrl(),

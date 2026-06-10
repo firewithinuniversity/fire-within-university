@@ -21,6 +21,10 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 const DUMMY_PASSWORD_HASH =
   "$2b$12$LCKFyiViMNZe6hhXCfiho.QAXT956Ygz1cQhTVe2XAl1NfpI0QOae";
 
+// Admin sessions auto-downgrade to USER after this many seconds. Stolen admin
+// cookies are time-boxed; ordinary sessions still last the JWT maxAge (7 days).
+const ADMIN_SESSION_MAX_SECONDS = 4 * 60 * 60;
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -89,14 +93,17 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        // Role comes strictly from the allowlist — never from the stored role,
+        // which could be a stale ADMIN from before an allowlist removal. Sync
+        // the DB in BOTH directions so a de-listed admin is also demoted there.
         const effectiveRole: UserRole = isAdminEmail(email)
           ? UserRole.ADMIN
-          : (user.role as UserRole);
+          : UserRole.USER;
 
-        if (effectiveRole === UserRole.ADMIN && user.role !== UserRole.ADMIN) {
+        if (user.role !== effectiveRole) {
           await prisma.user.update({
             where: { id: user.id },
-            data: { role: UserRole.ADMIN },
+            data: { role: effectiveRole },
           });
         }
 
@@ -128,45 +135,49 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user, account }) {
-      // `user`/`account` are only present at sign-in. Treat that as the moment
-      // of authentication and stamp an immutable admin-login timestamp.
+      // `user`/`account` are only present at sign-in.
       const isSignIn = Boolean(user || account);
 
       if (user) {
         token.id = user.id;
-        token.role = (user as { role?: UserRole }).role ?? UserRole.USER;
       }
 
       if (account?.provider === "google" && token.email) {
-        token.role = isAdminEmail(token.email) ? UserRole.ADMIN : UserRole.USER;
-
         const dbUser = await prisma.user.findUnique({
           where: { email: token.email },
         });
         if (dbUser) {
           token.id = dbUser.id;
-          if (isAdminEmail(token.email) && dbUser.role !== UserRole.ADMIN) {
+          // Same bidirectional sync as the credentials provider: the stored
+          // role mirrors the allowlist, including demotion after removal.
+          const dbRole = isAdminEmail(token.email)
+            ? UserRole.ADMIN
+            : UserRole.USER;
+          if (dbUser.role !== dbRole) {
             await prisma.user.update({
               where: { id: dbUser.id },
-              data: { role: UserRole.ADMIN },
+              data: { role: dbRole },
             });
           }
         }
       }
 
-      // Admin status is determined by the server-side email allowlist and
-      // re-derived on EVERY request from the signed token. This keeps
-      // allowlisted admins reliably admin (and reflects allowlist changes)
-      // without logging them out on deploys. The signed JWT + allowlist is the
-      // security boundary; a non-allowlisted email can never be ADMIN.
+      // Single authoritative role derivation, run on EVERY request:
+      // ADMIN requires (a) the email is on the server-side allowlist right now
+      // (so removing an email revokes access mid-session), and (b) the admin
+      // session is fresh — adminSince is stamped only at sign-in, so admin
+      // privilege expires after ADMIN_SESSION_MAX_SECONDS and requires a
+      // re-login, restoring the audit-H1 time-box. Everyone else is USER.
       if (token.email) {
-        token.role = isAdminEmail(token.email)
-          ? UserRole.ADMIN
-          : (token.role as UserRole) ?? UserRole.USER;
-      }
-
-      if (isSignIn && token.role === UserRole.ADMIN) {
-        token.adminSince = Math.floor(Date.now() / 1000);
+        const allowlisted = isAdminEmail(token.email);
+        const now = Math.floor(Date.now() / 1000);
+        if (allowlisted && isSignIn) {
+          token.adminSince = now;
+        }
+        const adminFresh =
+          typeof token.adminSince === "number" &&
+          now - token.adminSince <= ADMIN_SESSION_MAX_SECONDS;
+        token.role = allowlisted && adminFresh ? UserRole.ADMIN : UserRole.USER;
       }
 
       return token;

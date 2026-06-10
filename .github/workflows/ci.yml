@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+# Least-privilege token scope: a compromised dev dependency executing during
+# install/lint/test can't push commits or open PRs with this workflow's token.
+permissions:
+  contents: read
+
 # Cancel in-progress runs for the same branch/PR when new commits arrive.
 concurrency:
   group: ci-${{ github.ref }}

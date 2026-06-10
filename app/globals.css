@@ -25,11 +25,12 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.015em;
 }
 
-/* Selection color — readable on both dark pages and the light admin:
-   dark walnut text on a committed gold wash */
+/* Selection color — readable on both dark public pages and the light admin.
+   Uses a fully-opaque mid-orange fill so it composites identically over any
+   ground, and cream text for high contrast (~5.5:1 on both themes). */
 ::selection {
-  background-color: rgba(232, 160, 32, 0.45);
-  color: #1a0f05;
+  background-color: #A34D14;
+  color: #FDF6EC;
 }
 
 /* ── Entrance choreography ─────────────────────────────────────────
@@ -93,8 +94,10 @@ h1, h2, h3, h4, h5, h6 {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

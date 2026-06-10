@@ -41,7 +41,6 @@ const config: Config = {
       },
       boxShadow: {
         card: "0 1px 3px 0 rgba(61,31,10,0.07), 0 1px 2px -1px rgba(61,31,10,0.05)",
-        "card-hover": "0 20px 40px -12px rgba(61,31,10,0.4)",
         glow: "0 0 24px 4px rgba(232,160,32,0.18)",
         "glow-lg": "0 0 48px 8px rgba(232,160,32,0.22)",
         // Kindled hover for cards on dark ground: elevation as light, not shadow

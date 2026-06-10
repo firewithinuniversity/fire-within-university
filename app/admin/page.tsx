@@ -11,6 +11,7 @@ export default async function AdminOverviewPage() {
   let totalCompletions = 0;
   let unreadMessages = 0;
   let recentUsers: { name: string | null; email: string; createdAt: Date }[] = [];
+  let dbError = false;
 
   try {
     [totalUsers, totalCompletions, unreadMessages, recentUsers] =
@@ -26,6 +27,7 @@ export default async function AdminOverviewPage() {
       ]);
   } catch (err) {
     console.error("[Admin Dashboard] Database error:", err);
+    dbError = true;
   }
 
   const stats = [
@@ -69,6 +71,17 @@ export default async function AdminOverviewPage() {
           Welcome back, {session.user.name ?? "Admin"}.
         </p>
       </div>
+
+      {dbError && (
+        <div
+          role="alert"
+          className="mb-6 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800"
+        >
+          <strong className="font-semibold">Database unreachable.</strong>{" "}
+          Stats below show zeros because the database call failed — they are
+          not real. Check Vercel logs and the Neon dashboard.
+        </div>
+      )}
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">

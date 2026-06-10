@@ -52,22 +52,36 @@ export async function POST(request: Request) {
   }
 
   try {
-    const email = session.user.email ?? undefined;
-
     // Prisma cascade deletes (via onDelete: Cascade) remove:
     // - Account (OAuth links), Session, LessonProgress, Bookmark
-    // We also clear email-keyed auth tokens that aren't linked by a foreign key.
     // (Contact submissions, donation records, and audit logs are intentionally
     // retained — see the Privacy Policy retention section.)
-    await prisma.$transaction([
-      prisma.user.delete({ where: { id: session.user.id } }),
-      ...(email
-        ? [
-            prisma.passwordResetToken.deleteMany({ where: { email } }),
-            prisma.verificationToken.deleteMany({ where: { identifier: email } }),
-          ]
-        : []),
-    ]);
+    //
+    // The account deletion is the only step that MUST succeed (right-to-erasure).
+    // Token cleanup is best-effort: a transient error on the token tables must
+    // not roll back the user deletion. We also fetch the canonical email from
+    // the DB rather than trusting JWT casing.
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { email: true },
+    });
+    await prisma.user.delete({ where: { id: session.user.id } });
+
+    // Best-effort: normalize to match the lowercased rows written elsewhere.
+    const email = user?.email?.toLowerCase().trim();
+    if (email) {
+      try {
+        await prisma.$transaction([
+          prisma.passwordResetToken.deleteMany({ where: { email } }),
+          prisma.verificationToken.deleteMany({ where: { identifier: email } }),
+        ]);
+      } catch (tokenErr) {
+        console.error(
+          "[Delete Account] Token cleanup failed (account still deleted):",
+          tokenErr instanceof Error ? tokenErr.message : "Unknown error"
+        );
+      }
+    }
 
     return NextResponse.json({
       message: "Your account has been deleted.",

@@ -38,6 +38,11 @@ beforeEach(() => {
   mockState.fail = false;
 });
 
+// Guarantee real timers are restored even if a fake-timer test below throws.
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 describe("checkRateLimitDb", () => {
   it("allows requests up to the limit, then blocks", async () => {
     const opts = { maxRequests: 3, windowMs: 60_000 };

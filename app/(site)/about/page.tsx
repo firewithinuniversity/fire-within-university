@@ -115,7 +115,7 @@ export default async function AboutPage() {
         </p>
 
         <div className="max-w-md mx-auto">
-          <EmailSignup variant="inline" />
+          <EmailSignup variant="inline" location="about" />
         </div>
 
         <div className="mt-8 pt-6 border-t border-cream/[0.06] flex flex-col sm:flex-row gap-3 justify-center items-center">

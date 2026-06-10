@@ -6,6 +6,7 @@
  */
 import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/metadata";
+import { EMAIL_HELLO } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-const CONTACT_EMAIL = "hello@firewithinuniversity.com";
+const CONTACT_EMAIL = EMAIL_HELLO;
 const LAST_UPDATED = "June 3, 2026";
 const SITE_URL = "firewithinuniversity.com";
 // TODO: replace with a real postal address (a P.O. box is fine) — required in

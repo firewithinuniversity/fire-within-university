@@ -6,6 +6,7 @@
  */
 import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/metadata";
+import { EMAIL_HELLO } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -19,8 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
-const CONTACT_EMAIL = "hello@firewithinuniversity.com";
-const LAST_UPDATED = "May 28, 2026";
+const CONTACT_EMAIL = EMAIL_HELLO;
+const LAST_UPDATED = "June 3, 2026";
 const SITE_URL = "firewithinuniversity.com";
 
 export default function TermsPage() {

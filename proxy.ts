@@ -8,6 +8,9 @@ import { getNextAuthSecret } from "@/lib/env";
 // own CSRF-token protection, so they're exempt from the Origin check. Custom
 // routes under /api/auth/* (register, reset-password, delete-account, etc.) are
 // intentionally NOT in this list — they must pass the Origin check (audit H3).
+//
+// Matching is exact OR a path-segment boundary, so "/api/auth/sessionFOO" is
+// NOT silently exempted (review finding).
 const NEXTAUTH_HANDLER_PREFIXES = [
   "/api/auth/callback",
   "/api/auth/signin",
@@ -17,6 +20,21 @@ const NEXTAUTH_HANDLER_PREFIXES = [
   "/api/auth/providers",
   "/api/auth/_log",
 ];
+
+function isNextAuthHandler(pathname: string): boolean {
+  return NEXTAUTH_HANDLER_PREFIXES.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
+}
+
+/** Strip a default-port suffix and lowercase; drops the case where the value is empty. */
+function normalizeHost(raw: string | null): string {
+  if (!raw) return "";
+  // x-forwarded-host can arrive as a comma-list when chained proxies append.
+  // Take the left-most (closest-to-client) entry per RFC 7239 convention.
+  const first = raw.split(",")[0].trim().toLowerCase();
+  return first.replace(/:(80|443)$/, "");
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -63,58 +81,43 @@ export async function proxy(request: NextRequest) {
 
   const nonce = crypto.randomUUID();
 
-  // CSRF: validate origin on mutating API requests
+  // CSRF: validate origin on mutating API requests.
+  // One rule: the Origin host must equal the host the request was actually
+  // served on (handles vercel.app, custom domain, previews, dev, all at once
+  // without trusting an env config that could drift). Cross-site browsers will
+  // either send a different Origin (rejected) or omit it (rejected). The
+  // header-spoofability concern is platform-specific and documented below.
   const isMutatingMethod = ["POST", "PUT", "PATCH", "DELETE"].includes(request.method);
   if (isMutatingMethod && pathname.startsWith("/api/")) {
-    const origin = request.headers.get("origin");
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-
-    let expectedOrigin: string;
-    try {
-      expectedOrigin = new URL(baseUrl).origin;
-    } catch {
-      expectedOrigin = "http://localhost:3000";
-    }
-
-    const isDev = process.env.NODE_ENV === "development";
-    const isLocalhostOrigin =
-      origin?.startsWith("http://localhost:") ||
-      origin?.startsWith("http://127.0.0.1:");
-
     const isStripeWebhook = pathname === "/api/stripe/webhook";
-    const isNextAuth = NEXTAUTH_HANDLER_PREFIXES.some((p) => pathname.startsWith(p));
+    const isNextAuth = isNextAuthHandler(pathname);
 
     if (!isStripeWebhook && !isNextAuth) {
+      const origin = request.headers.get("origin");
       if (!origin) {
         return NextResponse.json({ message: "Missing Origin header." }, { status: 403 });
       }
 
-      // Same-origin check: accept the request when its Origin host matches the
-      // host the app is actually served on (the Vercel deployment URL, a custom
-      // domain, or a preview URL) — not only the configured NEXT_PUBLIC_BASE_URL.
-      // This is the real CSRF guard (cross-site origins still get rejected) and
-      // avoids blocking legitimate forms when the access URL differs from the
-      // configured production URL.
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const host = forwardedHost ?? request.headers.get("host");
+      // We trust x-forwarded-host because Vercel sets it for us and overwrites
+      // any client-supplied value. Self-hosters MUST front the app with a proxy
+      // that does the same (the standard nginx/caddy pattern). On Vercel and
+      // any correctly configured reverse proxy, this header reflects the real
+      // serving host, normalized below for case + default ports + comma-lists.
+      const servedHost =
+        normalizeHost(request.headers.get("x-forwarded-host")) ||
+        normalizeHost(request.headers.get("host"));
+
       let originHost = "";
       try {
-        originHost = new URL(origin).host;
+        originHost = new URL(origin).host.toLowerCase().replace(/:(80|443)$/, "");
       } catch {
         originHost = "";
       }
 
-      const originAllowed =
-        origin === expectedOrigin ||
-        (originHost !== "" && originHost === host) ||
-        (isDev && isLocalhostOrigin);
-
-      if (!originAllowed) {
+      if (originHost === "" || originHost !== servedHost) {
         return NextResponse.json({ message: "Forbidden: origin not allowed." }, { status: 403 });
       }
-    }
 
-    if (!isStripeWebhook && !isNextAuth) {
       const contentType = request.headers.get("content-type") ?? "";
       if (!contentType.includes("application/json")) {
         return NextResponse.json({ message: "Content-Type must be application/json." }, { status: 415 });

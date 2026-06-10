@@ -254,7 +254,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
           </div>
 
           <div className="pt-2">
-            <EmailSignup variant="inline" />
+            <EmailSignup variant="inline" location="blog" />
           </div>
 
           <p className="text-cream/50 text-sm italic pt-4 border-t border-cream/[0.06]">

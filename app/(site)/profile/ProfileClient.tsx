@@ -117,6 +117,9 @@ export default function ProfileClient({
     try {
       const res = await fetch("/api/auth/resend-verification", {
         method: "POST",
+        // The middleware rejects mutating API calls without a JSON content type
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
       });
       const data = await res.json();
       if (res.ok) {

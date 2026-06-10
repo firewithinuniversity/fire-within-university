@@ -58,7 +58,7 @@ export default async function SeriesPage() {
           </div>
 
           <div className="pt-2">
-            <EmailSignup variant="inline" />
+            <EmailSignup variant="inline" location="series" />
           </div>
 
           <p className="text-cream/50 text-sm italic pt-4 border-t border-cream/[0.06]">
