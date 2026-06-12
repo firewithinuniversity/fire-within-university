@@ -28,7 +28,7 @@ import { trackDonationStart } from "@/lib/analytics";
 type Frequency = "once" | "monthly";
 
 const PRESET_AMOUNTS_DOLLARS = [5, 10, 25, 50];
-const MIN_CUSTOM_DOLLARS = 5;
+const MIN_CUSTOM_DOLLARS = 1;
 
 export default function DonateForm() {
   const [frequency, setFrequency] = useState<Frequency>("once");
