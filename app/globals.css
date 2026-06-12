@@ -57,31 +57,12 @@ h1, h2, h3, h4, h5, h6 {
 .anim-d4 { animation-delay: 540ms; }
 .anim-d5 { animation-delay: 760ms; }
 
-/* Portable Text article styles */
+/* Portable Text article styles — typography/spacing only.
+   Colors live on the component (PortableTextRenderer) so dark-theme
+   blog posts render correctly. */
 .prose-ministry {
   overflow-wrap: break-word;
   word-break: break-word;
-}
-.prose-ministry h2 {
-  @apply text-2xl font-serif font-bold text-brown mt-10 mb-4 leading-snug tracking-tight;
-}
-.prose-ministry h3 {
-  @apply text-xl font-serif font-semibold text-brown mt-8 mb-3 leading-snug;
-}
-.prose-ministry p {
-  @apply text-base leading-relaxed text-brown/85 mb-5;
-}
-.prose-ministry blockquote {
-  @apply border-l-4 border-gold pl-6 italic text-brown-light my-8 text-lg leading-relaxed bg-gold/5 rounded-r-xl py-4 pr-4;
-}
-.prose-ministry a {
-  @apply text-orange underline decoration-orange/40 underline-offset-2 hover:text-orange-hover hover:decoration-orange-hover transition-colors;
-}
-.prose-ministry ul {
-  @apply list-disc list-inside mb-4 space-y-1;
-}
-.prose-ministry ol {
-  @apply list-decimal list-inside mb-4 space-y-1;
 }
 
 :focus-visible {
