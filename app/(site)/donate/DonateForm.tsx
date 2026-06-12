@@ -32,7 +32,7 @@ const MIN_CUSTOM_DOLLARS = 1;
 
 export default function DonateForm() {
   const [frequency, setFrequency] = useState<Frequency>("once");
-  const [selectedAmount, setSelectedAmount] = useState<number>(25); // default $25
+  const [selectedAmount, setSelectedAmount] = useState<number>(10); // default $10
   const [customAmount, setCustomAmount] = useState("");
   const [isCustom, setIsCustom] = useState(false);
   const [loading, setLoading] = useState(false);
