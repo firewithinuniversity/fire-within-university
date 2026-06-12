@@ -86,7 +86,7 @@ export default async function PostPage({
     ? await getSeriesNavigation(post.series._id, post._id)
     : null;
 
-  const { title, publishedAt, author, category, series, mainImage, youtubeUrl, body, affiliateProducts } = post;
+  const { title, publishedAt, author, category, series, mainImage, youtubeUrl, pdfFile, body, affiliateProducts } = post;
   const readTime = body ? readingTimeLabel(body as unknown[]) : null;
   const headings = body ? extractHeadings(body as unknown[]) : [];
 
@@ -215,6 +215,25 @@ export default async function PostPage({
       {/* ── YouTube embed (before body, if URL present) ─────────────── */}
       {youtubeUrl && (
         <YouTubeEmbed url={youtubeUrl} title={`${title} — sermon video`} />
+      )}
+
+      {/* ── Download PDF button (if a PDF was uploaded) ─────────────── */}
+      {pdfFile?.url && (
+        <a
+          href={`${pdfFile.url}?dl=${encodeURIComponent(pdfFile.originalFilename ?? `${slug}.pdf`)}`}
+          className="inline-flex items-center gap-2 mb-8 px-5 py-3 rounded-full border border-gold/40 bg-gold/[0.06] text-gold hover:bg-gold/[0.12] hover:border-gold/60 transition-colors text-sm font-medium"
+          aria-label={`Download ${title} as PDF`}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          Download PDF
+          {typeof pdfFile.size === "number" && (
+            <span className="text-gold/60 text-xs">
+              ({(pdfFile.size / 1024 / 1024).toFixed(1)} MB)
+            </span>
+          )}
+        </a>
       )}
 
       {/* ── Table of contents ──────────────────────────────────────── */}

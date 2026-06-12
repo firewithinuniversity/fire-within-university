@@ -198,6 +198,15 @@ export const post = defineType({
     }),
 
     defineField({
+      name: "pdfFile",
+      title: "Downloadable PDF (optional)",
+      type: "file",
+      description:
+        "Upload a PDF for readers to download. If present, a 'Download PDF' button appears at the top of the post.",
+      options: { accept: "application/pdf" },
+    }),
+
+    defineField({
       name: "affiliateProducts",
       title: "Recommended Resources (optional)",
       type: "array",

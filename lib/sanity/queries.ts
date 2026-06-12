@@ -57,6 +57,7 @@ export type PostSummary = {
 export type Post = PostSummary & {
   body: unknown[]; // Portable Text blocks — typed by @portabletext/react
   youtubeUrl?: string;
+  pdfFile?: { url: string; originalFilename?: string; size?: number };
   affiliateProducts?: AffiliateProduct[];
 };
 
@@ -159,26 +160,23 @@ export async function getFilteredPosts(opts: {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return unstable_cache(
-    async () =>
-      safeFetch(
-        () =>
-          client.fetch(
-            `*[_type == "post" && slug.current == $slug][0] {
-              ${POST_SUMMARY_FIELDS},
-              body,
-              youtubeUrl,
-              "affiliateProducts": affiliateProducts[]-> {
-                _id, name, description, affiliateUrl, image, disclosureText
-              }
-            }`,
-            { slug }
-          ),
-        null
+  return safeFetch(
+    () =>
+      client.fetch(
+        `*[_type == "post" && slug.current == $slug][0] {
+          ${POST_SUMMARY_FIELDS},
+          body,
+          youtubeUrl,
+          "pdfFile": pdfFile.asset->{ "url": url, "originalFilename": originalFilename, "size": size },
+          "affiliateProducts": affiliateProducts[]-> {
+            _id, name, description, affiliateUrl, image, disclosureText
+          }
+        }`,
+        { slug },
+        { next: { revalidate: FIVE_MIN, tags: [`post-${slug}`] } }
       ),
-    [`post-${slug}`],
-    { revalidate: FIVE_MIN }
-  )();
+    null
+  );
 }
 
 export const getFeaturedPosts = unstable_cache(
