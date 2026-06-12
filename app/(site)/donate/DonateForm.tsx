@@ -157,7 +157,7 @@ export default function DonateForm() {
             <input
               type="number"
               min={MIN_CUSTOM_DOLLARS}
-              max={1000}
+              max={10000}
               step="1"
               placeholder="Other amount"
               value={customAmount}
