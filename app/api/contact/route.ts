@@ -5,6 +5,7 @@ import { getIpFromRequest } from "@/lib/rateLimit";
 import { checkRateLimitDb } from "@/lib/rateLimitDb";
 import { getContactFormEmail, getResendApiKey } from "@/lib/env";
 import { EMAIL_CONTACT } from "@/lib/constants";
+import { escapeHtml } from "@/lib/escapeHtml";
 import { prisma } from "@/lib/prisma";
 
 const ContactSchema = z.object({
@@ -14,16 +15,6 @@ const ContactSchema = z.object({
   message: z.string().min(10).max(2000).trim(),
   website: z.string().max(0, "Bot detected"), // honeypot — must be empty
 });
-
-// Entity-encode instead of strip — regex-based tag removal is bypassable
-function escapeHtml(input: string): string {
-  return input
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
 const MAX_BODY_SIZE = 10 * 1024; // 10KB — contact forms are small
 

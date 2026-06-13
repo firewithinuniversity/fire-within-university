@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { getStripe } from "@/lib/stripe";
 import { getStripeWebhookSecret, getResendApiKey, getContactFormEmail } from "@/lib/env";
 import { EMAIL_FROM_NOREPLY } from "@/lib/constants";
+import { escapeHtml } from "@/lib/escapeHtml";
 
 const MAX_BODY_SIZE = 64 * 1024; // 64KB — webhook payloads are moderate JSON
 
@@ -53,6 +54,10 @@ export async function POST(request: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         const email = session.customer_details?.email;
         const name = session.customer_details?.name ?? "Someone";
+        // Donor name/email come from user-controlled Checkout fields — escape
+        // before interpolating into HTML email bodies.
+        const safeName = escapeHtml(name);
+        const safeEmail = email ? escapeHtml(email) : null;
         const amountTotal = session.amount_total ?? 0;
         const dollars = (amountTotal / 100).toFixed(2);
         const frequency = session.metadata?.frequency ?? "once";
@@ -76,7 +81,7 @@ export async function POST(request: Request) {
               html: `
                 <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 16px;">
                   <h1 style="font-size: 24px; color: #1a1a1a; margin-bottom: 16px;">
-                    Thank you, ${name}!
+                    Thank you, ${safeName}!
                   </h1>
                   <p style="font-size: 16px; color: #444; line-height: 1.6;">
                     Your ${isMonthly ? "monthly" : "one-time"} donation of <strong>$${dollars}</strong> to
@@ -124,8 +129,8 @@ export async function POST(request: Request) {
                 <table style="font-size: 14px; color: #444; border-collapse: collapse;">
                   <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Amount:</td><td>$${dollars}</td></tr>
                   <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Frequency:</td><td>${isMonthly ? "Monthly" : "One-time"}</td></tr>
-                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Donor:</td><td>${name}</td></tr>
-                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Email:</td><td>${email ?? "Not provided"}</td></tr>
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Donor:</td><td>${safeName}</td></tr>
+                  <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Email:</td><td>${safeEmail ?? "Not provided"}</td></tr>
                   <tr><td style="padding: 4px 12px 4px 0; font-weight: bold;">Session ID:</td><td style="font-size: 12px; color: #888;">${session.id}</td></tr>
                 </table>
               </div>
