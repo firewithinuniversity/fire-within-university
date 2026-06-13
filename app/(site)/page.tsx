@@ -130,9 +130,12 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator — arrives last, breathes like an ember */}
-        <div className="anim-rise anim-d5 absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center gap-2 opacity-50">
+        {/* Scroll indicator — arrives last, breathes like an ember.
+            Positioning (left-1/2 -translate-x-1/2) lives on the outer div;
+            the rise-in animation lives on the inner div so its `transform`
+            keyframes don't clobber the horizontal centering. */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="anim-rise anim-d5 flex flex-col items-center gap-2 opacity-50">
             <span className="text-cream/60 text-[10px] uppercase tracking-[0.3em] font-medium">Scroll</span>
             <div className="w-px h-8 bg-gradient-to-b from-cream/40 to-transparent animate-pulse-glow" />
           </div>
