@@ -499,31 +499,25 @@ export const getFeaturedCourses = unstable_cache(
   { revalidate: FIVE_MIN }
 );
 
-const getCourseBySlugCached = (slug: string) =>
-  unstable_cache(
-    async () =>
-      safeFetch(
-        () =>
-          client.fetch(
-            `*[_type == "course" && slug.current == $slug][0] {
-              _id, title, slug, description, coverImage, instructor, featured,
-              "lessonCount": count(lessons),
-              whatYoullLearn,
-              _updatedAt,
-              "lessons": lessons[]-> {
-                _id, title, slug, lessonNumber, scripture, duration, _updatedAt
-              }
-            }`,
-            { slug }
-          ),
-        null
-      ),
-    ["course", slug],
-    { revalidate: FIVE_MIN }
-  );
-
 export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
-  return getCourseBySlugCached(slug)();
+  // Fetch directly (no safeFetch). A genuine "no such course" returns null →
+  // the page renders notFound(). But a TRANSIENT Sanity error must THROW, not
+  // return null — Next.js caches a notFound() under ISR, so swallowing a fetch
+  // error into null would cache a 404 for a real course until the next deploy.
+  // A thrown error is not cached: Next.js serves a transient 500 and retries.
+  return client.fetch(
+    `*[_type == "course" && slug.current == $slug][0] {
+      _id, title, slug, description, coverImage, instructor, featured,
+      "lessonCount": count(lessons),
+      whatYoullLearn,
+      _updatedAt,
+      "lessons": lessons[]-> {
+        _id, title, slug, lessonNumber, scripture, duration, _updatedAt
+      }
+    }`,
+    { slug },
+    { next: { revalidate: FIVE_MIN, tags: [`course-${slug}`] } }
+  );
 }
 
 export async function getAllCourseSlugs(): Promise<{ slug: string; _updatedAt?: string }[]> {
@@ -564,10 +558,11 @@ export async function getLessonBySlug(
   courseSlug: string,
   lessonSlug: string
 ): Promise<LessonDetail | null> {
-  return safeFetch(
-    () =>
-      client.fetch(
-        `{
+  // Direct fetch (no safeFetch): a transient Sanity error must throw, not
+  // collapse to null, so Next.js doesn't cache a 404 for a real lesson under
+  // ISR. See getCourseBySlug for the full rationale.
+  return client.fetch(
+    `{
           "course": *[_type == "course" && slug.current == $courseSlug][0] {
             title, slug,
             "lessons": lessons[]-> { _id, title, slug, lessonNumber }
@@ -577,8 +572,7 @@ export async function getLessonBySlug(
             "downloads": downloads[] { label, fileUrl }
           }
         }`,
-        { courseSlug, lessonSlug }
-      ),
-    null
+    { courseSlug, lessonSlug },
+    { next: { revalidate: FIVE_MIN, tags: [`lesson-${lessonSlug}`] } }
   );
 }
