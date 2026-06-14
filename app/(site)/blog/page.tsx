@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import PageHeader from "@/components/PageHeader";
+import VideoCard from "@/components/VideoCard";
 import EmailSignup from "@/components/EmailSignup";
-import { getAllCategories, getFilteredPosts } from "@/lib/sanity/queries";
+import SectionReveal from "@/components/SectionReveal";
+import { getAllCategories, getFilteredPosts, getLatestVideos } from "@/lib/sanity/queries";
+import { imageUrlFor } from "@/lib/sanity/image";
 import { canonicalUrl } from "@/lib/metadata";
 
 export const revalidate = 3600;
@@ -46,8 +49,8 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
   const categorySlug = params.category ?? "";
   const currentPage = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
 
-  // Run in parallel: categories, filtered posts, unfiltered total
-  const [categories, { posts, total }, { total: totalUnfiltered }] = await Promise.all([
+  // Run in parallel: categories, filtered posts, unfiltered total, and videos
+  const [categories, { posts, total }, { total: totalUnfiltered }, latestVideos] = await Promise.all([
     getAllCategories(),
     getFilteredPosts({
       search: searchQuery,
@@ -57,6 +60,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
     }),
     // Cheap count-only query (no post data) to check if site has any posts at all
     getFilteredPosts({ page: 1, limit: 1 }),
+    getLatestVideos(),
   ]);
 
   const totalPages = Math.ceil(total / POSTS_PER_PAGE);
@@ -155,6 +159,34 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
           </div>
         )}
       </div>
+
+      {/* ── Latest Videos ── */}
+      {latestVideos.length > 0 && !hasActiveFilter && currentPage === 1 && (
+        <div className="mb-14">
+          <div className="flex items-end justify-between gap-4 mb-6">
+            <h2 className="font-serif text-2xl font-bold text-cream">Latest Videos</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {latestVideos.slice(0, 3).map((video, i) => (
+              <SectionReveal key={video._id} delay={i * 100} distance={20}>
+                <VideoCard
+                  title={video.title}
+                  youtubeUrl={video.youtubeUrl}
+                  thumbnailUrl={
+                    video.thumbnail
+                      ? imageUrlFor(video.thumbnail).width(640).height(360).url()
+                      : undefined
+                  }
+                  category={video.category}
+                  speaker={video.speaker}
+                  scripture={video.scripture}
+                  duration={video.duration}
+                />
+              </SectionReveal>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Results ── */}
       {posts.length > 0 ? (
